@@ -3,8 +3,8 @@
     <!-- Balloon -->
     <defs>
         <linearGradient id="balloonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:rgb(250, 220, 71);stop-opacity:1" />
-            <stop offset="100%" style="stop-color:rgb(250,132,0);stop-opacity:1" />
+            <stop offset="0%" style="stop-color: rgb(250, 220, 71); stop-opacity: 1" />
+            <stop offset="100%" style="stop-color: rgb(250,172,0); stop-opacity: 1" />
         </linearGradient>
     </defs>
     <ellipse
@@ -13,7 +13,7 @@
         rx="30"
         ry="35"
         fill="url(#balloonGradient)"
-        stroke="rgb(163, 128, 0)"
+        stroke="rgb(163, 138, 0)"
         stroke-width="4px"
         stroke-dasharray="4 10 4 12 200"
         stroke-dashoffset="0"
@@ -44,8 +44,8 @@
     <!-- Knot -->
     <path
         d="M 64 77 l -8 8 q 8 6 16 0 Z"
-        fill="rgb(250,156,0)"
-        stroke="rgb(163, 128, 0)"
+        fill="rgb(250, 186, 0)"
+        stroke="rgb(163, 138, 0)"
         stroke-width="4px"
         stroke-linejoin="round"
     />
