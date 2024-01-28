@@ -2,6 +2,7 @@
     position: absolute;
     z-index: 9999;
     cursor: pointer;
+    top: 0;
 
     /* Make image not dragable and not selectable */
     user-drag: none;
@@ -18,3 +19,12 @@
     aspect-ratio: 1/1;
     object-fit: contain;
 }
+
+@keyframes rise {
+    0% {
+      transform: translateY(100vh);
+    }
+    100% {
+      transform: translateY(-10vh);
+    }
+  }

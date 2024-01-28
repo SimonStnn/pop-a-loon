@@ -8,6 +8,7 @@ const stylesheetUrl = chrome.runtime.getURL("src/content/style.css");
 class Balloon {
   element: HTMLDivElement = document.createElement("div");
   currentTopOffset: number = 100;
+  duration: number;
 
   constructor() {
     // Set the balloon's width and height to value between 50 and 200
@@ -25,6 +26,8 @@ class Balloon {
     // Add the balloon to the page
     document.body.appendChild(this.element);
 
+    this.duration = generateRandomNumber(10000, 15000);
+
     // Make the balloon rise
     this.rise();
 
@@ -33,22 +36,11 @@ class Balloon {
   }
 
   rise() {
-    // Change this to make the balloon rise at a different speed
-    const riseSpeed = generateRandomNumber(0.05, 0.2);
-    const riseDelay = generateRandomNumber(10, 20);
+    this.element.style.animation = `rise ${this.duration}ms linear`;
 
-    const riseInterval = setInterval(() => {
-      // Get the current top position of the balloon
-
-      if (this.currentTopOffset + this.element.clientHeight <= 0) {
-        clearInterval(riseInterval);
-        this.remove();
-        return;
-      }
-      this.currentTopOffset -= riseSpeed;
-
-      this.element.style.top = this.currentTopOffset.toString() + "vh";
-    }, riseDelay);
+    setTimeout(() => {
+      this.remove();
+    }, this.duration);
   }
 
   remove() {
@@ -58,6 +50,7 @@ class Balloon {
   }
 
   pop() {
+    console.log("Balloon popped!");
     this.remove();
   }
 }
@@ -68,7 +61,11 @@ stylesheet.type = "text/css";
 stylesheet.href = stylesheetUrl;
 document.head.appendChild(stylesheet);
 
+const b = new Balloon();
+b.element.id = "balloonetjee";
+b.rise();
+
 const balloonInterval = setInterval(() => {
   const balloon = new Balloon();
   balloon.rise();
-}, 100);
+}, 1);
