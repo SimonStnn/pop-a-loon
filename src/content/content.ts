@@ -5,6 +5,10 @@ function generateRandomNumber(min: number, max: number) {
 const balloonImageUrl = chrome.runtime.getURL("icons/icon.png");
 const stylesheetUrl = chrome.runtime.getURL("src/content/style.css");
 
+const balloonContainer = document.createElement("div");
+balloonContainer.id = "balloon-container";
+document.body.appendChild(balloonContainer);
+
 class Balloon {
   element: HTMLDivElement = document.createElement("div");
   currentTopOffset: number = 100;
@@ -24,7 +28,7 @@ class Balloon {
     this.element.appendChild(image);
 
     // Add the balloon to the page
-    document.body.appendChild(this.element);
+    balloonContainer.appendChild(this.element);
 
     this.duration = generateRandomNumber(10000, 15000);
 
@@ -60,10 +64,6 @@ stylesheet.rel = "stylesheet";
 stylesheet.type = "text/css";
 stylesheet.href = stylesheetUrl;
 document.head.appendChild(stylesheet);
-
-const b = new Balloon();
-b.element.id = "balloonetjee";
-b.rise();
 
 const balloonInterval = setInterval(() => {
   const balloon = new Balloon();
