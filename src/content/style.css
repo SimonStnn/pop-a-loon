@@ -9,7 +9,7 @@
 }
 
 .balloon {
-  position: relative;
+  position: fixed;
   z-index: 9999;
   cursor: pointer;
   top: 0;
