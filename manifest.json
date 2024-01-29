@@ -4,7 +4,7 @@
   "description": "A fun Chrome extension that lets balloons rise on your screen",
   "permissions": ["storage", "activeTab", "scripting"],
   "action": {
-    "default_icon": "./icons/icon.png",
+    "default_icon": "./resources/images/icon.png",
     "default_title": "Pop-a-loon",
     "default_popup": "./src/popup/index.html"
   },
@@ -17,7 +17,7 @@
   "web_accessible_resources": [
     {
       "matches": ["<all_urls>"],
-      "resources": ["icons/icon.png"]
+      "resources": ["resources/images/icon.png"]
     },
     {
       "matches": ["<all_urls>"],
