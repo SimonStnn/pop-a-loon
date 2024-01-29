@@ -1,0 +1,29 @@
+html,
+body {
+  --width: 256px;
+  min-width: var(--width);
+  width: var(--width);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #ff5a5a;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #eee;
+}
+
+
+main {
+  margin: auto;
+  width: 90%;
+}
