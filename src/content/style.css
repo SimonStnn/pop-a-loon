@@ -1,40 +1,42 @@
-#balloon-container{
-    position: fixed;
-    z-index: 9999;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
+#balloon-container {
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
-.balloon{
-    position: relative;
-    z-index: 9999;
-    cursor: pointer;
-    top: 0;
+.balloon {
+  position: relative;
+  z-index: 9999;
+  cursor: pointer;
+  top: 0;
 
-    /* Make image not dragable and not selectable */
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+  /* Make image not dragable and not selectable */
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  pointer-events: auto;
 }
 
-.balloon img{
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1/1;
-    object-fit: contain;
+.balloon img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1/1;
+  object-fit: contain;
 }
 
 @keyframes rise {
-    0% {
-      transform: translateY(100vh);
-    }
-    100% {
-      transform: translateY(-10vh);
-    }
+  0% {
+    transform: translateY(100vh);
   }
+  100% {
+    transform: translateY(-10vh);
+  }
+}
