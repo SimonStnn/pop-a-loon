@@ -12,8 +12,5 @@ let balloonInterval = setTimeout(function createAndRiseBalloon() {
 
   // Set the next interval
   clearInterval(balloonInterval);
-  const a = generateRandomInterval();
-  balloonInterval = setTimeout(createAndRiseBalloon, a);
-  console.log("balloonInterval", a);
-  
+  balloonInterval = setTimeout(createAndRiseBalloon, generateRandomInterval());
 }, generateRandomInterval());
