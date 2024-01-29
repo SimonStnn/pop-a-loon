@@ -1,5 +1,3 @@
-console.log("Hello from popup.ts");
-
 const balloonCount = document.getElementById("balloonCount")!;
 
 function setBalloonCount(count: number) {
@@ -10,7 +8,6 @@ function setBalloonCount(count: number) {
 
 document.addEventListener("DOMContentLoaded", () => {
   chrome.storage.sync.get("balloonCount", (result) => {
-    console.log("result:", result);
     setBalloonCount(result.balloonCount || 0);
   });
 });

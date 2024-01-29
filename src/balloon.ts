@@ -47,7 +47,6 @@ export default class Balloon {
   }
 
   pop() {
-    console.log("Balloon popped!");
     this.remove();
     incrementBalloonCount();
   }
