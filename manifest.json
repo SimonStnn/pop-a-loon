@@ -11,7 +11,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["./build/content/content.js"]
+      "js": ["./dist/content.js"]
     }
   ],
   "web_accessible_resources": [
@@ -24,8 +24,5 @@
       "resources": ["src/content/style.css"]
     }
   ],
-  "background": {
-    "service_worker": "./build/background/background.js"
-  },
   "manifest_version": 3
 }
