@@ -1,5 +1,5 @@
 import { generateRandomNumber, incrementBalloonCount } from "./utils";
-import { balloonImageUrl,  } from "./const";
+import { balloonImageUrl, popSoundUrl } from "./const";
 
 export const balloonContainer = document.createElement("div");
 balloonContainer.id = "balloon-container";
@@ -8,6 +8,7 @@ export default class Balloon {
   element: HTMLDivElement = document.createElement("div");
   currentTopOffset: number = 100;
   duration: number;
+  popSound: HTMLAudioElement = new Audio(popSoundUrl);
 
   constructor() {
     // Set the balloon's width and height to value between 50 and 200
@@ -49,5 +50,6 @@ export default class Balloon {
   pop() {
     this.remove();
     incrementBalloonCount();
+    this.popSound.play();
   }
 }
