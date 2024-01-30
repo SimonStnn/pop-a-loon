@@ -1,4 +1,4 @@
-import { Message } from "./const";
+import { Message, storageKey } from "./const";
 
 export function secondsToMilliseconds(seconds: number) {
   return seconds * 1000;
@@ -18,11 +18,28 @@ export function sendMessage(message: Message) {
   } catch (e) {}
 }
 
-export function incrementBalloonCount() {
-  chrome.storage.sync.get(["balloonCount"], (result) => {
-    const balloonCount = (result.balloonCount || 0) + 1;
-    chrome.storage.sync.set({ balloonCount });
+class StorageManager {
+  private _storage: chrome.storage.SyncStorageArea;
 
-    sendMessage({ action: "updateCounter", balloonCount });
-  });
+  constructor() {
+    this._storage = chrome.storage.sync;
+  }
+
+  get(key: storageKey): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._storage.get([key], (result) => {
+        resolve(result[key]);
+      });
+    });
+  }
+
+  set(key: storageKey, value: any): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._storage.set({ [key]: value }, () => {
+        resolve();
+      });
+    });
+  }
 }
+
+export const storage = new StorageManager();
