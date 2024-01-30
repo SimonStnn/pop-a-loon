@@ -1,3 +1,5 @@
+import { storage } from "../utils";
+
 const balloonCount = document.getElementById("balloonCount")!;
 
 function setBalloonCount(count: number) {
@@ -7,8 +9,8 @@ function setBalloonCount(count: number) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  chrome.storage.sync.get("balloonCount", (result) => {
-    setBalloonCount(result.balloonCount || 0);
+  storage.get("balloonCount").then((result) => {
+    setBalloonCount(result.balloonCount);
   });
 });
 
