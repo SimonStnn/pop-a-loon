@@ -1,4 +1,5 @@
 const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -26,5 +27,11 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/popup/index.html", // Specify the path to your HTML template
+      filename: "./popup.html", // Specify the output filename
+    }),
+  ],
   devtool: "source-map",
 };

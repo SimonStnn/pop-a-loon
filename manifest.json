@@ -6,7 +6,7 @@
   "action": {
     "default_icon": "./resources/images/icon.png",
     "default_title": "Pop-a-loon",
-    "default_popup": "./src/popup/index.html"
+    "default_popup": "./dist/popup.html"
   },
   "content_scripts": [
     {
