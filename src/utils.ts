@@ -1,5 +1,13 @@
 import { Message } from "./const";
 
+export function secondsToMilliseconds(seconds: number) {
+  return seconds * 1000;
+}
+
+export function minutesToMilliseconds(minutes: number) {
+  return secondsToMilliseconds(minutes * 60);
+}
+
 export function generateRandomNumber(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
