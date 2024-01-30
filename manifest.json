@@ -22,10 +22,6 @@
     {
       "matches": ["<all_urls>"],
       "resources": ["resources/audio/pop.mp3"]
-    },
-    {
-      "matches": ["<all_urls>"],
-      "resources": ["src/content/style.css"]
     }
   ],
   "manifest_version": 3
