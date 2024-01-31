@@ -1,4 +1,5 @@
 import { storage } from "../utils";
+import "./style.css";
 
 const balloonCount = document.getElementById("balloonCount")!;
 
