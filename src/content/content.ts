@@ -13,7 +13,7 @@ import "./style.css";
 
   document.body.appendChild(balloonContainer);
 
-  const generateRandomInterval = () => generateRandomNumber(1000, 2000);
+  const generateRandomInterval = () => generateRandomNumber(0, minutesToMilliseconds(10));
 
   let balloonInterval = setTimeout(function createAndRiseBalloon() {
     const balloon = new Balloon();
