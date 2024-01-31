@@ -37,5 +37,8 @@
       "resources": ["resources/audio/pop.mp3"]
     }
   ],
+  "background": {
+    "service_worker": "./dist/background.js"
+  },
   "manifest_version": 3
 }
