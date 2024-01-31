@@ -2,16 +2,28 @@ import Balloon, { balloonContainer } from "../balloon";
 import { generateRandomNumber, minutesToMilliseconds } from "../utils";
 import "./style.css";
 
-document.body.appendChild(balloonContainer);
+(() => {
+  // Prevent multiple script loads
+  if (
+    document.body.id === "pop-a-loon" ||
+    document.body.contains(balloonContainer)
+  ) {
+    return;
+  }
 
-const generateRandomInterval = () =>
-  generateRandomNumber(minutesToMilliseconds(5), minutesToMilliseconds(10));
+  document.body.appendChild(balloonContainer);
 
-let balloonInterval = setTimeout(function createAndRiseBalloon() {
-  const balloon = new Balloon();
-  balloon.rise();
+  const generateRandomInterval = () => generateRandomNumber(0, minutesToMilliseconds(10));
 
-  // Set the next interval
-  clearInterval(balloonInterval);
-  balloonInterval = setTimeout(createAndRiseBalloon, generateRandomInterval());
-}, generateRandomInterval());
+  let balloonInterval = setTimeout(function createAndRiseBalloon() {
+    const balloon = new Balloon();
+    balloon.rise();
+
+    // Set the next interval
+    clearInterval(balloonInterval);
+    balloonInterval = setTimeout(
+      createAndRiseBalloon,
+      generateRandomInterval()
+    );
+  }, generateRandomInterval());
+})();
