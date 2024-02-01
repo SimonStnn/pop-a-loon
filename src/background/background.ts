@@ -2,7 +2,7 @@ import { Message } from "../const";
 import { storage } from "../utils";
 
 (async () => {
-  if (typeof window === "undefined") return;
+  if (typeof window !== "undefined") return;
 
   chrome.action.setBadgeText({
     text: (await storage.get("balloonCount")).balloonCount.toString(),
