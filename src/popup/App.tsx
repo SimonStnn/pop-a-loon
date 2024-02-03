@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { storage } from "../utils";
 import { Message } from "../const";
+import { Link } from "react-router-dom";
 
 const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);
@@ -29,6 +30,8 @@ const App: React.FC = () => {
       </header>
       <main>
         <p>Balloons Popped: {balloonCount}</p>
+
+        <Link to={"/settings"}>Settings</Link>
       </main>
     </>
   );
