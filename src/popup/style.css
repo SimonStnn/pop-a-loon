@@ -18,7 +18,7 @@
   --border: hsl(240 5.9% 90%);
   --input: hsl(240 5.9% 90%);
   --ring: hsl(346.8 77.2% 49.8%);
-  --radius: hsl(0.5rem);
+  --radius: 0.5rem;
 }
 
 html,
@@ -68,4 +68,31 @@ main {
 
 .navigation-icon:hover {
   opacity: 1;
+}
+
+.settings-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+
+  color: var(--primary-foreground);
+  background-color: var(--primary);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.danger {
+  color: var(--destructive-foreground);
+  background-color: var(--destructive);
 }
