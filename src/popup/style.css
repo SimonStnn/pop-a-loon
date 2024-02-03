@@ -1,3 +1,26 @@
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(240 10% 3.9%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(240 10% 3.9%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(240 10% 3.9%);
+  --primary: hsl(346.8 77.2% 49.8%);
+  --primary-foreground: hsl(355.7 100% 97.3%);
+  --secondary: hsl(240 4.8% 95.9%);
+  --secondary-foreground: hsl(240 5.9% 10%);
+  --muted: hsl(240 4.8% 95.9%);
+  --muted-foreground: hsl(240 3.8% 46.1%);
+  --accent: hsl(240 4.8% 95.9%);
+  --accent-foreground: hsl(240 5.9% 10%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(240 5.9% 90%);
+  --input: hsl(240 5.9% 90%);
+  --ring: hsl(346.8 77.2% 49.8%);
+  --radius: hsl(0.5rem);
+}
+
 html,
 body {
   --width: 256px;
@@ -5,6 +28,9 @@ body {
   width: var(--width);
   margin: 0;
   padding: 0;
+
+  color: var(--foreground);
+  background-color: var(--background);
 }
 
 header {
@@ -12,18 +38,34 @@ header {
   justify-content: center;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: #ff5a5a;
+
+  color: var(--primary-foreground);
+  background-color: var(--primary);
 }
 
 header h1 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #eee;
 }
-
 
 main {
   margin: auto;
   width: 90%;
+}
+
+.navigation-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  opacity: 0.8;
+
+  padding: 0.4rem;
+  color: var(--primary-foreground);
+}
+
+.navigation-icon:hover {
+  opacity: 1;
 }
