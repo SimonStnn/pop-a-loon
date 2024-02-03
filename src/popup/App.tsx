@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { storage } from "../utils";
 import { Message } from "../const";
-import { Link } from "react-router-dom";
+import NavigationIcon from "../components/NavigationIcon";
 
 const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);
@@ -26,12 +27,11 @@ const App: React.FC = () => {
   return (
     <>
       <header>
+        <NavigationIcon to={"/settings"} icon={faGear} side={"right"} />
         <h1>Pop-a-loon</h1>
       </header>
       <main>
         <p>Balloons Popped: {balloonCount}</p>
-
-        <Link to={"/settings"}>Settings</Link>
       </main>
     </>
   );
