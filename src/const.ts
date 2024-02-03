@@ -8,4 +8,8 @@ type UpdateCounterMessage = {
   balloonCount: number;
 };
 
-export type Message = UpdateCounterMessage;
+type ResetCounterMessage = {
+  action: "resetCounter";
+};
+
+export type Message = UpdateCounterMessage | ResetCounterMessage;
