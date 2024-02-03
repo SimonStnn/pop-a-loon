@@ -7,10 +7,20 @@ export default () => {
     <>
       <header>
         <h1>Settings</h1>
-      <NavigationIcon to={"/"} icon={faArrowLeft} side={"left"} />
+        <NavigationIcon to={"/"} icon={faArrowLeft} side={"left"} />
       </header>
       <main>
-        sttings!$
+        <div className="settings-container">
+          <label>Reset Balloons Popped</label>
+          <button
+            className="button danger"
+            onClick={() => {
+              chrome.runtime.sendMessage({ action: "resetCounter" });
+            }}
+          >
+            Reset
+          </button>
+        </div>
       </main>
     </>
   );
