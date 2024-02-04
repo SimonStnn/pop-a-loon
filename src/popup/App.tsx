@@ -17,7 +17,7 @@ const App: React.FC = () => {
       if (message.action === "updateCounter") {
         setBalloonCount(message.balloonCount);
       }
-    }
+    },
   );
 
   useEffect(() => {
@@ -26,9 +26,9 @@ const App: React.FC = () => {
 
   return (
     <>
-      <header>
+      <header className="flex items-center justify-center bg-primary px-2 py-4 text-primary-foreground">
         <NavigationIcon to={"/settings"} icon={faGear} side={"right"} />
-        <h1>Pop-a-loon</h1>
+        <h1 className="text-xl font-bold">Pop-a-loon</h1>
       </header>
       <main>
         <p>Balloons Popped: {balloonCount}</p>
