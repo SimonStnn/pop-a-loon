@@ -26,11 +26,11 @@ const App: React.FC = () => {
 
   return (
     <>
-      <header className="flex items-center justify-center bg-primary px-2 py-4 text-primary-foreground">
+      <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
         <NavigationIcon to={"/settings"} icon={faGear} side={"right"} />
         <h1 className="text-xl font-bold">Pop-a-loon</h1>
       </header>
-      <main>
+      <main className="m-auto w-4/5">
         <p>Balloons Popped: {balloonCount}</p>
       </main>
     </>

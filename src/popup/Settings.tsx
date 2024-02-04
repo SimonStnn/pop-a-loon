@@ -5,15 +5,15 @@ import NavigationIcon from "../components/NavigationIcon";
 export default () => {
   return (
     <>
-      <header>
-        <h1>Settings</h1>
+      <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
         <NavigationIcon to={"/"} icon={faArrowLeft} side={"left"} />
+        <h1 className="text-xl font-bold">Settings</h1>
       </header>
-      <main>
-        <div className="settings-container">
-          <label>Reset Balloons Popped</label>
+      <main className="m-auto my-2 flex w-4/5 flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <label>Reset Balloons</label>
           <button
-            className="button danger"
+            className="rounded-md bg-destructive px-2 py-1 text-destructive-foreground"
             onClick={() => {
               chrome.runtime.sendMessage({ action: "resetCounter" });
             }}
