@@ -30,7 +30,7 @@ const App: React.FC = () => {
         <NavigationIcon to={"/settings"} icon={faGear} side={"right"} />
         <h1 className="text-xl font-bold">Pop-a-loon</h1>
       </header>
-      <main className="m-auto w-4/5">
+      <main  className="m-auto my-2 flex w-4/5 flex-col gap-2">
         <p>Balloons Popped: {balloonCount}</p>
       </main>
     </>
