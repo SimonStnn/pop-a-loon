@@ -7,20 +7,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-dev": "webpack --mode development",
     "build-dev-watch": "webpack --mode development --watch",
-    "build-production": "webpack --mode production"
+    "build-production": "webpack --mode production",
+    "prepare": "husky"
   },
   "author": "",
   "license": "Apache-2.0",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "echo 'Running pre-commit hook' && lint-staged"
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,jsx,ts,tsx}": "prettier --write"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
