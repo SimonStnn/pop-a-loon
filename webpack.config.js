@@ -38,4 +38,5 @@ module.exports = {
       filename: "./popup.html", // Specify the output filename
     }),
   ],
+  devtool: "source-map",
 };
