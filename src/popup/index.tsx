@@ -9,10 +9,12 @@ import "./style.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
-  <Router>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/settings" element={<Settings />} />
-    </Routes>
-  </Router>
+  <div className="w-[256px]">
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/settings" element={<Settings />} />
+      </Routes>
+    </Router>
+  </div>,
 );
