@@ -23,17 +23,17 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://*/*", "http://*/*"],
       "js": ["./dist/content.js"]
     }
   ],
   "web_accessible_resources": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://*/*", "http://*/*"],
       "resources": ["resources/images/icon.png"]
     },
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://*/*", "http://*/*"],
       "resources": ["resources/audio/pop.mp3"]
     }
   ],
