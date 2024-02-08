@@ -1,22 +1,18 @@
-import { Message } from "../const";
-import { storage } from "../utils";
+import { Message } from '../const';
+import { storage, sendMessage } from '../utils';
 
-(async () => {
-  if (typeof window !== "undefined") return;
-
-  chrome.action.setBadgeText({
-    text: (await storage.get("balloonCount")).balloonCount.toString(),
-  });
-})();
+const resetCounter = () => {
+  storage.set('balloonCount', { balloonCount: 0 });
+  chrome.action.setBadgeText({ text: '0' });
+};
 
 chrome.runtime.onMessage.addListener(
   (message: Message, sender, sendResponse) => {
     switch (message.action) {
-      case "resetCounter":
-        storage.set("balloonCount", { balloonCount: 0 });
-        chrome.action.setBadgeText({ text: "0" });
+      case 'resetCounter':
+        resetCounter();
         break;
-      case "updateCounter":
+      case 'updateCounter':
         chrome.action.setBadgeText({
           text: message.balloonCount.toString(),
         });
@@ -24,3 +20,18 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+(async () => {
+  if (typeof window !== 'undefined') return;
+
+  let balloonCount = (await storage.get('balloonCount'))?.balloonCount;
+
+  if (balloonCount === undefined) {
+    resetCounter();
+    balloonCount = 0;
+  }
+
+  chrome.action.setBadgeText({
+    text: balloonCount.toString(),
+  });
+})();
