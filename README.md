@@ -13,3 +13,5 @@ A fun Chrome extension that lets balloons rise on your screen
 </div>
 
 ---
+
+![Screenshot-1](./resources/images/Screenshot-1.png)

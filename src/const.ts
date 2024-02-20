@@ -1,15 +1,14 @@
-export const balloonImageUrl = chrome.runtime.getURL("resources/images/icon.png");
-export const popSoundUrl = chrome.runtime.getURL("resources/audio/pop.mp3");
+export const popSoundUrl = chrome.runtime.getURL('resources/audio/pop.mp3');
 
-export type storageKey = "balloonCount";
+export type storageKey = 'balloonCount';
 
 type UpdateCounterMessage = {
-  action: "updateCounter";
+  action: 'updateCounter';
   balloonCount: number;
 };
 
 type ResetCounterMessage = {
-  action: "resetCounter";
+  action: 'resetCounter';
 };
 
 export type Message = UpdateCounterMessage | ResetCounterMessage;
