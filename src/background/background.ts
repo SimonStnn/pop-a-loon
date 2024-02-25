@@ -35,6 +35,7 @@ chrome.runtime.onMessage.addListener(
     resetCounter();
     balloonCount = 0;
   }
-
+  chrome.action.setBadgeBackgroundColor({ color: '#7aa5eb' });
+  chrome.action.setBadgeTextColor({ color: '#26282b' });
   setBadgeText(balloonCount);
 })();
