@@ -1,4 +1,7 @@
 export const popSoundUrl = chrome.runtime.getURL('resources/audio/pop.mp3');
+export const balloonImageUrl = chrome.runtime.getURL(
+  'resources/icons/icon-128.png'
+);
 
 export type storageKey = 'balloonCount';
 
