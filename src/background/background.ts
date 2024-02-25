@@ -1,9 +1,16 @@
+import { abbreviateNumber } from 'js-abbreviation-number';
 import { Message } from '../const';
 import { storage, sendMessage } from '../utils';
 
 const resetCounter = () => {
   storage.set('balloonCount', { balloonCount: 0 });
   chrome.action.setBadgeText({ text: '0' });
+};
+
+const setBadgeText = (count: number) => {
+  chrome.action.setBadgeText({
+    text: abbreviateNumber(count),
+  });
 };
 
 chrome.runtime.onMessage.addListener(
@@ -13,9 +20,7 @@ chrome.runtime.onMessage.addListener(
         resetCounter();
         break;
       case 'updateCounter':
-        chrome.action.setBadgeText({
-          text: message.balloonCount.toString(),
-        });
+        setBadgeText(message.balloonCount);
         break;
     }
   }
@@ -31,7 +36,5 @@ chrome.runtime.onMessage.addListener(
     balloonCount = 0;
   }
 
-  chrome.action.setBadgeText({
-    text: balloonCount.toString(),
-  });
+  setBadgeText(balloonCount);
 })();
