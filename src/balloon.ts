@@ -27,9 +27,6 @@ export default class Balloon {
 
     this.duration = generateRandomNumber(10000, 15000);
 
-    // Make the balloon rise
-    this.rise();
-
     // Add an event listener to the balloon
     this.element.addEventListener('click', this.pop.bind(this));
   }
