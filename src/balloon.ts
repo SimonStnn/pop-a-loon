@@ -34,6 +34,10 @@ export default class Balloon {
     this.element.addEventListener('click', this.pop.bind(this));
   }
 
+  public isRising() {
+    return this.element.style.animationName === 'rise';
+  }
+
   public rise() {
     this.element.style.animation = `rise ${this.duration}ms linear`;
 
