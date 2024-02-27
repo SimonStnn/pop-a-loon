@@ -44,6 +44,15 @@
       "resources": [
         "resources/audio/pop.mp3"
       ]
+    },
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "resources": [
+        "resources/icons/icon-128.png"
+      ]
     }
   ],
   "background": {
