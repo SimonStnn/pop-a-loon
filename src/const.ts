@@ -3,7 +3,11 @@ export const balloonImageUrl = chrome.runtime.getURL(
   'resources/icons/icon-128.png'
 );
 
-export type storageKey = 'balloonCount';
+export type StorageStructure = {
+  balloonCount: { balloonCount: number };
+};
+
+export type storageKey = keyof StorageStructure;
 
 type UpdateCounterMessage = {
   action: 'updateCounter';
