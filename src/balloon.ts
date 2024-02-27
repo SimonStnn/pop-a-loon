@@ -6,7 +6,6 @@ balloonContainer.id = 'balloon-container';
 
 export default class Balloon {
   private element: HTMLDivElement = document.createElement('div');
-  private currentTopOffset: number = 100;
   private duration: number;
   private popSound: HTMLAudioElement = new Audio(popSoundUrl);
 
