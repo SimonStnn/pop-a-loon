@@ -4,13 +4,18 @@ import { storage, sendMessage } from '../utils';
 
 const resetCounter = () => {
   storage.set('balloonCount', { balloonCount: 0 });
-  chrome.action.setBadgeText({ text: '0' });
+  setBadgeNumber(0);
 };
 
-const setBadgeText = (count: number) => {
+const setBadgeNumber = (count: number) => {
   chrome.action.setBadgeText({
     text: abbreviateNumber(count),
   });
+};
+
+const updateBadgeColors = () => {
+  chrome.action.setBadgeBackgroundColor({ color: '#7aa5eb' });
+  chrome.action.setBadgeTextColor({ color: '#26282b' });
 };
 
 chrome.runtime.onMessage.addListener(
@@ -20,22 +25,19 @@ chrome.runtime.onMessage.addListener(
         resetCounter();
         break;
       case 'updateCounter':
-        setBadgeText(message.balloonCount);
+        setBadgeNumber(message.balloonCount);
+        updateBadgeColors();
         break;
     }
   }
 );
 
-(async () => {
-  if (typeof window !== 'undefined') return;
-
-  let balloonCount = (await storage.get('balloonCount'))?.balloonCount;
-
+chrome.runtime.onInstalled.addListener(async () => {
+  const balloonCount = (await storage.get('balloonCount'))?.balloonCount;
   if (balloonCount === undefined) {
     resetCounter();
-    balloonCount = 0;
   }
-  chrome.action.setBadgeBackgroundColor({ color: '#7aa5eb' });
-  chrome.action.setBadgeTextColor({ color: '#26282b' });
-  setBadgeText(balloonCount);
-})();
+
+  setBadgeNumber(balloonCount || 0);
+  updateBadgeColors();
+});
