@@ -7,7 +7,7 @@ const resetCounter = () => {
   chrome.action.setBadgeText({ text: '0' });
 };
 
-const setBadgeText = (count: number) => {
+const setBadgeNumber = (count: number) => {
   chrome.action.setBadgeText({
     text: abbreviateNumber(count),
   });
@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(
         resetCounter();
         break;
       case 'updateCounter':
-        setBadgeText(message.balloonCount);
+        setBadgeNumber(message.balloonCount);
         updateBadgeColors();
         break;
     }
