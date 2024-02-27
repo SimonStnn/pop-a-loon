@@ -37,4 +37,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   if (balloonCount === undefined) {
     resetCounter();
   }
+
+  setBadgeNumber((await storage.get('balloonCount'))?.balloonCount);
+  updateBadgeColors();
 });
