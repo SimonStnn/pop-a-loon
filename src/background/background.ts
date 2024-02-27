@@ -4,7 +4,7 @@ import { storage, sendMessage } from '../utils';
 
 const resetCounter = () => {
   storage.set('balloonCount', { balloonCount: 0 });
-  chrome.action.setBadgeText({ text: '0' });
+  setBadgeNumber(0);
 };
 
 const setBadgeNumber = (count: number) => {
