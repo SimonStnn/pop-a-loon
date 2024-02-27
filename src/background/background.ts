@@ -13,6 +13,11 @@ const setBadgeText = (count: number) => {
   });
 };
 
+const updateBadgeColors = () => {
+  chrome.action.setBadgeBackgroundColor({ color: '#7aa5eb' });
+  chrome.action.setBadgeTextColor({ color: '#26282b' });
+};
+
 chrome.runtime.onMessage.addListener(
   (message: Message, sender, sendResponse) => {
     switch (message.action) {
@@ -21,21 +26,15 @@ chrome.runtime.onMessage.addListener(
         break;
       case 'updateCounter':
         setBadgeText(message.balloonCount);
+        updateBadgeColors();
         break;
     }
   }
 );
 
-(async () => {
-  if (typeof window !== 'undefined') return;
-
-  let balloonCount = (await storage.get('balloonCount'))?.balloonCount;
-
+chrome.runtime.onInstalled.addListener(async () => {
+  const balloonCount = (await storage.get('balloonCount'))?.balloonCount;
   if (balloonCount === undefined) {
     resetCounter();
-    balloonCount = 0;
   }
-  chrome.action.setBadgeBackgroundColor({ color: '#7aa5eb' });
-  chrome.action.setBadgeTextColor({ color: '#26282b' });
-  setBadgeText(balloonCount);
-})();
+});
