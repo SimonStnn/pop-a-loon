@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import { storage } from '../utils';
+import storage from '../storage';
 import { Message } from '../const';
 import NavigationIcon from '../components/NavigationIcon';
 
