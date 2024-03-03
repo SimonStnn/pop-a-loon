@@ -18,4 +18,8 @@ type ResetCounterMessage = {
   action: 'resetCounter';
 };
 
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
+
 export type Message = UpdateCounterMessage | ResetCounterMessage;
