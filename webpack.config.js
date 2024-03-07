@@ -1,6 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+let mode;
+if (process.env.npm_lifecycle_script.includes('development'))
+  mode = 'development';
+else mode = 'production';
+
 module.exports = {
   entry: {
     background: './src/background/background.ts',
@@ -38,4 +43,5 @@ module.exports = {
       filename: './popup.html', // Specify the output filename
     }),
   ],
+  devtool: mode == 'development' ? 'inline-source-map' : '',
 };
