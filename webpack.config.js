@@ -7,6 +7,7 @@ if (process.env.npm_lifecycle_script.includes('development'))
 else mode = 'production';
 
 module.exports = {
+  mode,
   entry: {
     background: './src/background/background.ts',
     content: './src/content/content.ts',
