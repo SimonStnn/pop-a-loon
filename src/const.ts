@@ -22,4 +22,11 @@ type ResetCounterMessage = {
   action: 'resetCounter';
 };
 
-export type Message = UpdateCounterMessage | ResetCounterMessage;
+type SpawnBalloonMessage = {
+  action: 'spawnBalloon';
+};
+
+export type Message =
+  | UpdateCounterMessage
+  | ResetCounterMessage
+  | SpawnBalloonMessage;
