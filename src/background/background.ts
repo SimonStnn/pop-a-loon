@@ -1,6 +1,7 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { Message } from '../const';
 import storage from '../storage';
+import { sleep } from '../utils';
 
 const resetCounter = () => {
   storage.set('balloonCount', { balloonCount: 0 });
@@ -40,4 +41,30 @@ chrome.runtime.onInstalled.addListener(async () => {
 
   setBadgeNumber(balloonCount || 0);
   updateBadgeColors();
+
+  let i = 0;
+  while (true) {
+    await sleep(1000);
+    chrome.tabs.query({ active: true }, (tabs) => {
+      for (let i = 0; i < tabs.length; i++) {
+        const tab = tabs[i];
+        if (!tab.id) continue;
+        console.log(`Sending to`, tab, tab.url, tab.pendingUrl);
+
+        try {
+          chrome.tabs.sendMessage(
+            tab.id,
+            { action: 'spawnBalloon' },
+            (response) => {}
+          );
+        } catch (e) {
+          console.log('Error', e);
+        }
+      }
+    });
+  }
 });
+
+(async () => {
+  if (typeof window !== 'undefined') return;
+})();
