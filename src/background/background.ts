@@ -1,7 +1,7 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { Message } from '../const';
 import storage from '../storage';
-import { sleep } from '../utils';
+import { generateRandomNumber, sleep } from '../utils';
 
 const resetCounter = () => {
   storage.set('balloonCount', { balloonCount: 0 });
@@ -46,21 +46,20 @@ chrome.runtime.onInstalled.addListener(async () => {
   while (true) {
     await sleep(1000);
     chrome.tabs.query({ active: true }, (tabs) => {
-      for (let i = 0; i < tabs.length; i++) {
-        const tab = tabs[i];
-        if (!tab.id) continue;
-        console.log(`Sending spawnBalloon to`, tab);
+      const num = Math.round(generateRandomNumber(0, tabs.length - 1));
+      const tab = tabs[num];
+      if (!tab.id) return;
+      console.log(`Sending spawnBalloon to`, tab);
 
-        chrome.tabs.sendMessage(
-          tab.id,
-          { action: 'spawnBalloon' },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              chrome.runtime.lastError = undefined;
-            }
+      chrome.tabs.sendMessage(
+        tab.id,
+        { action: 'spawnBalloon' },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            chrome.runtime.lastError = undefined;
           }
-        );
-      }
+        }
+      );
     });
   }
 });
