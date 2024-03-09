@@ -42,7 +42,6 @@ chrome.runtime.onInstalled.addListener(async () => {
   setBadgeNumber(balloonCount || 0);
   updateBadgeColors();
 
-  let i = 0;
   while (true) {
     await sleep(generateRandomNumber(0, minutesToMilliseconds(10)));
     chrome.tabs.query({ active: true }, (tabs) => {
