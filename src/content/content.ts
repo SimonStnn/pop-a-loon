@@ -14,7 +14,6 @@ import './style.css';
   chrome.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
       sendResponse();
-      console.log('message', message);
       if (message.action !== 'spawnBalloon') return;
       const balloon = new Balloon();
       balloon.rise();
