@@ -19,21 +19,7 @@ const updateBadgeColors = () => {
   chrome.action.setBadgeTextColor({ color: '#26282b' });
 };
 
-chrome.runtime.onMessage.addListener(
-  (message: Message, sender, sendResponse) => {
-    switch (message.action) {
-      case 'resetCounter':
-        resetCounter();
-        break;
-      case 'updateCounter':
-        setBadgeNumber(message.balloonCount);
-        updateBadgeColors();
-        break;
-    }
-  }
-);
-
-chrome.runtime.onInstalled.addListener(async () => {
+const setup = async () => {
   const balloonCount = (await storage.get('balloonCount'))?.balloonCount;
   if (balloonCount === undefined) {
     resetCounter();
@@ -41,6 +27,12 @@ chrome.runtime.onInstalled.addListener(async () => {
 
   setBadgeNumber(balloonCount || 0);
   updateBadgeColors();
+};
+
+let loopRunning = false;
+const loop = async () => {
+  if (loopRunning) return;
+  loopRunning = true;
 
   while (true) {
     await sleep(generateRandomNumber(0, minutesToMilliseconds(10)));
@@ -61,4 +53,28 @@ chrome.runtime.onInstalled.addListener(async () => {
       );
     });
   }
+};
+
+chrome.runtime.onMessage.addListener(
+  (message: Message, sender, sendResponse) => {
+    switch (message.action) {
+      case 'resetCounter':
+        resetCounter();
+        break;
+      case 'updateCounter':
+        setBadgeNumber(message.balloonCount);
+        updateBadgeColors();
+        break;
+    }
+  }
+);
+
+chrome.runtime.onStartup.addListener(async () => {
+  await setup();
+  await loop();
+});
+
+chrome.runtime.onInstalled.addListener(async () => {
+  await setup();
+  await loop();
 });
