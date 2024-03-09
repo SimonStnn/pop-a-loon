@@ -1,7 +1,7 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { Message } from '../const';
 import storage from '../storage';
-import { generateRandomNumber, sleep } from '../utils';
+import { generateRandomNumber, minutesToMilliseconds, sleep } from '../utils';
 
 const resetCounter = () => {
   storage.set('balloonCount', { balloonCount: 0 });
@@ -44,7 +44,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 
   let i = 0;
   while (true) {
-    await sleep(1000);
+    await sleep(generateRandomNumber(0, minutesToMilliseconds(10)));
     chrome.tabs.query({ active: true }, (tabs) => {
       const num = Math.round(generateRandomNumber(0, tabs.length - 1));
       const tab = tabs[num];
