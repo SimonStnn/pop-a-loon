@@ -62,7 +62,3 @@ chrome.runtime.onInstalled.addListener(async () => {
     });
   }
 });
-
-(async () => {
-  if (typeof window !== 'undefined') return;
-})();
