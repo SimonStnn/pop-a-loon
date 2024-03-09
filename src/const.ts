@@ -9,6 +9,10 @@ export type StorageStructure = {
 
 export type storageKey = keyof StorageStructure;
 
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
+
 type UpdateCounterMessage = {
   action: 'updateCounter';
   balloonCount: number;
@@ -18,8 +22,11 @@ type ResetCounterMessage = {
   action: 'resetCounter';
 };
 
-export type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
+type SpawnBalloonMessage = {
+  action: 'spawnBalloon';
+};
 
-export type Message = UpdateCounterMessage | ResetCounterMessage;
+export type Message =
+  | UpdateCounterMessage
+  | ResetCounterMessage
+  | SpawnBalloonMessage;
