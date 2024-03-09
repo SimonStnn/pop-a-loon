@@ -18,6 +18,10 @@ export function generateRandomNumber(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function sendMessage(message: Message) {
   try {
     chrome.runtime.sendMessage(message);
