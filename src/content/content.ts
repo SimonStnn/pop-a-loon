@@ -13,8 +13,11 @@ import './style.css';
 
   chrome.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
+      // Always call sendResponse, this is required
       sendResponse();
+      // If the message is not spawnBalloon, ignore it
       if (message.action !== 'spawnBalloon') return;
+      // Create a new balloon and make it rise
       const balloon = new Balloon();
       balloon.rise();
     }
