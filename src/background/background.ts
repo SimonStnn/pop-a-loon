@@ -51,15 +51,15 @@ chrome.runtime.onInstalled.addListener(async () => {
         if (!tab.id) continue;
         console.log(`Sending to`, tab, tab.url, tab.pendingUrl);
 
-        try {
-          chrome.tabs.sendMessage(
-            tab.id,
-            { action: 'spawnBalloon' },
-            (response) => {}
-          );
-        } catch (e) {
-          console.log('Error', e);
-        }
+        chrome.tabs.sendMessage(
+          tab.id,
+          { action: 'spawnBalloon' },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              chrome.runtime.lastError = undefined;
+            }
+          }
+        );
       }
     });
   }
