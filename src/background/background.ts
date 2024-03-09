@@ -49,7 +49,7 @@ chrome.runtime.onInstalled.addListener(async () => {
       for (let i = 0; i < tabs.length; i++) {
         const tab = tabs[i];
         if (!tab.id) continue;
-        console.log(`Sending to`, tab, tab.url, tab.pendingUrl);
+        console.log(`Sending spawnBalloon to`, tab);
 
         chrome.tabs.sendMessage(
           tab.id,
