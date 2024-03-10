@@ -3,9 +3,10 @@ import Balloon, { balloonContainer } from '@/balloon';
 import './style.css';
 
 (() => {
-  // Prevent multiple script loads
   if (
+    // Prevent running in popup
     document.body.id === 'pop-a-loon' ||
+    // Prevent multiple script loads
     document.body.contains(balloonContainer)
   ) {
     return;
