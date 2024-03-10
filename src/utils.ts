@@ -1,4 +1,4 @@
-import { Message } from './const';
+import { Message } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
