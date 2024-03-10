@@ -8,5 +8,20 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@components/*": [
+        "./components/*"
+      ],
+      "@const": [
+        "./const"
+      ],
+      "@utils": [
+        "./utils"
+      ],
+    },
   }
 }

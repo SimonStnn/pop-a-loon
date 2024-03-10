@@ -1,7 +1,7 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
-import { Message } from '../const';
-import storage from '../storage';
-import { generateRandomNumber, minutesToMilliseconds, sleep } from '../utils';
+import { Message } from '@const';
+import { generateRandomNumber, minutesToMilliseconds, sleep } from '@utils';
+import storage from '@/storage';
 
 const resetCounter = () => {
   storage.set('balloonCount', { balloonCount: 0 });
