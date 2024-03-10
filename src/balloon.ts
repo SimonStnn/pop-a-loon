@@ -1,6 +1,6 @@
-import { generateRandomNumber, sendMessage } from './utils';
-import storage from './storage';
-import { balloonImageUrl, popSoundUrl } from './const';
+import { generateRandomNumber, sendMessage } from '@utils';
+import { balloonImageUrl, popSoundUrl } from '@const';
+import storage from '@/storage';
 
 export const balloonContainer = document.createElement('div');
 balloonContainer.id = 'balloon-container';

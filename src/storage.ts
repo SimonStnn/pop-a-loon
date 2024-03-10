@@ -1,4 +1,4 @@
-import { storageKey, StorageStructure } from './const';
+import { storageKey, StorageStructure } from '@const';
 
 class StorageManager {
   private _storage: chrome.storage.SyncStorageArea;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import storage from '../storage';
-import { Message } from '../const';
-import NavigationIcon from '../components/NavigationIcon';
+import storage from '@/storage';
+import { Message } from '@const';
+import NavigationIcon from '@components/NavigationIcon';
 
 const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);

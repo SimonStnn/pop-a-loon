@@ -1,5 +1,5 @@
-import Balloon, { balloonContainer } from '../balloon';
-import { Message } from '../const';
+import { Message } from '@const';
+import Balloon, { balloonContainer } from '@/balloon';
 import './style.css';
 
 (() => {
