@@ -25,4 +25,9 @@ export const schema = new mongoose.Schema({
   },
 });
 
+schema.pre('save', function (next) {
+  this.updatedAt = new Date();
+  next();
+});
+
 export default mongoose.model(name, schema);
