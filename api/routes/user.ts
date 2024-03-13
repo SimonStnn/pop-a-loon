@@ -16,9 +16,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 router.get('/:id/count', async (req: Request, res: Response) => {
-  const id = req.params.id;
-
   try {
+    const id = req.params.id;
+
     const user = await Count.findById(id);
 
     res.json(user);
