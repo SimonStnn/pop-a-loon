@@ -26,4 +26,20 @@ router.post('/new', async (req: Request, res: Response) => {
   }
 });
 
+router.put('/:id', async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const { username, email, password } = req.query;
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { username, email, password },
+      { new: true }
+    );
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+});
+
 export default router;
