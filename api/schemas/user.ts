@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Count from './count';
 
 export const name = 'User';
 
@@ -27,10 +28,12 @@ export const schema = new mongoose.Schema({
 });
 
 schema.pre('save', function (next) {
+  const now = new Date();
   if (this.isNew) {
-    this.createdAt = new Date();
+    const count = new Count({ _id: this._id });
+    count.save();
   }
-  this.updatedAt = new Date();
+  this.updatedAt = now;
   next();
 });
 
