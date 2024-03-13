@@ -38,7 +38,16 @@ router.get('/:id/count', async (req: Request, res: Response) => {
 
     const user = await Count.findById(id);
 
-    res.json(user);
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      id: user.id,
+      count: user.count,
+      updatedAt: user.updatedAt,
+    });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
