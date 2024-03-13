@@ -2,12 +2,12 @@ import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-import UserRoutes from './routes/user';
+import ApiRoutes from './routes/api';
 
 const app = express();
 app.use(express.json());
 
-app.use('/api/user', UserRoutes);
+app.use('/api', ApiRoutes);
 
 const main = async () => {
   const db = await mongoose.connect(process.env.DATABASE_URL!);
