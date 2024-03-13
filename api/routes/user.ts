@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import User from '../schemas/user';
+import Count from '../schemas/count';
 
 const router = express.Router();
 
@@ -8,6 +9,18 @@ router.get('/:id', async (req: Request, res: Response) => {
 
   try {
     const user = await User.findById(id);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+});
+
+router.get('/:id/count', async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  try {
+    const user = await Count.findById(id);
+
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
