@@ -5,9 +5,9 @@ import Count from '../schemas/count';
 const router = express.Router();
 
 router.get('/:id', async (req: Request, res: Response) => {
-  const id = req.params.id;
-
   try {
+    const id = req.params.id;
+
     const user = await User.findById(id);
     res.json(user);
   } catch (error) {
