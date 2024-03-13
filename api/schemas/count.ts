@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
-import { name as User } from './user';
 
 export const name = 'Count';
 
 export const schema = new mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: User,
+    ref: 'User',
   },
   count: {
     type: Number,
