@@ -40,10 +40,10 @@ router.post('/new', async (req: Request, res: Response) => {
 });
 
 router.put('/:id', async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const { username, email, password } = req.query;
-
   try {
+    const id = req.params.id;
+    const { username, email, password } = req.query;
+
     const user = await User.findByIdAndUpdate(
       id,
       { username, email, password },
