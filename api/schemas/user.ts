@@ -26,6 +26,9 @@ export const schema = new mongoose.Schema({
 });
 
 schema.pre('save', function (next) {
+  if (this.isNew) {
+    this.createdAt = new Date();
+  }
   this.updatedAt = new Date();
   next();
 });
