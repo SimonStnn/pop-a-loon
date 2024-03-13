@@ -36,6 +36,8 @@ router.put('/:id', async (req: Request, res: Response) => {
       { username, email, password },
       { new: true }
     );
+    await user?.save();
+
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
