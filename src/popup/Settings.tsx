@@ -1,6 +1,7 @@
 import React from 'react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import NavigationIcon from '@components/NavigationIcon';
+import { Slider } from '@/components/ui/slider';
 
 export default () => {
   return (
@@ -20,6 +21,11 @@ export default () => {
           >
             Reset
           </button>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <label>Volume</label>
+          <Slider defaultValue={[33]} max={100} step={1} />
         </div>
       </main>
     </>
