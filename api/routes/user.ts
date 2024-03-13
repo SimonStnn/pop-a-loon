@@ -59,7 +59,20 @@ router.post('/new', async (req: Request, res: Response) => {
 
     const user = new User({ username, email, password });
     await user.save();
-    res.json(user);
+    const count = await Count.findById(user.id);
+
+    if (!count) {
+      throw new Error('Something went wrong');
+    }
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      count: count.count,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
