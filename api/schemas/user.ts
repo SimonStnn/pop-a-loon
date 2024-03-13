@@ -18,6 +18,7 @@ export const schema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+    immutable: true,
   },
   updatedAt: {
     type: Date,
