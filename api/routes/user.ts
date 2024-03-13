@@ -112,9 +112,26 @@ router.put('/:id', async (req: Request, res: Response) => {
       { username, email, password },
       { new: true }
     );
-    await user?.save();
+    const count = await Count.findById(id);
 
-    res.json(user);
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    } else if (!count) {
+      res.status(404).json({ error: 'Count not found' });
+      return;
+    }
+
+    await user.save();
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      count: count.count,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
