@@ -28,9 +28,9 @@ router.get('/:id/count', async (req: Request, res: Response) => {
 });
 
 router.post('/new', async (req: Request, res: Response) => {
-  const { username, email, password } = req.query;
-
   try {
+    const { username, email, password } = req.query;
+
     const user = new User({ username, email, password });
     await user.save();
     res.json(user);
