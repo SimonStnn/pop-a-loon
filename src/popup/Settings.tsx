@@ -3,6 +3,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import NavigationIcon from '@components/NavigationIcon';
 import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
+import { popSoundUrl } from '@/const';
 
 export default () => {
   return (
@@ -14,7 +15,17 @@ export default () => {
       <main className="m-auto my-2 flex w-4/5 flex-col gap-2">
         <div className="flex flex-col justify-between">
           <label className="mb-1">Pop Volume</label>
-          <Slider defaultValue={[70]} max={100} step={10} />
+          <Slider
+            defaultValue={[70]}
+            min={0}
+            max={100}
+            step={20}
+            onValueChange={(value) => {
+              const popSound = new Audio(popSoundUrl);
+              popSound.volume = value[0] / 100;
+              popSound.play();
+            }}
+          />
         </div>
         <Separator className="my-1" />
         <div className="flex flex-row justify-between">
