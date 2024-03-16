@@ -3,8 +3,13 @@ export const balloonImageUrl = chrome.runtime.getURL(
   'resources/icons/icon-128.png'
 );
 
+export const initalConfig = {
+  popVolume: 70,
+};
+
 export type StorageStructure = {
   balloonCount: { balloonCount: number };
+  config: typeof initalConfig;
 };
 
 export type storageKey = keyof StorageStructure;
