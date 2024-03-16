@@ -11,7 +11,7 @@ export default () => {
         <h1 className="text-xl font-bold">Settings</h1>
       </header>
       <main className="m-auto my-2 flex w-4/5 flex-col gap-2">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-row justify-between">
           <label>Reset Balloons</label>
           <button
             className="rounded-md bg-destructive px-2 py-1 text-destructive-foreground"
@@ -22,10 +22,9 @@ export default () => {
             Reset
           </button>
         </div>
-
-        <div className="flex justify-between items-center">
-          <label>Volume</label>
-          <Slider defaultValue={[33]} max={100} step={1} />
+        <div className="flex flex-col justify-between">
+          <label className="mb-1">Volume</label>
+          <Slider defaultValue={[7]} max={10} step={1} />
         </div>
       </main>
     </>
