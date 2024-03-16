@@ -23,6 +23,7 @@ export default () => {
             onValueChange={(value) => {
               const popSound = new Audio(popSoundUrl);
               popSound.volume = value[0] / 100;
+              // TODO: Save the volume to storage
               popSound.play();
             }}
           />

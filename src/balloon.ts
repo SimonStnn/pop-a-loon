@@ -52,6 +52,7 @@ export default class Balloon {
     // Remove the balloon
     this.remove();
     // Play the pop sound
+    // TODO: Set the volume from storage
     this.popSound.play();
 
     // Get the stored value
