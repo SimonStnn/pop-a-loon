@@ -2,6 +2,7 @@ import React from 'react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import NavigationIcon from '@components/NavigationIcon';
 import { Slider } from '@/components/ui/slider';
+import { Separator } from '@/components/ui/separator';
 
 export default () => {
   return (
@@ -15,6 +16,7 @@ export default () => {
           <label className="mb-1">Pop Volume</label>
           <Slider defaultValue={[70]} max={100} step={10} />
         </div>
+        <Separator className="my-1" />
         <div className="flex flex-row justify-between">
           <label>Reset Balloons</label>
           <button
