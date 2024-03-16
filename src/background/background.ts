@@ -1,5 +1,5 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
-import { Message } from '@const';
+import { Message, initalConfig } from '@const';
 import { generateRandomNumber, minutesToMilliseconds, sleep } from '@utils';
 import storage from '@/storage';
 
@@ -30,6 +30,9 @@ const updateBadgeColors = () => {
     if (balloonCount === undefined) {
       resetCounter();
     }
+
+    const config = await storage.get('config');
+    if (!config) await storage.set('config', initalConfig);
 
     // Set badge number and colors
     setBadgeNumber(balloonCount || 0);
