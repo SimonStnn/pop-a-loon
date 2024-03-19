@@ -11,11 +11,16 @@ export const initalConfig = {
   popVolume: 70,
 };
 
+//
+// * Remote types
+//
+
 export type User = {
-  token: string;
   id: string;
   username: string;
-  email: string;
+  count: number;
+  updatedAt: string;
+  createdAt: string;
 };
 
 export type RemoteConfig = {
@@ -25,11 +30,22 @@ export type RemoteConfig = {
   };
 };
 
-type Config = Prettify<User & typeof initalConfig & RemoteConfig>;
+export type RemoteResponse = {
+  user: User;
+  configuration: RemoteConfig;
+  leaderboard: {
+    user: User;
+    rank: number;
+  };
+};
+
+export type Endpoint = keyof RemoteResponse;
 
 //
 // * Storage types
 //
+
+type Config = Prettify<typeof initalConfig & RemoteConfig>;
 
 export type StorageStructure = {
   balloonCount: { balloonCount: number };
