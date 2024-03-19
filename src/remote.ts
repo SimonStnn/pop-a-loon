@@ -2,7 +2,7 @@ import { RemoteResponse, Prettify } from '@/const';
 import storage from '@/storage';
 
 interface RequestParams {
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
 }
 
 class BackendAPI {
@@ -25,9 +25,10 @@ class BackendAPI {
   ): Promise<T> {
     const url = new URL(`${BackendAPI.BASE_URL}/api${endpoint}`);
     if (params) {
-      Object.keys(params).forEach((key) =>
-        url.searchParams.append(key, String(params[key]))
-      );
+      Object.keys(params).forEach((key) => {
+        if (params[key] === undefined) return;
+        url.searchParams.append(key, String(params[key]));
+      });
     }
     const response = await fetch(url.toString(), {
       method,
@@ -48,10 +49,13 @@ class BackendAPI {
     );
   }
 
-  public async getNewUser() {
+  public async getNewUser(username: string, email?: string) {
     return await this.request<
       Prettify<{ token: string } & RemoteResponse['user']>
-    >('POST', '/user');
+    >('POST', '/user/new', {
+      username,
+      email,
+    });
   }
 
   public async getUser(id: string) {
