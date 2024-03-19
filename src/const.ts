@@ -24,6 +24,10 @@ export type User = {
 };
 
 export type RemoteConfig = {
+  badge: {
+    color: hexColor;
+    backgroundColor: hexColor;
+  };
   spawnInterval: {
     min: number;
     max: number;
@@ -81,6 +85,8 @@ export type Message =
 //
 // * Other
 //
+
+export type hexColor = string;
 
 export type Prettify<T> = {
   [K in keyof T]: T[K];
