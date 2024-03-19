@@ -3,6 +3,10 @@ export const balloonImageUrl = chrome.runtime.getURL(
   'resources/icons/icon-128.png'
 );
 
+//
+// * Config types
+//
+
 export const initalConfig = {
   popVolume: 70,
 };
@@ -23,6 +27,10 @@ export type RemoteConfig = {
 
 type Config = Prettify<User & typeof initalConfig & RemoteConfig>;
 
+//
+// * Storage types
+//
+
 export type StorageStructure = {
   balloonCount: { balloonCount: number };
   config: Config;
@@ -30,9 +38,9 @@ export type StorageStructure = {
 
 export type storageKey = keyof StorageStructure;
 
-export type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
+//
+// * Chrome message types
+//
 
 type UpdateCounterMessage = {
   action: 'updateCounter';
@@ -51,3 +59,11 @@ export type Message =
   | UpdateCounterMessage
   | ResetCounterMessage
   | SpawnBalloonMessage;
+
+//
+// * Other
+//
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
