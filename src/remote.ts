@@ -1,4 +1,5 @@
-import { RemoteResponse, Prettify } from './const';
+import { RemoteResponse, Prettify } from '@/const';
+import storage from '@/storage';
 
 interface RequestParams {
   [key: string]: string | number;
@@ -19,7 +20,7 @@ class BackendAPI {
 
   private async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-    endpoint: string = '/',
+    endpoint: string,
     params?: RequestParams
   ): Promise<T> {
     const url = new URL(`${BackendAPI.BASE_URL}/api${endpoint}`);
@@ -36,7 +37,10 @@ class BackendAPI {
   }
 
   public async getConfiguration() {
-    return await this.request<RemoteResponse['configuration']>('GET');
+    return await this.request<RemoteResponse['configuration']>(
+      'GET',
+      '/configuration'
+    );
   }
 
   public async getNewUser() {
