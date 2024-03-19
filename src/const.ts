@@ -7,6 +7,13 @@ export const initalConfig = {
   popVolume: 70,
 };
 
+export type User = {
+  token: string;
+  id: string;
+  username: string;
+  email: string;
+};
+
 export type RemoteConfig = {
   spawnInterval: {
     min: number;
@@ -14,7 +21,7 @@ export type RemoteConfig = {
   };
 };
 
-type Config = Prettify<typeof initalConfig & RemoteConfig>;
+type Config = Prettify<User & typeof initalConfig & RemoteConfig>;
 
 export type StorageStructure = {
   balloonCount: { balloonCount: number };
