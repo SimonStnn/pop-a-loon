@@ -16,8 +16,13 @@ const setBadgeNumber = (count: number) => {
 };
 
 const updateBadgeColors = () => {
-  chrome.action.setBadgeBackgroundColor({ color: '#7aa5eb' });
-  chrome.action.setBadgeTextColor({ color: '#26282b' });
+  (async () => {
+    const config = await storage.get('config');
+    chrome.action.setBadgeBackgroundColor({
+      color: config.badge.backgroundColor,
+    });
+    chrome.action.setBadgeTextColor({ color: config.badge.color });
+  })();
 };
 
 (() => {
