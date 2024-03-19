@@ -1,5 +1,5 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
-import { Message, User, initalConfig } from '@const';
+import { Message, initalConfig } from '@const';
 import { generateRandomNumber, minutesToMilliseconds, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
@@ -71,9 +71,13 @@ const updateBadgeColors = () => {
     if (loopRunning) return;
     loopRunning = true;
 
+    const config = await storage.get('config');
+
     while (true) {
       // Wait between 0 and 10 minutes
-      await sleep(generateRandomNumber(0, minutesToMilliseconds(10)));
+      await sleep(
+        generateRandomNumber(config.spawnInterval.min, config.spawnInterval.max)
+      );
 
       // Get all active tabs
       chrome.tabs.query({ active: true }, (tabs) => {
