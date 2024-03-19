@@ -29,7 +29,12 @@ class BackendAPI {
         url.searchParams.append(key, String(params[key]))
       );
     }
-    const response = await fetch(url.toString(), { method });
+    const response = await fetch(url.toString(), {
+      method,
+      headers: {
+        authorization: (await storage.get('token')) || '',
+      },
+    });
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
