@@ -7,8 +7,23 @@ export const balloonImageUrl = chrome.runtime.getURL(
 // * Config types
 //
 
-export const initalConfig = {
+type _initialConfig = {
+  popVolume: number;
+} & RemoteConfig;
+
+export const initalConfig: _initialConfig = {
+  // Local config
   popVolume: 70,
+
+  // Remote config -> can be overriden by the remote
+  badge: {
+    color: '#26282b',
+    backgroundColor: '#7aa5eb',
+  },
+  spawnInterval: {
+    min: 1000,
+    max: 10 * 60000,
+  },
 };
 
 //
