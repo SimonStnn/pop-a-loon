@@ -109,7 +109,6 @@ const updateBadgeColors = () => {
         resetCounter();
         break;
       case 'updateCounter':
-        console.log('Updating counter', message.balloonCount);
         setBadgeNumber(message.balloonCount);
         updateBadgeColors();
         break;
@@ -122,7 +121,7 @@ const updateBadgeColors = () => {
           count: newCount.count,
         });
         // Send message to popup if its open
-        chrome.runtime.sendMessage({
+        sendMessage({
           action: 'updateCounter',
           balloonCount: newCount.count,
         });
