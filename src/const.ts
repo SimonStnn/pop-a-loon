@@ -36,6 +36,11 @@ export type RemoteConfig = {
 
 export type RemoteResponse = {
   user: User;
+  count: {
+    id: string;
+    count: number;
+    updatedAt: string;
+  };
   configuration: RemoteConfig;
   leaderboard: {
     user: User;
