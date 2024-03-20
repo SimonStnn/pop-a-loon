@@ -1,6 +1,6 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { Message, initalConfig } from '@const';
-import { generateRandomNumber, minutesToMilliseconds, sleep } from '@utils';
+import { generateRandomNumber, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
 
@@ -99,19 +99,42 @@ const updateBadgeColors = () => {
     }
   };
 
-  chrome.runtime.onMessage.addListener(
-    (message: Message, sender, sendResponse) => {
-      switch (message.action) {
-        case 'resetCounter':
-          resetCounter();
-          break;
-        case 'updateCounter':
-          setBadgeNumber(message.balloonCount);
-          updateBadgeColors();
-          break;
-      }
+  chrome.runtime.onMessage.addListener(async function messageListener(
+    message: Message,
+    sender,
+    sendResponse
+  ) {
+    switch (message.action) {
+      case 'resetCounter':
+        resetCounter();
+        break;
+      case 'updateCounter':
+        console.log('Updating counter', message.balloonCount);
+        setBadgeNumber(message.balloonCount);
+        updateBadgeColors();
+        break;
+      case 'incrementCount':
+        // Increment the count and save it to the local storage
+        const newCount = await remote.incrementCount();
+        storage.set('balloonCount', { balloonCount: newCount.count });
+        storage.set('user', {
+          ...(await storage.get('user')),
+          count: newCount.count,
+        });
+        // Send message to popup if its open
+        chrome.runtime.sendMessage({
+          action: 'updateCounter',
+          balloonCount: newCount.count,
+        });
+        // Call the listener again to update the badge number
+        messageListener(
+          { action: 'updateCounter', balloonCount: newCount.count },
+          sender,
+          sendResponse
+        );
+        break;
     }
-  );
+  });
 
   chrome.runtime.onStartup.addListener(async () => {
     await setup();
