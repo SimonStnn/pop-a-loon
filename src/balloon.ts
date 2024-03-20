@@ -54,12 +54,7 @@ export default class Balloon {
     // Play the pop sound
     this.popSound.play();
 
-    // Get the stored value
-    const storedCount = (await storage.get('balloonCount')).balloonCount || 0;
-    const balloonCount = storedCount + 1;
-    // Store the new value
-    storage.set('balloonCount', { balloonCount });
     // Send message with the new count
-    sendMessage({ action: 'updateCounter', balloonCount });
+    sendMessage({ action: 'incrementCount' });
   }
 }
