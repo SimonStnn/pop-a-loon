@@ -52,12 +52,8 @@ const updateBadgeColors = () => {
     // Get the config from the remote
     const remoteConfig = await remote.getConfiguration();
     // Get the config from the local storage
-    let config = await storage.get('config');
-    // If the config is not in the local storage, use the default config
-    if (!config) {
-      config = initalConfig as any;
-    }
-    // Merge the remote config with the local config
+    const config = (await storage.get('config')) || initalConfig;
+    // Merge the local config with the remote config
     await storage.set('config', { ...config, ...remoteConfig });
 
     // Set badge number and colors
