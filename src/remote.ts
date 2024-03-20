@@ -61,6 +61,13 @@ class BackendAPI {
   public async getUser(id: string) {
     return await this.request<RemoteResponse['user']>('GET', `/user/${id}`);
   }
+
+  public async incrementCount() {
+    return await this.request<RemoteResponse['count']>(
+      'POST',
+      '/user/count/increment'
+    );
+  }
 }
 
 export default BackendAPI.getInstance();
