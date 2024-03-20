@@ -4,11 +4,6 @@ import { generateRandomNumber, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
 
-const resetCounter = () => {
-  storage.set('balloonCount', { balloonCount: 0 });
-  setBadgeNumber(0);
-};
-
 const setBadgeNumber = (count: number) => {
   chrome.action.setBadgeText({
     text: abbreviateNumber(count),
@@ -31,12 +26,6 @@ const updateBadgeColors = () => {
   if (typeof window !== 'undefined') return;
 
   const setup = async () => {
-    const balloonCount = (await storage.get('balloonCount'))?.balloonCount;
-    // Reset the counter if it's undefined
-    if (balloonCount === undefined) {
-      resetCounter();
-    }
-
     // Get the user from the local storage
     let localUser = await storage.get('user');
     // If the user is not in the local storage, get a new user from the remote
@@ -57,7 +46,7 @@ const updateBadgeColors = () => {
     await storage.set('config', { ...config, ...remoteConfig });
 
     // Set badge number and colors
-    setBadgeNumber(balloonCount || 0);
+    setBadgeNumber(user.count || 0);
     updateBadgeColors();
   };
 
@@ -106,7 +95,6 @@ const updateBadgeColors = () => {
   ) {
     switch (message.action) {
       case 'resetCounter':
-        resetCounter();
         break;
       case 'updateCounter':
         setBadgeNumber(message.balloonCount);
@@ -115,7 +103,6 @@ const updateBadgeColors = () => {
       case 'incrementCount':
         // Increment the count and save it to the local storage
         const newCount = await remote.incrementCount();
-        storage.set('balloonCount', { balloonCount: newCount.count });
         storage.set('user', {
           ...(await storage.get('user')),
           count: newCount.count,

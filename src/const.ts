@@ -57,7 +57,6 @@ export type Endpoint = keyof RemoteResponse;
 type Config = Prettify<typeof initalConfig & RemoteConfig>;
 
 export type StorageStructure = {
-  balloonCount: { balloonCount: number };
   config: Config;
   token: string;
   user: User;
