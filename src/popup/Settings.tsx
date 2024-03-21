@@ -1,15 +1,16 @@
 import React from 'react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import NavigationIcon from '@components/NavigationIcon';
+import Header from '@/components/Header';
+import Main from '@/components/Main';
 
 export default () => {
   return (
     <>
-      <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
-        <NavigationIcon to={'/'} icon={faArrowLeft} side={'left'} />
-        <h1 className="text-xl font-bold">Settings</h1>
-      </header>
-      <main className="m-auto my-2 flex w-4/5 flex-col gap-2">
+      <Header
+        title="Settings"
+        icons={[{ to: '/', side: 'left', icon: faArrowLeft }]}
+      />
+      <Main>
         <div className="flex justify-between items-center">
           <label>Reset Balloons</label>
           <button
@@ -21,7 +22,7 @@ export default () => {
             Reset
           </button>
         </div>
-      </main>
+      </Main>
     </>
   );
 };

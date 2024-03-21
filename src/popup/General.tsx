@@ -1,6 +1,7 @@
 import React from 'react';
 import { faArrowLeft, faGear } from '@fortawesome/free-solid-svg-icons';
 import Header from '@/components/Header';
+import Main from '@/components/Main';
 
 export default () => {
   return (
@@ -12,7 +13,7 @@ export default () => {
           { to: '/settings', side: 'right', icon: faGear },
         ]}
       />
-      <main className="m-auto my-2 flex w-4/5 flex-col gap-2"></main>
+      <Main></Main>
     </>
   );
 };

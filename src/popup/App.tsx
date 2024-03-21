@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import storage from '@/storage';
 import { Message } from '@const';
-import NavigationIcon from '@components/NavigationIcon';
 import Header from '@/components/Header';
+import Main from '@/components/Main';
 
 const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);
@@ -31,9 +31,9 @@ const App: React.FC = () => {
         title="Pop-a-loon"
         icons={[{ to: '/general', side: 'right', icon: faList }]}
       />
-      <main className="m-auto my-2 flex w-4/5 flex-col gap-2">
+      <Main>
         <p>Balloons Popped: {balloonCount}</p>
-      </main>
+      </Main>
     </>
   );
 };
