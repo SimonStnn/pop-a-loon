@@ -8,7 +8,7 @@ export default () => {
     <>
       <Header
         title="Settings"
-        icons={[{ to: '/', side: 'left', icon: faArrowLeft }]}
+        icons={[{ to: '/general', side: 'left', icon: faArrowLeft }]}
       />
       <Main>
         <div className="flex justify-between items-center">
