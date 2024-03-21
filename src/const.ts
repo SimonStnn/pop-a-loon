@@ -60,6 +60,7 @@ export type RemoteResponse = {
   leaderboard: {
     user: User;
     rank: number;
+    topUsers: User[];
   };
 };
 
