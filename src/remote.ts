@@ -7,7 +7,10 @@ interface RequestParams {
 
 class BackendAPI {
   private static instance: BackendAPI;
-  private static readonly BASE_URL = 'http://localhost:3000';
+  private static readonly BASE_URL =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000'
+      : 'https://pop-a-loon-backend.vercel.app';
 
   private constructor() {}
 
