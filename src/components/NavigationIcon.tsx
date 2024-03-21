@@ -6,12 +6,12 @@ import { ClassValue } from 'clsx';
 import { cn } from '@utils';
 
 // React component with the option to add classNames
-interface NavigationIconProps {
+export type NavigationIconProps = {
   to: string;
   icon: IconProp;
   side: 'left' | 'right';
   className?: ClassValue[];
-}
+};
 
 export default (props: NavigationIconProps) => {
   return (
