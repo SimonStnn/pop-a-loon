@@ -73,6 +73,13 @@ class BackendAPI {
       '/user/count/increment'
     );
   }
+
+  public async getLeaderboard() {
+    return await this.request<RemoteResponse['leaderboard']>(
+      'GET',
+      '/leaderboard'
+    );
+  }
 }
 
 export default BackendAPI.getInstance();
