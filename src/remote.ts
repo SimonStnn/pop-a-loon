@@ -37,7 +37,8 @@ class BackendAPI {
       },
     });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      console.error(response, await response.json());
+      throw new Error(`Failed to fetch ${url.toString()}`);
     }
     return response.json() as Promise<T>;
   }
