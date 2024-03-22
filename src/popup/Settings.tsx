@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Main from '@/components/Main';
 import { User } from '@/const';
 import storage from '@/storage';
+import remote from '@/remote';
 
 export default () => {
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -38,14 +39,17 @@ export default () => {
           />
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label>Reset Balloons</Label>
           <Button
-            variant={'destructive'}
-            onClick={() => {
-              chrome.runtime.sendMessage({ action: 'resetCounter' });
+            variant="default"
+            onClick={async () => {
+              const username = usernameRef.current?.value;
+              if (username) {
+                const user = await remote.putUser({ username });
+                await storage.set('user', user);
+              }
             }}
           >
-            Reset
+            Save
           </Button>
         </div>
       </Main>
