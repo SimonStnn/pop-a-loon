@@ -25,7 +25,10 @@ const formSchema = z.object({
       required_error: 'Username is required',
     })
     .min(4)
-    .max(20),
+    .max(20)
+    .refine((value) => /^[a-zA-Z0-9_]+$/.test(value), {
+      message: 'Username can only contain letters, numbers, and underscores',
+    }),
   email: z.string().refine((value) => value === '' || z.string().email()),
 });
 
