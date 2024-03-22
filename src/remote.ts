@@ -67,6 +67,10 @@ class BackendAPI {
     return await this.request<RemoteResponse['user']>('GET', `/user/${id}`);
   }
 
+  public async putUser(props: { [K in 'username' | 'email']?: string }) {
+    return await this.request<RemoteResponse['user']>('PUT', `/user`, props);
+  }
+
   public async incrementCount() {
     return await this.request<RemoteResponse['count']>(
       'POST',
