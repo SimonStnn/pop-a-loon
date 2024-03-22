@@ -11,11 +11,16 @@ import remote from '@/remote';
 
 export default () => {
   const usernameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      const user = await storage.get('user');
       if (usernameRef.current) {
-        usernameRef.current.value = (await storage.get('user')).username;
+        usernameRef.current.value = user.username;
+      }
+      if (emailRef.current) {
+        emailRef.current.value = user.email || '';
       }
     };
 
@@ -39,12 +44,17 @@ export default () => {
           />
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="email">Email</Label>
+          <Input ref={emailRef} type="email" id="email" placeholder="Email" />
+        </div>
+        <div className="grid w-full max-w-sm items-center gap-1.5">
           <Button
             variant="default"
             onClick={async () => {
               const username = usernameRef.current?.value;
-              if (username) {
-                const user = await remote.putUser({ username });
+              const email = emailRef.current?.value;
+              if (username || email) {
+                const user = await remote.putUser({ username, email });
                 await storage.set('user', user);
               }
             }}
