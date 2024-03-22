@@ -33,6 +33,7 @@ export const initalConfig: _initialConfig = {
 export type User = {
   id: string;
   username: string;
+  email?: string;
   count: number;
   updatedAt: string;
   createdAt: string;
