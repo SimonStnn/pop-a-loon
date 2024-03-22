@@ -1,31 +1,57 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import Header from '@/components/Header';
 import Main from '@/components/Main';
-import { User } from '@/const';
 import storage from '@/storage';
 import remote from '@/remote';
 
+const formSchema = z.object({
+  username: z
+    .string({
+      required_error: 'Username is required',
+    })
+    .min(4)
+    .max(20),
+  email: z.string().refine((value) => value === '' || z.string().email()),
+});
+
 export default () => {
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: '',
+      email: '',
+    },
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      const user = await storage.get('user');
-      if (usernameRef.current) {
-        usernameRef.current.value = user.username;
-      }
-      if (emailRef.current) {
-        emailRef.current.value = user.email || '';
-      }
+    const loadUser = async () => {
+      const storedUser = await storage.get('user');
+      form.setValue('username', storedUser.username);
+      form.setValue('email', storedUser.email || '');
     };
 
-    fetchData();
+    loadUser();
   }, []);
+
+  const onSubmit = async ({ username, email }: z.infer<typeof formSchema>) => {
+    const user = await remote.putUser({ username, email });
+    await storage.set('user', user);
+  };
 
   return (
     <>
@@ -33,35 +59,42 @@ export default () => {
         title="Settings"
         icons={[{ to: '/general', side: 'left', icon: faArrowLeft }]}
       />
-      <Main className="grid gap-4">
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="username">Username</Label>
-          <Input
-            ref={usernameRef}
-            type="text"
-            id="username"
-            placeholder="Username"
-          />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="email">Email</Label>
-          <Input ref={emailRef} type="email" id="email" placeholder="Email" />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Button
-            variant="default"
-            onClick={async () => {
-              const username = usernameRef.current?.value;
-              const email = emailRef.current?.value;
-              if (username || email) {
-                const user = await remote.putUser({ username, email });
-                await storage.set('user', user);
-              }
-            }}
-          >
-            Save
-          </Button>
-        </div>
+      <Main>
+        <Form {...form}>
+          <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Username" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Save</Button>
+          </form>
+        </Form>
       </Main>
     </>
   );
