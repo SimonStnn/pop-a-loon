@@ -29,7 +29,7 @@ export default () => {
         <TableCaption>Your are #{data.rank}!</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="h-8 px-2 text-right">Position</TableHead>
+            <TableHead className="h-8 px-2 text-right">#</TableHead>
             <TableHead className="h-8 px-2 w-full">Name</TableHead>
             <TableHead className="h-8 px-2">Pops</TableHead>
           </TableRow>
