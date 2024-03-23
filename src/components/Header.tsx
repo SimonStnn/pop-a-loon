@@ -33,7 +33,6 @@ export default (props: HeaderProps) => {
     { to: '/general', icon: List },
     { to: '/settings', icon: Settings },
   ];
-  console.log(location);
   return (
     <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
       <div className="absolute left-1 flex items-center justify-center">
