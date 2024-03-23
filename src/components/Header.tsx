@@ -33,13 +33,13 @@ export default (props: HeaderProps) => {
 
   return (
     <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
-      <div className="absolute left-0 flex items-center justify-center">
+      <div className="absolute left-1 flex items-center justify-center">
         {leftIcons.map((Icon, index) => (
           <HeaderIcon key={index} {...Icon} />
         ))}
       </div>
       <h1 className="text-xl font-bold">Pop-a-loon</h1>
-      <div className="absolute right-0 flex items-center justify-center">
+      <div className="absolute right-1 flex items-center justify-center">
         {rightIcons.map((Icon, index) => (
           <HeaderIcon key={index} {...Icon} />
         ))}
