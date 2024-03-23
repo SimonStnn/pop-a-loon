@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Loader2, CheckIcon } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -95,7 +96,15 @@ export default () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="flex flex-row gap-1">
+              Save
+              {form.formState.isSubmitting && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {form.formState.isSubmitSuccessful && (
+                <CheckIcon className="mr-2 h-4 w-4" />
+              )}
+            </Button>
           </form>
         </Form>
       </Main>
