@@ -27,13 +27,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header
-        title="Pop-a-loon"
-        icons={[
-          { to: '/general', side: 'right', icon: List },
-          { to: '/settings', side: 'right', icon: Settings },
-        ]}
-      />
+      <Header title="Pop-a-loon" />
       <Main>
         <p>Balloons Popped: {balloonCount}</p>
       </Main>

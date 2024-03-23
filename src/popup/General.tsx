@@ -7,14 +7,7 @@ import Leaderboard from '@/components/Leaderboard';
 export default () => {
   return (
     <>
-      <Header
-        title="General"
-        icons={[
-          { to: '/', side: 'left', icon: ArrowLeft },
-          { to: '/general', side: 'right', icon: List },
-          { to: '/settings', side: 'right', icon: Settings },
-        ]}
-      />
+      <Header title="General" />
       <Main>
         <h2 className="text-lg">Leaderboard</h2>
         <Leaderboard />
