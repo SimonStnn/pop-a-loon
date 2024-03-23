@@ -10,7 +10,7 @@ import './style.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-  <div className="w-[480px]">
+  <div className="w-[398px]">
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
