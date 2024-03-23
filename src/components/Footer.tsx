@@ -7,7 +7,7 @@ export default () => {
     <footer className="flex justify-center items-center gap-2">
       <Button
         variant="link"
-        className="h-7 p-0 text-muted-foreground text-xs font-thin"
+        className="h-6 p-0 text-muted-foreground text-xs font-thin"
       >
         <a
           target="_blank"
@@ -20,7 +20,7 @@ export default () => {
       <Separator orientation="vertical" className="max-h-3" />
       <Button
         variant="link"
-        className="h-5 p-0 text-muted-foreground text-xs font-thin"
+        className="h-6 p-0 text-muted-foreground text-xs font-thin"
       >
         <a
           target="_blank"
