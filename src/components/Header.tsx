@@ -16,25 +16,34 @@ type HeaderProps = {
   className?: ClassValue[];
 };
 
+const HeaderIcon = (props: iconProps) => {
+  return (
+    <Link
+      to={props.to}
+      className="p-3 text-primary-foreground opacity-80 hover:opacity-100"
+    >
+      <props.icon size={20} />
+    </Link>
+  );
+};
+
 export default (props: HeaderProps) => {
-  console.log(props);
+  const leftIcons = props.icons?.filter((icon) => icon.side === 'left') || [];
+  const rightIcons = props.icons?.filter((icon) => icon.side === 'right') || [];
 
   return (
     <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
-      {props.icons?.map((Icon, index) => (
-        <Link
-          key={index}
-          to={Icon.to}
-          className={cn(
-            'absolute flex items-center justify-center p-3 text-primary-foreground opacity-80 hover:opacity-100',
-            Icon.side === 'left' ? 'left-1' : 'right-1',
-            props.className
-          )}
-        >
-          <Icon.icon size={20} />
-        </Link>
-      ))}
+      <div className="absolute left-0 flex items-center justify-center">
+        {leftIcons.map((Icon, index) => (
+          <HeaderIcon key={index} {...Icon} />
+        ))}
+      </div>
       <h1 className="text-xl font-bold">Pop-a-loon</h1>
+      <div className="absolute right-0 flex items-center justify-center">
+        {rightIcons.map((Icon, index) => (
+          <HeaderIcon key={index} {...Icon} />
+        ))}
+      </div>
     </header>
   );
 };
