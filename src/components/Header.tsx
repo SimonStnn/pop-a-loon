@@ -1,12 +1,12 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { ClassValue } from 'clsx';
 import { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { cn } from '@/utils';
+import { ArrowLeft, List, Settings } from 'lucide-react';
 
 type iconProps = {
   to: string;
-  side: 'left' | 'right';
   icon: LucideIcon;
 };
 
@@ -28,19 +28,20 @@ const HeaderIcon = (props: iconProps) => {
 };
 
 export default (props: HeaderProps) => {
-  const leftIcons = props.icons?.filter((icon) => icon.side === 'left') || [];
-  const rightIcons = props.icons?.filter((icon) => icon.side === 'right') || [];
-
+  const location = useLocation();
+  const navIcons = [
+    { to: '/general', icon: List },
+    { to: '/settings', icon: Settings },
+  ];
+  console.log(location);
   return (
     <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
       <div className="absolute left-1 flex items-center justify-center">
-        {leftIcons.map((Icon, index) => (
-          <HeaderIcon key={index} {...Icon} />
-        ))}
+        {location.pathname !== '/' && <HeaderIcon to="/" icon={ArrowLeft} />}
       </div>
       <h1 className="text-xl font-bold">Pop-a-loon</h1>
       <div className="absolute right-1 flex items-center justify-center">
-        {rightIcons.map((Icon, index) => (
+        {navIcons.map((Icon, index) => (
           <HeaderIcon key={index} {...Icon} />
         ))}
       </div>
