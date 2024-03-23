@@ -65,7 +65,8 @@ export default () => {
   });
   const deleteFormOnSubmit = async () => {
     console.log('deleteFormOnSubmit');
-    // await remote.deleteUser();
+    const token = await storage.get('token');
+    await remote.deleteUser(token);
     chrome.runtime.reload();
   };
 
