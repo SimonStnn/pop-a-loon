@@ -7,7 +7,7 @@ import Leaderboard from '@/components/Leaderboard';
 export default () => {
   return (
     <>
-      <Header title="General" />
+      <Header />
       <Main>
         <h2 className="text-lg">Leaderboard</h2>
         <Leaderboard />

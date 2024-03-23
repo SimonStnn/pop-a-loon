@@ -27,7 +27,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header title="Pop-a-loon" />
+      <Header />
       <Main>
         <section className="flex flex-col gap-2 items-center">
           <span className="flex justify-center items-center text-4xl font-bold drop-shadow">
