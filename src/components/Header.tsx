@@ -11,7 +11,7 @@ type iconProps = {
 };
 
 type HeaderProps = {
-  title: string;
+  title?: string;
   icons?: iconProps[];
   className?: ClassValue[];
 };
@@ -39,7 +39,7 @@ export default (props: HeaderProps) => {
       <div className="absolute left-1 flex items-center justify-center">
         {location.pathname !== '/' && <HeaderIcon to="/" icon={ArrowLeft} />}
       </div>
-      <h1 className="text-xl font-bold">Pop-a-loon</h1>
+      <h1 className="text-xl font-bold">{props.title || 'Pop-a-loon'}</h1>
       <div className="absolute right-1 flex items-center justify-center">
         {navIcons.map((Icon, index) => (
           <HeaderIcon key={index} {...Icon} />
