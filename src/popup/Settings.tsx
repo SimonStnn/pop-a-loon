@@ -136,7 +136,12 @@ export default () => {
         <section>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="destructive">Delete account</Button>
+              <Button
+                variant="outline"
+                className="border-destructive text-destructive hover:text-destructive py-1 px-2 h-7"
+              >
+                Delete account
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
