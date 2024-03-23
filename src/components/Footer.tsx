@@ -9,7 +9,11 @@ export default () => {
         variant="link"
         className="h-7 p-0 text-muted-foreground text-xs font-thin"
       >
-        <a target="_blank" href="https://github.com/SimonStnn/pop-a-loon">
+        <a
+          target="_blank"
+          rel="noreferrer noopener"
+          href="https://github.com/SimonStnn/pop-a-loon"
+        >
           Github
         </a>
       </Button>
@@ -20,6 +24,7 @@ export default () => {
       >
         <a
           target="_blank"
+          rel="noreferrer noopener"
           href="https://chromewebstore.google.com/detail/pop-a-loon/pahcoancbdjmffpmfbnjablnabomdocp/reviews"
         >
           Leave a review
