@@ -71,6 +71,12 @@ class BackendAPI {
     return await this.request<RemoteResponse['user']>('PUT', `/user`, props);
   }
 
+  public async deleteUser(token: string) {
+    if ((await storage.get('token')) === token)
+      throw new Error('Cannot delete user without token');
+    return await this.request<RemoteResponse['user']>('DELETE', `/user`);
+  }
+
   public async incrementCount() {
     return await this.request<RemoteResponse['count']>(
       'POST',
