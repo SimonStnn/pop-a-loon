@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckIcon, ArrowLeft } from 'lucide-react';
+import { Loader2, CheckIcon, ArrowLeft, List, Settings } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -60,7 +60,11 @@ export default () => {
     <>
       <Header
         title="Settings"
-        icons={[{ to: '/general', side: 'left', icon: ArrowLeft }]}
+        icons={[
+          { to: '/', side: 'left', icon: ArrowLeft },
+          { to: '/general', side: 'right', icon: List },
+          { to: '/settings', side: 'right', icon: Settings },
+        ]}
       />
       <Main>
         <Form {...form}>

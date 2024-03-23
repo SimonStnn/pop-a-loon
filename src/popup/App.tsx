@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List } from 'lucide-react';
+import { List, Settings } from 'lucide-react';
 import storage from '@/storage';
 import { Message } from '@const';
 import Header from '@/components/Header';
@@ -29,7 +29,10 @@ const App: React.FC = () => {
     <>
       <Header
         title="Pop-a-loon"
-        icons={[{ to: '/general', side: 'right', icon: List }]}
+        icons={[
+          { to: '/general', side: 'right', icon: List },
+          { to: '/settings', side: 'right', icon: Settings },
+        ]}
       />
       <Main>
         <p>Balloons Popped: {balloonCount}</p>

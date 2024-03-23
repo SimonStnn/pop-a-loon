@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Settings } from 'lucide-react';
+import { ArrowLeft, List, Settings } from 'lucide-react';
 import Header from '@/components/Header';
 import Main from '@/components/Main';
 import Leaderboard from '@/components/Leaderboard';
@@ -11,6 +11,7 @@ export default () => {
         title="General"
         icons={[
           { to: '/', side: 'left', icon: ArrowLeft },
+          { to: '/general', side: 'right', icon: List },
           { to: '/settings', side: 'right', icon: Settings },
         ]}
       />
