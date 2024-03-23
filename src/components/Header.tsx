@@ -23,6 +23,7 @@ export default (props: HeaderProps) => {
     <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
       {props.icons?.map((Icon, index) => (
         <Link
+          key={index}
           to={Icon.to}
           className={cn(
             'absolute flex items-center justify-center p-3 text-primary-foreground opacity-80 hover:opacity-100',
@@ -30,7 +31,7 @@ export default (props: HeaderProps) => {
             props.className
           )}
         >
-          <Icon.icon key={index} size={20} />
+          <Icon.icon size={20} />
         </Link>
       ))}
       <h1 className="text-xl font-bold">Pop-a-loon</h1>
