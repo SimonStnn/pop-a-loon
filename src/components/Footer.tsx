@@ -20,9 +20,9 @@ export default () => {
       >
         <a
           target="_blank"
-          href="https://chromewebstore.google.com/detail/pop-a-loon/pahcoancbdjmffpmfbnjablnabomdocp"
+          href="https://chromewebstore.google.com/detail/pop-a-loon/pahcoancbdjmffpmfbnjablnabomdocp/reviews"
         >
-          Chrome Webstore
+          Leave a review
         </a>
       </Button>
     </footer>
