@@ -29,7 +29,14 @@ const App: React.FC = () => {
     <>
       <Header title="Pop-a-loon" />
       <Main>
-        <p>Balloons Popped: {balloonCount}</p>
+        <section className="flex flex-col gap-2 items-center">
+          <span className="flex justify-center items-center text-4xl font-bold drop-shadow">
+            {balloonCount}
+          </span>
+          <span className="text-[16px]">
+            {balloonCount === 1 ? 'Baloon popped' : 'Balloons popped'}
+          </span>
+        </section>
       </Main>
     </>
   );
