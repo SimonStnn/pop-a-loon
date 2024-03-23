@@ -1,5 +1,5 @@
 import React from 'react';
-import { faArrowLeft, faGear } from '@fortawesome/free-solid-svg-icons';
+import { ArrowLeft, Settings } from 'lucide-react';
 import Header from '@/components/Header';
 import Main from '@/components/Main';
 import Leaderboard from '@/components/Leaderboard';
@@ -10,8 +10,8 @@ export default () => {
       <Header
         title="General"
         icons={[
-          { to: '/', side: 'left', icon: faArrowLeft },
-          { to: '/settings', side: 'right', icon: faGear },
+          { to: '/', side: 'left', icon: ArrowLeft },
+          { to: '/settings', side: 'right', icon: Settings },
         ]}
       />
       <Main>

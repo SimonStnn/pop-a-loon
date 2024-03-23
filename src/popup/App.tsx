@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { faList } from '@fortawesome/free-solid-svg-icons';
+import { List } from 'lucide-react';
 import storage from '@/storage';
 import { Message } from '@const';
 import Header from '@/components/Header';
@@ -29,7 +29,7 @@ const App: React.FC = () => {
     <>
       <Header
         title="Pop-a-loon"
-        icons={[{ to: '/general', side: 'right', icon: faList }]}
+        icons={[{ to: '/general', side: 'right', icon: List }]}
       />
       <Main>
         <p>Balloons Popped: {balloonCount}</p>

@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckIcon } from 'lucide-react';
+import { Loader2, CheckIcon, ArrowLeft } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -61,7 +60,7 @@ export default () => {
     <>
       <Header
         title="Settings"
-        icons={[{ to: '/general', side: 'left', icon: faArrowLeft }]}
+        icons={[{ to: '/general', side: 'left', icon: ArrowLeft }]}
       />
       <Main>
         <Form {...form}>
