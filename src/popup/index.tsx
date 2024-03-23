@@ -4,6 +4,7 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App';
 import General from './General';
 import Settings from './Settings';
+import Footer from '@/components/Footer';
 
 // Import stylesheet
 import './style.css';
@@ -18,5 +19,6 @@ root.render(
         <Route path="/settings" element={<Settings />} />
       </Routes>
     </Router>
+    <Footer />
   </div>
 );
