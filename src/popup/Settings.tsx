@@ -81,9 +81,10 @@ export default () => {
   }, []);
 
   const onSubmit = async ({ username, email }: z.infer<typeof formSchema>) => {
-    const user = await remote.putUser({ username, email });
-    setUser(user);
-    await storage.set('user', user);
+    if (username === user?.username && email === user?.email) return;
+    const newUser = await remote.putUser({ username, email });
+    setUser(newUser);
+    await storage.set('user', newUser);
   };
 
   return (
