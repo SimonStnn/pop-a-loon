@@ -16,7 +16,7 @@ export default () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await remote.getLeaderboard();
+      const result = await remote.getLeaderboard(10);
       setData(result);
     };
 
