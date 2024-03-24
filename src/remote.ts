@@ -10,7 +10,7 @@ class BackendAPI {
   private static readonly BASE_URL =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
-      : 'https://pop-a-loon-backend.vercel.app';
+      : 'http://localhost:3000'; // TODO: Change to production URL
 
   private constructor() {}
 
