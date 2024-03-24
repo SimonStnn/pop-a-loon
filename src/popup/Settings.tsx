@@ -92,7 +92,7 @@ export default () => {
       <Header title="Settings" />
       <Main className="">
         <ScrollArea>
-          <div className="h-[256px] grid gap-4 pl-2 pr-5 mr-[-8px]">
+          <div className="h-[156px] grid gap-4 pl-2 pr-5 mr-[-8px]">
             <section>
               <Form {...form}>
                 <form
