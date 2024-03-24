@@ -64,7 +64,6 @@ export default () => {
     },
   });
   const deleteFormOnSubmit = async () => {
-    console.log('deleteFormOnSubmit');
     const token = await storage.get('token');
     await remote.deleteUser(token);
     chrome.runtime.reload();
@@ -83,6 +82,7 @@ export default () => {
 
   const onSubmit = async ({ username, email }: z.infer<typeof formSchema>) => {
     const user = await remote.putUser({ username, email });
+    setUser(user);
     await storage.set('user', user);
   };
 
