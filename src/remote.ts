@@ -89,10 +89,13 @@ class BackendAPI {
     );
   }
 
-  public async getLeaderboard() {
+  public async getLeaderboard(limit?: number) {
     return await this.request<RemoteResponse['leaderboard']>(
       'GET',
-      '/leaderboard'
+      '/leaderboard',
+      {
+        limit: limit,
+      }
     );
   }
 }
