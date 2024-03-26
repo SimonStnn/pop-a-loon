@@ -26,6 +26,12 @@ const updateBadgeColors = () => {
   if (typeof window !== 'undefined') return;
 
   const setup = async () => {
+    const remoteAvailable = await remote.isAvailable();
+    if (!remoteAvailable) {
+      console.warn('Remote is not available');
+      return;
+    }
+
     // Get the user from the local storage
     let localUser = await storage.get('user');
     // If the user is not in the local storage, get a new user from the remote
@@ -53,7 +59,7 @@ const updateBadgeColors = () => {
   let loopRunning = false;
   const loop = async () => {
     // If the loop is already running, don't start another one
-    if (loopRunning) return;
+    if (loopRunning || !(await remote.isAvailable())) return;
     loopRunning = true;
 
     const config = await storage.get('config');
