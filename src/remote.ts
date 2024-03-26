@@ -14,14 +14,6 @@ class BackendAPI {
 
   private constructor() {}
 
-  private _available = false;
-  public get available() {
-    return this._available;
-  }
-  private set available(value) {
-    this._available = value;
-  }
-
   public static getInstance() {
     if (!BackendAPI.instance) {
       BackendAPI.instance = new BackendAPI();
@@ -56,8 +48,7 @@ class BackendAPI {
 
   public async isAvailable() {
     try {
-      this.available = (await this.getStatus()).status === 'up';
-      return this.available;
+      return (await this.getStatus()).status === 'up';
     } catch (e) {
       return false;
     }
