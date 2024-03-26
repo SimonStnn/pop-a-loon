@@ -59,8 +59,16 @@ const updateBadgeColors = () => {
   let loopRunning = false;
   const loop = async () => {
     // If the loop is already running, don't start another one
-    if (loopRunning || !(await remote.isAvailable())) return;
+    if (loopRunning) return;
     loopRunning = true;
+
+    if (!remote.isAvailable()) {
+      do {
+        await sleep(60000);
+      } while (!remote.isAvailable());
+      // Reload the extension now that the remote is available
+      chrome.runtime.reload();
+    }
 
     const config = await storage.get('config');
 
