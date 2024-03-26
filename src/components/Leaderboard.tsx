@@ -13,15 +13,30 @@ import { RemoteResponse } from '@/const';
 
 export default () => {
   const [data, setData] = useState({} as RemoteResponse['leaderboard']);
+  const [isAvailable, setIsAvailable] = useState(false);
+
+  console.log('remote.isAvailable()', remote.isAvailable());
+
+  if (!remote.isAvailable()) {
+    return <p>Remote server is not available</p>;
+  }
 
   useEffect(() => {
+    const checkAvailability = async () => {
+      setIsAvailable((await remote.isAvailable()) || false);
+    };
     const fetchData = async () => {
       const result = await remote.getLeaderboard(10);
       setData(result);
     };
 
+    checkAvailability();
     fetchData();
   }, []);
+
+  if (!isAvailable) {
+    return <p>Remote server is not available</p>;
+  }
 
   return (
     <>
