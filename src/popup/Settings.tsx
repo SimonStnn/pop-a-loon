@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import Header from '@/components/Header';
 import Main from '@/components/Main';
 import storage from '@/storage';
 import remote from '@/remote';
@@ -89,7 +88,6 @@ export default () => {
 
   return (
     <>
-      <Header title="Settings" />
       <Main className="">
         <ScrollArea>
           <div className="h-[156px] grid gap-4 pl-2 pr-5 mr-[-8px]">

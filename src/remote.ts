@@ -7,6 +7,8 @@ interface RequestParams {
 
 class BackendAPI {
   private static instance: BackendAPI;
+  private available: boolean | null = null;
+  private lastChecked: Date | null = null;
   private static readonly BASE_URL =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
@@ -44,6 +46,31 @@ class BackendAPI {
       throw new Error(`Failed to fetch ${url.toString()}`);
     }
     return response.json() as Promise<T>;
+  }
+
+  public async isAvailable() {
+    const now = new Date();
+    // If the result is less than one minute old, return the stored result
+    if (
+      this.lastChecked &&
+      now.getTime() - this.lastChecked.getTime() < 60000
+    ) {
+      return this.available;
+    }
+
+    try {
+      this.available = (await this.getStatus()).status === 'up';
+      this.lastChecked = now;
+      return this.available;
+    } catch (e) {
+      this.available = false;
+      this.lastChecked = now;
+      return false;
+    }
+  }
+
+  public async getStatus() {
+    return await this.request<RemoteResponse['status']>('GET', '/status');
   }
 
   public async getConfiguration() {

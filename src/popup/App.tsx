@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { List, Settings } from 'lucide-react';
 import storage from '@/storage';
 import { Message } from '@const';
-import Header from '@/components/Header';
 import Main from '@/components/Main';
 
 const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);
 
   const fetchBalloonCount = async () => {
-    const count = (await storage.get('user')).count;
+    const count = (await storage.get('user'))?.count;
     setBalloonCount(count || 0);
   };
 
@@ -27,7 +25,6 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header />
       <Main>
         <section className="flex flex-col gap-2 items-center">
           <span className="flex justify-center items-center text-4xl font-bold drop-shadow">

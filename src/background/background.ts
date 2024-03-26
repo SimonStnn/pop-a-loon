@@ -26,6 +26,12 @@ const updateBadgeColors = () => {
   if (typeof window !== 'undefined') return;
 
   const setup = async () => {
+    const remoteAvailable = await remote.isAvailable();
+    if (!remoteAvailable) {
+      console.warn('Remote is not available');
+      return;
+    }
+
     // Get the user from the local storage
     let localUser = await storage.get('user');
     // If the user is not in the local storage, get a new user from the remote
@@ -55,6 +61,14 @@ const updateBadgeColors = () => {
     // If the loop is already running, don't start another one
     if (loopRunning) return;
     loopRunning = true;
+
+    if (!remote.isAvailable()) {
+      do {
+        await sleep(60000);
+      } while (!remote.isAvailable());
+      // Reload the extension now that the remote is available
+      chrome.runtime.reload();
+    }
 
     const config = await storage.get('config');
 
