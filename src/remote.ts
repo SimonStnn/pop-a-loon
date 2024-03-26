@@ -58,13 +58,13 @@ class BackendAPI {
       return this.available;
     }
 
+    this.lastChecked = now;
     try {
       this.available = (await this.getStatus()).status === 'up';
-      this.lastChecked = now;
       return this.available;
     } catch (e) {
       this.available = false;
-      this.lastChecked = now;
+      console.warn('Remote is not available');
       return false;
     }
   }
