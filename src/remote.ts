@@ -46,6 +46,18 @@ class BackendAPI {
     return response.json() as Promise<T>;
   }
 
+  public async isAvailable() {
+    try {
+      return (await this.getStatus()).status === 'up';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async getStatus() {
+    return await this.request<RemoteResponse['status']>('GET', '/status');
+  }
+
   public async getConfiguration() {
     return await this.request<RemoteResponse['configuration']>(
       'GET',

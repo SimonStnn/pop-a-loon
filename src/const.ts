@@ -57,6 +57,10 @@ export type RemoteResponse = {
     count: number;
     updatedAt: string;
   };
+  status: {
+    status: 'up';
+    version: string;
+  };
   configuration: RemoteConfig;
   leaderboard: {
     user: User;
