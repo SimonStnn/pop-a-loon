@@ -24,6 +24,16 @@ export function sleep(ms: number) {
 
 export function sendMessage(message: Message) {
   try {
-    chrome.runtime.sendMessage(message);
+    chrome.runtime.sendMessage(message, (res) => {
+      if (chrome.runtime.lastError) {
+        console.log(
+          'Error sending message:',
+          message,
+          '\nError message:',
+          chrome.runtime.lastError
+        );
+        chrome.runtime.lastError = undefined;
+      }
+    });
   } catch (e) {}
 }
