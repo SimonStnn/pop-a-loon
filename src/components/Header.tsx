@@ -35,10 +35,12 @@ const HeaderIcon = (props: iconProps) => {
 export default (props: HeaderProps) => {
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const location = useLocation();
-  const navIcons = [
-    { to: '/general', icon: List },
-    { to: '/settings', icon: Settings },
-  ];
+  const navIcons =
+    (isAvailable && [
+      { to: '/general', icon: List },
+      { to: '/settings', icon: Settings },
+    ]) ||
+    [];
 
   const title = Object.keys(routeTitles).includes(location.pathname)
     ? routeTitles[location.pathname]
