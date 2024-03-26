@@ -22,6 +22,22 @@ class StorageManager {
       });
     });
   }
+
+  remove<K extends storageKey>(key: K): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._storage.remove(key, () => {
+        resolve();
+      });
+    });
+  }
+
+  clear(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._storage.clear(() => {
+        resolve();
+      });
+    });
+  }
 }
 
 export default new StorageManager();
