@@ -48,8 +48,6 @@ export default (props: HeaderProps) => {
     remote.isAvailable().then(setIsAvailable);
   }, []);
 
-  console.log('isAvailable', remote.isAvailable());
-
   return (
     <>
       <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
