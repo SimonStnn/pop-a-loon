@@ -98,10 +98,6 @@ type IncrementCount = {
   action: 'incrementCount';
 };
 
-type ResetCounterMessage = {
-  action: 'resetCounter';
-};
-
 type SpawnBalloonMessage = {
   action: 'spawnBalloon';
 };
@@ -109,7 +105,6 @@ type SpawnBalloonMessage = {
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
-  | ResetCounterMessage
   | SpawnBalloonMessage;
 
 //

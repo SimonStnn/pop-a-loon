@@ -7,12 +7,13 @@ interface RequestParams {
 
 class BackendAPI {
   private static instance: BackendAPI;
-  private available: boolean | null = null;
-  private lastChecked: Date | null = null;
   private static readonly BASE_URL =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
-      : 'http://localhost:3000'; // TODO: Change to production URL
+      : 'https://pop-a-loon.stijnen.be';
+
+  private available: boolean | null = null;
+  private lastChecked: Date | null = null;
 
   private constructor() {}
 
@@ -65,6 +66,7 @@ class BackendAPI {
     } catch (e) {
       this.available = false;
       console.warn('Remote is not available');
+      console.log(BackendAPI.BASE_URL);
       return false;
     }
   }

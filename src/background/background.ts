@@ -118,9 +118,6 @@ const updateBadgeColors = () => {
     sendResponse
   ) {
     switch (message.action) {
-      case 'resetCounter':
-        // TODO: Implement resetCounter
-        break;
       case 'updateCounter':
         setBadgeNumber(message.balloonCount);
         updateBadgeColors();
