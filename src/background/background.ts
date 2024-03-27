@@ -100,6 +100,18 @@ const updateBadgeColors = () => {
     }
   };
 
+  const backgroundScript = async () => {
+    try {
+      await setup();
+      await loop();
+    } catch (e) {
+      console.error(e);
+      console.log('Restarting in 1 minute');
+      await sleep(60000);
+      chrome.runtime.reload();
+    }
+  };
+
   chrome.runtime.onMessage.addListener(async function messageListener(
     message: Message,
     sender,
@@ -135,13 +147,6 @@ const updateBadgeColors = () => {
     }
   });
 
-  chrome.runtime.onStartup.addListener(async () => {
-    await setup();
-    await loop();
-  });
-
-  chrome.runtime.onInstalled.addListener(async () => {
-    await setup();
-    await loop();
-  });
+  chrome.runtime.onStartup.addListener(backgroundScript);
+  chrome.runtime.onInstalled.addListener(backgroundScript);
 })();
