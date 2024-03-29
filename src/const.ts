@@ -108,6 +108,12 @@ export type Message =
   | SpawnBalloonMessage;
 
 //
+// * Alarms
+//
+
+export type AlarmName = 'spawnBalloon' | 'restart';
+
+//
 // * Other
 //
 

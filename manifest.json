@@ -1,9 +1,10 @@
 {
   "name": "Pop-a-loon",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A fun Chrome extension that lets balloons rise on your screen",
   "permissions": [
-    "storage"
+    "storage",
+    "alarms"
   ],
   "icons": {
     "16": "./resources/icons/icon-16.png",

@@ -1,5 +1,5 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
-import { Message, initalConfig } from '@const';
+import { AlarmName, Message, initalConfig } from '@const';
 import { generateRandomNumber, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
@@ -27,7 +27,11 @@ const updateBadgeColors = () => {
 
   const setup = async () => {
     const remoteAvailable = await remote.isAvailable();
-    if (!remoteAvailable) return;
+    if (!remoteAvailable) {
+      console.log('Remote is not available, retrying in 1 minute');
+      await chrome.alarms.create('restart', { when: Date.now() + 60000 });
+      return;
+    }
 
     // Get the user from the local storage
     let localUser = await storage.get('user');
@@ -48,69 +52,72 @@ const updateBadgeColors = () => {
     // Merge the local config with the remote config
     await storage.set('config', { ...config, ...remoteConfig });
 
+    // Create the alarm for the spawn interval
+    createSpawnAlarm('spawnBalloon');
+
     // Set badge number and colors
     setBadgeNumber(user.count || 0);
     updateBadgeColors();
   };
 
-  let loopRunning = false;
-  const loop = async () => {
-    // If the loop is already running, don't start another one
-    if (loopRunning) return;
-    loopRunning = true;
+  const spawnBalloon = async () => {
+    // Get all active tabs
+    chrome.tabs.query({ active: true }, (tabs) => {
+      // Select a random tab
+      const num = Math.round(generateRandomNumber(0, tabs.length - 1));
+      const tab = tabs[num];
+      if (!tab.id) return;
+      console.log(`Sending spawnBalloon to`, tab);
 
-    if (!(await remote.isAvailable())) {
-      do {
-        console.log('Remote is not available, retrying in 1 minute');
-        await sleep(60000);
-      } while (!(await remote.isAvailable()));
-      // Reload the extension now that the remote is available
-      chrome.runtime.reload();
-    }
-
-    const config = await storage.get('config');
-
-    while (true) {
-      // Wait between 0 and 10 minutes
-      await sleep(
-        generateRandomNumber(config.spawnInterval.min, config.spawnInterval.max)
-      );
-
-      // Get all active tabs
-      chrome.tabs.query({ active: true }, (tabs) => {
-        // Select a random tab
-        const num = Math.round(generateRandomNumber(0, tabs.length - 1));
-        const tab = tabs[num];
-        if (!tab.id) return;
-        console.log(`Sending spawnBalloon to`, tab);
-
-        // Send the spawnBalloon message
-        chrome.tabs.sendMessage(
-          tab.id,
-          { action: 'spawnBalloon' },
-          (response) => {
-            // If there was an error, discard it
-            // Error is most likely 'Receiving end does not exist.' exception
-            if (chrome.runtime.lastError) {
-              chrome.runtime.lastError = undefined;
-            }
+      // Send the spawnBalloon message
+      chrome.tabs.sendMessage(
+        tab.id,
+        { action: 'spawnBalloon' },
+        (response) => {
+          // If there was an error, discard it
+          // Error is most likely 'Receiving end does not exist.' exception
+          if (chrome.runtime.lastError) {
+            chrome.runtime.lastError = undefined;
           }
-        );
-      });
-    }
+        }
+      );
+    });
+  };
+
+  const createSpawnAlarm = async (name: AlarmName) => {
+    const config = await storage.get('config');
+    // Generate a random delay between the min and max spawn interval
+    const randomDelay = generateRandomNumber(
+      config.spawnInterval.min,
+      config.spawnInterval.max
+    );
+    await chrome.alarms.create(name, { when: Date.now() + randomDelay });
   };
 
   const backgroundScript = async () => {
     try {
       await setup();
-      await loop();
     } catch (e) {
       console.error(e);
       console.log('Restarting in 1 minute');
-      await sleep(60000);
-      chrome.runtime.reload();
+      chrome.alarms.create('restart', { when: Date.now() + 60000 });
     }
   };
+
+  chrome.alarms.onAlarm.addListener(async (alarm) => {
+    switch (alarm.name as AlarmName) {
+      case 'spawnBalloon':
+        // Spawn a balloon
+        await spawnBalloon();
+        // Create a new alarm for the spawn interval
+        await createSpawnAlarm('spawnBalloon');
+        break;
+      case 'restart':
+        // Restart the extension
+        chrome.runtime.reload();
+        break;
+    }
+  });
 
   chrome.runtime.onMessage.addListener(async function messageListener(
     message: Message,
