@@ -1,5 +1,5 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
-import { Message, initalConfig } from '@const';
+import { AlarmName, Message, initalConfig } from '@const';
 import { generateRandomNumber, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
@@ -48,6 +48,9 @@ const updateBadgeColors = () => {
     // Merge the local config with the remote config
     await storage.set('config', { ...config, ...remoteConfig });
 
+    // Create the alarm for the spawn interval
+    createSpawnAlarm('spawnBalloon');
+
     // Set badge number and colors
     setBadgeNumber(user.count || 0);
     updateBadgeColors();
@@ -67,37 +70,40 @@ const updateBadgeColors = () => {
       // Reload the extension now that the remote is available
       chrome.runtime.reload();
     }
+  };
 
-    const config = await storage.get('config');
+  const spawnBalloon = async () => {
+    // Get all active tabs
+    chrome.tabs.query({ active: true }, (tabs) => {
+      // Select a random tab
+      const num = Math.round(generateRandomNumber(0, tabs.length - 1));
+      const tab = tabs[num];
+      if (!tab.id) return;
+      console.log(`Sending spawnBalloon to`, tab);
 
-    while (true) {
-      // Wait between 0 and 10 minutes
-      await sleep(
-        generateRandomNumber(config.spawnInterval.min, config.spawnInterval.max)
-      );
-
-      // Get all active tabs
-      chrome.tabs.query({ active: true }, (tabs) => {
-        // Select a random tab
-        const num = Math.round(generateRandomNumber(0, tabs.length - 1));
-        const tab = tabs[num];
-        if (!tab.id) return;
-        console.log(`Sending spawnBalloon to`, tab);
-
-        // Send the spawnBalloon message
-        chrome.tabs.sendMessage(
-          tab.id,
-          { action: 'spawnBalloon' },
-          (response) => {
-            // If there was an error, discard it
-            // Error is most likely 'Receiving end does not exist.' exception
-            if (chrome.runtime.lastError) {
-              chrome.runtime.lastError = undefined;
-            }
+      // Send the spawnBalloon message
+      chrome.tabs.sendMessage(
+        tab.id,
+        { action: 'spawnBalloon' },
+        (response) => {
+          // If there was an error, discard it
+          // Error is most likely 'Receiving end does not exist.' exception
+          if (chrome.runtime.lastError) {
+            chrome.runtime.lastError = undefined;
           }
-        );
-      });
-    }
+        }
+      );
+    });
+  };
+
+  const createSpawnAlarm = async (name: AlarmName) => {
+    const config = await storage.get('config');
+    // Generate a random delay between the min and max spawn interval
+    const randomDelay = generateRandomNumber(
+      config.spawnInterval.min,
+      config.spawnInterval.max
+    );
+    chrome.alarms.create(name, { when: Date.now() + randomDelay });
   };
 
   const backgroundScript = async () => {
@@ -107,10 +113,24 @@ const updateBadgeColors = () => {
     } catch (e) {
       console.error(e);
       console.log('Restarting in 1 minute');
-      await sleep(60000);
-      chrome.runtime.reload();
+      chrome.alarms.create('restart', { when: Date.now() + 60000 });
     }
   };
+
+  chrome.alarms.onAlarm.addListener(async (alarm) => {
+    switch (alarm.name as AlarmName) {
+      case 'spawnBalloon':
+        // Spawn a balloon
+        await spawnBalloon();
+        // Create a new alarm for the spawn interval
+        await createSpawnAlarm('spawnBalloon');
+        break;
+      case 'restart':
+        // Restart the extension
+        chrome.runtime.reload();
+        break;
+    }
+  });
 
   chrome.runtime.onMessage.addListener(async function messageListener(
     message: Message,
