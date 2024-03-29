@@ -30,6 +30,7 @@ const updateBadgeColors = () => {
     if (!remoteAvailable) {
       console.log('Remote is not available, retrying in 1 minute');
       chrome.alarms.create('restart', { when: Date.now() + 60000 });
+      return;
     }
 
     // Get the user from the local storage
