@@ -29,7 +29,7 @@ const updateBadgeColors = () => {
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
       console.log('Remote is not available, retrying in 1 minute');
-      chrome.alarms.create('restart', { when: Date.now() + 60000 });
+      await chrome.alarms.create('restart', { when: Date.now() + 60000 });
       return;
     }
 
@@ -91,7 +91,7 @@ const updateBadgeColors = () => {
       config.spawnInterval.min,
       config.spawnInterval.max
     );
-    chrome.alarms.create(name, { when: Date.now() + randomDelay });
+    await chrome.alarms.create(name, { when: Date.now() + randomDelay });
   };
 
   const backgroundScript = async () => {
