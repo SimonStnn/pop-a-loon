@@ -27,7 +27,10 @@ const updateBadgeColors = () => {
 
   const setup = async () => {
     const remoteAvailable = await remote.isAvailable();
-    if (!remoteAvailable) return;
+    if (!remoteAvailable) {
+      console.log('Remote is not available, retrying in 1 minute');
+      chrome.alarms.create('restart', { when: Date.now() + 60000 });
+    }
 
     // Get the user from the local storage
     let localUser = await storage.get('user');
@@ -54,22 +57,6 @@ const updateBadgeColors = () => {
     // Set badge number and colors
     setBadgeNumber(user.count || 0);
     updateBadgeColors();
-  };
-
-  let loopRunning = false;
-  const loop = async () => {
-    // If the loop is already running, don't start another one
-    if (loopRunning) return;
-    loopRunning = true;
-
-    if (!(await remote.isAvailable())) {
-      do {
-        console.log('Remote is not available, retrying in 1 minute');
-        await sleep(60000);
-      } while (!(await remote.isAvailable()));
-      // Reload the extension now that the remote is available
-      chrome.runtime.reload();
-    }
   };
 
   const spawnBalloon = async () => {
@@ -109,7 +96,6 @@ const updateBadgeColors = () => {
   const backgroundScript = async () => {
     try {
       await setup();
-      await loop();
     } catch (e) {
       console.error(e);
       console.log('Restarting in 1 minute');
