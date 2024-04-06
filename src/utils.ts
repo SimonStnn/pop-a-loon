@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import { Message } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -22,18 +23,17 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function sendMessage(message: Message) {
+export async function sendMessage(message: Message) {
   try {
-    chrome.runtime.sendMessage(message, (res) => {
-      if (chrome.runtime.lastError) {
-        console.log(
-          'Error sending message:',
-          message,
-          '\nError message:',
-          chrome.runtime.lastError
-        );
-        chrome.runtime.lastError = undefined;
-      }
-    });
+    const res = await browser.runtime.sendMessage(message);
+    if (browser.runtime.lastError) {
+      console.log(
+        'Error sending message:',
+        message,
+        '\nError message:',
+        browser.runtime.lastError
+      );
+      browser.runtime.lastError;
+    }
   } catch (e) {}
 }

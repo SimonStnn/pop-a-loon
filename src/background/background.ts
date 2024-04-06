@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { AlarmName, Message, initalConfig } from '@const';
 import { generateRandomNumber, sendMessage, sleep } from '@utils';
@@ -5,7 +6,7 @@ import storage from '@/storage';
 import remote from '@/remote';
 
 const setBadgeNumber = (count: number) => {
-  chrome.action.setBadgeText({
+  browser.action.setBadgeText({
     text: abbreviateNumber(count),
   });
 };
@@ -13,23 +14,23 @@ const setBadgeNumber = (count: number) => {
 const updateBadgeColors = () => {
   (async () => {
     const config = await storage.get('config');
-    chrome.action.setBadgeBackgroundColor({
+    browser.action.setBadgeBackgroundColor({
       color: config.badge.backgroundColor,
     });
-    chrome.action.setBadgeTextColor({ color: config.badge.color });
+    browser.action.setBadgeTextColor({ color: config.badge.color });
   })();
 };
 
 (() => {
   // Check if the script is running in the background
   // If the window object exists, we're not in the background script
-  if (typeof window !== 'undefined') return;
+  // if (typeof window !== 'undefined') return;
 
   const setup = async () => {
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
       console.log('Remote is not available, retrying in 1 minute');
-      await chrome.alarms.create('restart', { when: Date.now() + 60000 });
+      await browser.alarms.create('restart', { when: Date.now() + 60000 });
       return;
     }
 
@@ -62,26 +63,20 @@ const updateBadgeColors = () => {
 
   const spawnBalloon = async () => {
     // Get all active tabs
-    chrome.tabs.query({ active: true }, (tabs) => {
-      // Select a random tab
-      const num = Math.round(generateRandomNumber(0, tabs.length - 1));
-      const tab = tabs[num];
-      if (!tab.id) return;
-      console.log(`Sending spawnBalloon to`, tab);
+    const tabs = await browser.tabs.query({ active: true });
+    // Select a random tab
+    const num = Math.round(generateRandomNumber(0, tabs.length - 1));
+    const tab = tabs[num];
+    if (!tab.id) return;
+    console.log(`Sending spawnBalloon to`, tab);
 
-      // Send the spawnBalloon message
-      chrome.tabs.sendMessage(
-        tab.id,
-        { action: 'spawnBalloon' },
-        (response) => {
-          // If there was an error, discard it
-          // Error is most likely 'Receiving end does not exist.' exception
-          if (chrome.runtime.lastError) {
-            chrome.runtime.lastError = undefined;
-          }
-        }
-      );
-    });
+    // Send the spawnBalloon message
+    const response = await browser.tabs
+      .sendMessage(tab.id, { action: 'spawnBalloon' })
+      .catch((e) => {});
+    if (browser.runtime.lastError) {
+      browser.runtime.lastError;
+    }
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
@@ -91,7 +86,7 @@ const updateBadgeColors = () => {
       config.spawnInterval.min,
       config.spawnInterval.max
     );
-    await chrome.alarms.create(name, { when: Date.now() + randomDelay });
+    await browser.alarms.create(name, { when: Date.now() + randomDelay });
   };
 
   const backgroundScript = async () => {
@@ -100,11 +95,11 @@ const updateBadgeColors = () => {
     } catch (e) {
       console.error(e);
       console.log('Restarting in 1 minute');
-      chrome.alarms.create('restart', { when: Date.now() + 60000 });
+      browser.alarms.create('restart', { when: Date.now() + 60000 });
     }
   };
 
-  chrome.alarms.onAlarm.addListener(async (alarm) => {
+  browser.alarms.onAlarm.addListener(async (alarm) => {
     switch (alarm.name as AlarmName) {
       case 'spawnBalloon':
         // Spawn a balloon
@@ -114,12 +109,12 @@ const updateBadgeColors = () => {
         break;
       case 'restart':
         // Restart the extension
-        chrome.runtime.reload();
+        browser.runtime.reload();
         break;
     }
   });
 
-  chrome.runtime.onMessage.addListener(async function messageListener(
+  browser.runtime.onMessage.addListener(async function messageListener(
     message: Message,
     sender,
     sendResponse
@@ -151,6 +146,6 @@ const updateBadgeColors = () => {
     }
   });
 
-  chrome.runtime.onStartup.addListener(backgroundScript);
-  chrome.runtime.onInstalled.addListener(backgroundScript);
+  browser.runtime.onStartup.addListener(backgroundScript);
+  browser.runtime.onInstalled.addListener(backgroundScript);
 })();
