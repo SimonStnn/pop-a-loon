@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,7 +66,7 @@ export default () => {
   const deleteFormOnSubmit = async () => {
     const token = await storage.get('token');
     await remote.deleteUser(token);
-    chrome.runtime.reload();
+    browser.runtime.reload();
   };
 
   useEffect(() => {
