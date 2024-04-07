@@ -28,8 +28,6 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
-    "@types/firefox-webext-browser": "^120.0.3",
-    "chrome-types": "^0.1.253",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "js-abbreviation-number": "^1.4.0",
@@ -45,7 +43,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.259",
     "@types/react": "^18.2.52",
     "@types/react-dom": "^18.2.18",
     "@types/webextension-polyfill": "^0.10.7",
