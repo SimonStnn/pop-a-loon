@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 let mode;
@@ -44,6 +45,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/popup/index.html', // Specify the path to your HTML template
       filename: './popup.html', // Specify the output filename
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        // Copy resource files to dist
+        { from: 'resources/', to: 'resources/' },
+      ],
     }),
   ],
   devtool: mode == 'development' ? 'inline-source-map' : undefined,
