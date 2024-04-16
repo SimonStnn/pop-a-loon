@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --mode development",
-    "dev-watch": "webpack --mode development --watch",
-    "build": "webpack --mode production",
+    "dev:chrome": "set BROWSER=chrome&& webpack --mode development",
+    "dev:firefox": "set BROWSER=firefox&& webpack --mode development",
+    "build:chrome": "set BROWSER=chrome&& webpack --mode production",
+    "build:firefox": "set BROWSER=firefox&& webpack --mode production",
     "prepare": "husky"
   },
   "author": "",
