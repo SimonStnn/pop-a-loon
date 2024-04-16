@@ -1,6 +1,6 @@
 {
+  "manifest_version": 3,
   "name": "Pop-a-loon",
-  "version": "1.5.4",
   "description": "A fun Chrome extension that lets balloons rise on your screen",
   "permissions": [
     "storage",
@@ -48,6 +48,5 @@
   ],
   "background": {
     "service_worker": "./background.js"
-  },
-  "manifest_version": 3
+  }
 }
