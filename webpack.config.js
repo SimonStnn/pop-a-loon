@@ -54,6 +54,11 @@ module.exports = {
         {
           from: `manifest.json`,
           to: 'manifest.json',
+          transform: (content) => {
+            const manifest = JSON.parse(content.toString());
+            manifest.version = process.env.npm_package_version;
+            return JSON.stringify(manifest, null, 2);
+          },
         },
       ],
     }),
