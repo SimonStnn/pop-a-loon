@@ -8,6 +8,10 @@ if (process.env.npm_lifecycle_script.includes('development'))
   mode = 'development';
 else mode = 'production';
 
+const browser = process.env.BROWSER;
+
+console.log(`Building for ${browser} in ${mode} mode`);
+
 module.exports = {
   mode,
   entry: {
@@ -52,7 +56,7 @@ module.exports = {
         { from: 'resources/', to: 'resources/' },
         // Copy manifest.json to dist
         {
-          from: `manifest.json`,
+          from: `manifest.${browser}.json`,
           to: 'manifest.json',
           transform: (content) => {
             const manifest = JSON.parse(content.toString());
