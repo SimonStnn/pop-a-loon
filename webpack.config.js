@@ -50,6 +50,11 @@ module.exports = {
       patterns: [
         // Copy resource files to dist
         { from: 'resources/', to: 'resources/' },
+        // Copy manifest.json to dist
+        {
+          from: `manifest.json`,
+          to: 'manifest.json',
+        },
       ],
     }),
   ],

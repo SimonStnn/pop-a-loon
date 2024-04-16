@@ -22,7 +22,7 @@
       "128": "./resources/icons/icon-128.png"
     },
     "default_title": "Pop-a-loon",
-    "default_popup": "./dist/popup.html"
+    "default_popup": "./popup.html"
   },
   "content_scripts": [
     {
@@ -31,7 +31,7 @@
         "http://*/*"
       ],
       "js": [
-        "./dist/content.js"
+        "./content.js"
       ]
     }
   ],
@@ -47,7 +47,7 @@
     }
   ],
   "background": {
-    "service_worker": "./dist/background.js"
+    "service_worker": "./background.js"
   },
   "manifest_version": 3
 }
