@@ -1,5 +1,4 @@
 import { generateRandomNumber, sendMessage } from '@utils';
-import * as balloons from '@/balloons';
 
 export const balloonContainer = document.createElement('div');
 balloonContainer.id = 'balloon-container';
@@ -86,16 +85,5 @@ export default abstract class Balloon {
 
     // Send message with the new count
     sendMessage({ action: 'incrementCount' });
-  }
-
-  public static getRandomBalloon() {
-    // Get an array of balloon classes
-    const balloonClasses = Object.values(balloons);
-
-    // Get a random index
-    const index = Math.floor(Math.random() * balloonClasses.length);
-
-    // Return a new instance of the selected balloon class
-    return new balloonClasses[index]();
   }
 }
