@@ -1,5 +1,4 @@
 import browser from 'webextension-polyfill';
-import Balloon from '@/balloon';
 export const popSoundUrl = browser.runtime.getURL('resources/audio/pop.mp3');
 export const balloonImageUrl = browser.runtime.getURL(
   'resources/icons/icon-128.png'
@@ -102,7 +101,6 @@ type IncrementCount = {
 
 type SpawnBalloonMessage = {
   action: 'spawnBalloon';
-  balloon: Balloon;
 };
 
 export type Message =

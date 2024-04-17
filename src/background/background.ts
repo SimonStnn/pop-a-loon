@@ -4,7 +4,6 @@ import { AlarmName, Message, initalConfig } from '@const';
 import { generateRandomNumber, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
-import Balloon from '@/balloon';
 
 const setBadgeNumber = (count: number) => {
   browser.action.setBadgeText({
@@ -71,13 +70,9 @@ const updateBadgeColors = () => {
     if (!tab.id) return;
     console.log(`Sending spawnBalloon to`, tab);
 
-    // Make a balloon
-    const balloon = Balloon.getRandomBalloon();
-    const message: Message = { action: 'spawnBalloon', balloon };
-
     // Send the spawnBalloon message
     const response = await browser.tabs
-      .sendMessage(tab.id, message)
+      .sendMessage(tab.id, { action: 'spawnBalloon' })
       .catch((e) => {});
     if (browser.runtime.lastError) {
       browser.runtime.lastError;
