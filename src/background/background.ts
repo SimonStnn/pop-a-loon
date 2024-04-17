@@ -131,17 +131,15 @@ const updateBadgeColors = () => {
           ...(await storage.get('user')),
           count: newCount.count,
         });
-        // Send message to popup if its open
-        sendMessage({
+
+        const msg: Message = {
           action: 'updateCounter',
           balloonCount: newCount.count,
-        });
+        };
+        // Send message to popup if its open
+        sendMessage(msg);
         // Call the listener again to update the badge number
-        messageListener(
-          { action: 'updateCounter', balloonCount: newCount.count },
-          sender,
-          sendResponse
-        );
+        messageListener(msg, sender, sendResponse);
         break;
     }
   });
