@@ -1,13 +1,13 @@
 {
-    "action": {
-        "default_icon": {
-            "16": "./resources/icons/icon-16.png",
-            "24": "./resources/icons/icon-24.png",
-            "32": "./resources/icons/icon-32.png",
-            "48": "./resources/icons/icon-48.png",
-            "128": "./resources/icons/icon-128.png"
-        },
-        "default_title": "Pop-a-loon",
-        "default_popup": "./popup.html"
-    }
+  "action": {
+    "default_icon": {
+      "16": "./resources/icons/icon-16.png",
+      "24": "./resources/icons/icon-24.png",
+      "32": "./resources/icons/icon-32.png",
+      "48": "./resources/icons/icon-48.png",
+      "128": "./resources/icons/icon-128.png"
+    },
+    "default_title": "Pop-a-loon",
+    "default_popup": "./popup.html"
+  }
 }
