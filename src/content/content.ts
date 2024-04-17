@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 import { Message } from '@const';
-import Balloon, { balloonContainer } from '@/balloon';
+import { balloonContainer } from '@/balloon';
 import './style.css';
 
 (() => {
@@ -20,8 +20,7 @@ import './style.css';
       // If the message is not spawnBalloon, ignore it
       if (message.action !== 'spawnBalloon') return;
       // Create a new balloon and make it rise
-      const balloon = new Balloon();
-      balloon.rise();
+      message.balloon.rise();
     }
   );
 
