@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -56,12 +57,20 @@ module.exports = {
         { from: 'resources/', to: 'resources/' },
         // Copy manifest.json to dist
         {
-          from: `manifest.${browser}.json`,
+          from: `manifest.json`,
           to: 'manifest.json',
           transform: (content) => {
             const manifest = JSON.parse(content.toString());
             manifest.version = process.env.npm_package_version;
-            return JSON.stringify(manifest, null, 2);
+
+            const manifest_overrides = fs.readFileSync(
+              `manifest.${browser}.json`
+            );
+
+            return JSON.stringify({
+              ...manifest,
+              ...JSON.parse(manifest_overrides),
+            });
           },
         },
       ],
