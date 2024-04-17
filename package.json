@@ -18,7 +18,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "prettier --write"
+    "*.{js,jsx,ts,tsx,json}": "prettier --write"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
