@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import { Message } from '@const';
 import Balloon, { balloonContainer } from '@/balloon';
 import './style.css';
@@ -12,7 +13,7 @@ import './style.css';
     return;
   }
 
-  chrome.runtime.onMessage.addListener(
+  browser.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
       // Always call sendResponse, this is required
       sendResponse();

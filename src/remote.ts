@@ -66,7 +66,7 @@ class BackendAPI {
     } catch (e) {
       this.available = false;
       console.warn('Remote is not available');
-      console.log(BackendAPI.BASE_URL);
+      console.log(BackendAPI.BASE_URL, e);
       return false;
     }
   }
