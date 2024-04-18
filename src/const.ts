@@ -1,9 +1,3 @@
-import browser from 'webextension-polyfill';
-export const popSoundUrl = browser.runtime.getURL('resources/audio/pop.mp3');
-export const balloonImageUrl = browser.runtime.getURL(
-  'resources/icons/icon-128.png'
-);
-
 //
 // * Config types
 //
