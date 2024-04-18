@@ -37,3 +37,23 @@ export async function sendMessage(message: Message) {
     }
   } catch (e) {}
 }
+
+export function weightedRandom<T>(results: T[], weights: number[]): T | null {
+  // Calculate the total weight
+  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+
+  // Generate a random number between 0 and the total weight
+  const randomWeight = Math.random() * totalWeight;
+
+  // Find the index of the selected result based on the random weight
+  let weightSum = 0;
+  for (let i = 0; i < results.length; i++) {
+    weightSum += weights[i];
+    if (randomWeight < weightSum) {
+      return results[i];
+    }
+  }
+
+  // Return null if no result is found (shouldn't happen if the weights are correct)
+  return null;
+}
