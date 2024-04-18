@@ -38,7 +38,7 @@ const buildBalloonElement = (
 export default abstract class Balloon {
   public abstract getRandomDuration(): number;
 
-  private element: HTMLDivElement;
+  private readonly element: HTMLDivElement;
 
   protected balloonImageUrl: string =
     resourceLocation + this.constructor.name.toLowerCase() + '/icon.png';
