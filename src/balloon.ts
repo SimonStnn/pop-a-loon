@@ -1,7 +1,10 @@
+import browser from 'webextension-polyfill';
 import { generateRandomNumber, sendMessage } from '@utils';
 
 export const balloonContainer = document.createElement('div');
 balloonContainer.id = 'balloon-container';
+
+const resourceLocation = browser.runtime.getURL('resources/balloons/');
 
 const buildBalloonElement = (
   element: HTMLDivElement,
@@ -33,11 +36,15 @@ const buildBalloonElement = (
 };
 
 export default abstract class Balloon {
-  protected abstract balloonImageUrl: string;
-  protected abstract popSound: HTMLAudioElement;
   public abstract getRandomDuration(): number;
 
   private element: HTMLDivElement;
+
+  protected balloonImageUrl: string =
+    resourceLocation + this.constructor.name.toLowerCase() + '/icon.png';
+  protected popSoundUrl: string =
+    resourceLocation + this.constructor.name.toLowerCase() + '/pop.mp3';
+  protected popSound: HTMLAudioElement = new Audio(this.popSoundUrl);
 
   constructor() {
     this.element = document.createElement('div');
