@@ -1,33 +1,55 @@
+import browser from 'webextension-polyfill';
 import { generateRandomNumber, sendMessage } from '@utils';
-import { balloonImageUrl, popSoundUrl } from '@const';
-import storage from '@/storage';
 
 export const balloonContainer = document.createElement('div');
 balloonContainer.id = 'balloon-container';
 
-export default class Balloon {
-  private element: HTMLDivElement = document.createElement('div');
-  private duration: number;
-  private popSound: HTMLAudioElement = new Audio(popSoundUrl);
+const resourceLocation = browser.runtime.getURL('resources/balloons/');
+
+const buildBalloonElement = (
+  element: HTMLDivElement,
+  props: {
+    balloonImage: HTMLImageElement;
+    size: number;
+    positionX: number;
+    riseDuration: number;
+    onAnimationend: () => void;
+  }
+) => {
+  element.classList.add('balloon');
+
+  // Add an image to the balloon
+  element.appendChild(props.balloonImage);
+
+  // Set the balloon's width and height
+  element.style.width = props.size + 'px';
+  element.style.height = element.style.width;
+  element.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
+  element.style.animationDuration = props.riseDuration.toString() + 'ms';
+  element.style.animationTimingFunction = 'linear';
+  element.style.animationName = 'rise';
+  element.addEventListener('animationend', props.onAnimationend);
+
+  return element;
+};
+
+export default abstract class Balloon {
+  public abstract getRandomDuration(): number;
+
+  private readonly element: HTMLDivElement;
+
+  protected balloonImageUrl: string =
+    resourceLocation + this.constructor.name.toLowerCase() + '/icon.png';
+  protected balloonImage: HTMLImageElement = document.createElement('img');
+  protected popSoundUrl: string =
+    resourceLocation + this.constructor.name.toLowerCase() + '/pop.mp3';
+  protected popSound: HTMLAudioElement = new Audio(this.popSoundUrl);
 
   constructor() {
-    // Set the balloon's width and height to value between 50 and 200
-    this.element.classList.add('balloon');
-    const size = generateRandomNumber(50, 75);
-    this.element.style.width = size + 'px';
-    this.element.style.height = size + 'px';
-    this.element.style.left = `calc(${generateRandomNumber(5, 95) + 'vw'} - ${
-      size / 2
-    }px)`;
-    const image = document.createElement('img');
-    image.src = balloonImageUrl;
-    this.element.appendChild(image);
-
-    // Add the balloon to the page
-    balloonContainer.appendChild(this.element);
-
-    this.duration = generateRandomNumber(10000, 15000);
-
+    // Load the balloon image
+    this.balloonImage.src = this.balloonImageUrl;
+    // Create the balloon element
+    this.element = document.createElement('div');
     // Add an event listener to the balloon
     this.element.addEventListener('click', this.pop.bind(this));
   }
@@ -37,11 +59,16 @@ export default class Balloon {
   }
 
   public rise() {
-    this.element.style.animation = `rise ${this.duration}ms linear`;
-
-    setTimeout(() => {
-      this.remove();
-    }, this.duration);
+    // Build the balloon element
+    buildBalloonElement(this.element, {
+      size: generateRandomNumber(50, 75),
+      balloonImage: this.balloonImage,
+      positionX: generateRandomNumber(5, 95),
+      riseDuration: this.getRandomDuration(),
+      onAnimationend: this.remove.bind(this),
+    });
+    // Add the balloon to the container
+    balloonContainer.appendChild(this.element);
   }
 
   public remove() {
