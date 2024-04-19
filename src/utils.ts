@@ -38,6 +38,18 @@ export async function sendMessage(message: Message) {
   } catch (e) {}
 }
 
+export function getBrowser() {
+  const userAgent = navigator.userAgent;
+
+  if (/firefox/i.test(userAgent)) {
+    return 'Firefox';
+  } else if (/chrome/i.test(userAgent)) {
+    return 'Chrome';
+  } else {
+    return 'Unknown';
+  }
+}
+
 export function weightedRandom<T>(results: T[], weights: number[]): T | null {
   // Calculate the total weight
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
