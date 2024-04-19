@@ -8,7 +8,9 @@
     "dev:chrome": "cross-env BROWSER=chrome webpack --mode development",
     "dev:firefox": "cross-env BROWSER=firefox webpack --mode development",
     "build:chrome": "cross-env BROWSER=chrome webpack --mode production",
+    "build:chrome:zip": "npm run build:chrome && bestzip ./dist/pop-a-loon-chrome.zip ./dist/*",
     "build:firefox": "cross-env BROWSER=firefox webpack --mode production",
+    "build:firefox:zip": "npm run build:firefox && bestzip ./dist/pop-a-loon-firefox.zip ./dist/*",
     "prepare": "husky"
   },
   "author": "",
