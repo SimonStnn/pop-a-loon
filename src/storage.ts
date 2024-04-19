@@ -1,42 +1,28 @@
+import browser from 'webextension-polyfill';
 import { storageKey, StorageStructure } from '@const';
 
 class StorageManager {
-  private _storage: chrome.storage.SyncStorageArea;
+  private _storage: browser.Storage.StorageAreaSync;
 
   constructor() {
-    this._storage = chrome.storage.sync;
+    this._storage = browser.storage.sync;
   }
 
-  get<K extends storageKey>(key: K): Promise<StorageStructure[K]> {
-    return new Promise((resolve, reject) => {
-      this._storage.get([key], (result) => {
-        resolve(result[key]);
-      });
-    });
+  async get<K extends storageKey>(key: K): Promise<StorageStructure[K]> {
+    const result = await this._storage.get(key);
+    return result[key];
   }
 
-  set<K extends storageKey>(key: K, value: StorageStructure[K]): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this._storage.set({ [key]: value }, () => {
-        resolve();
-      });
-    });
+  async set<K extends storageKey>(key: K, value: StorageStructure[K]) {
+    return await this._storage.set({ [key]: value });
   }
 
-  remove<K extends storageKey>(key: K): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this._storage.remove(key, () => {
-        resolve();
-      });
-    });
+  async remove<K extends storageKey>(key: K) {
+    return await this._storage.remove(key);
   }
 
-  clear(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this._storage.clear(() => {
-        resolve();
-      });
-    });
+  async clear() {
+    return await this._storage.clear();
   }
 }
 

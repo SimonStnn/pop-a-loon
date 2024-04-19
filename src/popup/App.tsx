@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import React, { useState, useEffect } from 'react';
 import storage from '@/storage';
 import { Message } from '@const';
@@ -11,7 +12,7 @@ const App: React.FC = () => {
     setBalloonCount(count || 0);
   };
 
-  chrome.runtime.onMessage.addListener(
+  browser.runtime.onMessage.addListener(
     (message: Message, sender, sendResponse) => {
       if (message.action === 'updateCounter') {
         setBalloonCount(message.balloonCount);

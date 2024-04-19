@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill';
 import { Message } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -22,18 +23,49 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function sendMessage(message: Message) {
+export async function sendMessage(message: Message) {
   try {
-    chrome.runtime.sendMessage(message, (res) => {
-      if (chrome.runtime.lastError) {
-        console.log(
-          'Error sending message:',
-          message,
-          '\nError message:',
-          chrome.runtime.lastError
-        );
-        chrome.runtime.lastError = undefined;
-      }
-    });
+    const res = await browser.runtime.sendMessage(message);
+    if (browser.runtime.lastError) {
+      console.log(
+        'Error sending message:',
+        message,
+        '\nError message:',
+        browser.runtime.lastError
+      );
+      browser.runtime.lastError;
+    }
   } catch (e) {}
+}
+
+export function getBrowser() {
+  const userAgent = navigator.userAgent.toLocaleLowerCase();
+
+  if (/firefox/i.test(userAgent)) {
+    return 'Firefox';
+  } else if (/chrome/i.test(userAgent)) {
+    return 'Chrome';
+  } else {
+    return 'Unknown';
+  }
+}
+
+export function weightedRandom<T>(results: T[], weights: number[]): T | null {
+  // Calculate the total weight
+  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+
+  // Generate a random number between 0 and the total weight
+  const randomWeight = Math.random() * totalWeight;
+
+  // Find the index of the selected result based on the random weight
+  let weightSum = 0;
+  for (let i = 0; i < results.length; i++) {
+    weightSum += weights[i];
+    if (randomWeight < weightSum) {
+      return results[i];
+    }
+  }
+
+  // Return null if no result is found (shouldn't happen if the weights are correct)
+  return null;
 }
