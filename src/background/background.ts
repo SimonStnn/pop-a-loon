@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { AlarmName, Message, initalConfig } from '@const';
-import { generateRandomNumber, sendMessage, sleep } from '@utils';
+import { generateRandomNumber, getBrowser, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
 
@@ -92,8 +92,8 @@ const updateBadgeColors = () => {
   const backgroundScript = async () => {
     try {
       // If extension is being run in firefox, set the browserAction popup
-      if (/firefox/.test(navigator.userAgent.toLocaleLowerCase())) {
-        (browser.action as any) = browser.browserAction;
+      if (getBrowser() === 'Firefox' && !('action' in browser)) {
+        (browser as any).action = (browser as any).browserAction;
       }
 
       await setup();
