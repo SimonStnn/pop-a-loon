@@ -91,6 +91,11 @@ const updateBadgeColors = () => {
 
   const backgroundScript = async () => {
     try {
+      // If extension is being run in firefox, set the browserAction popup
+      if (/firefox/.test(navigator.userAgent.toLocaleLowerCase())) {
+        (browser.action as any) = browser.browserAction;
+      }
+
       await setup();
     } catch (e) {
       console.error(e);
