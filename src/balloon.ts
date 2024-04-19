@@ -9,7 +9,7 @@ const resourceLocation = browser.runtime.getURL('resources/balloons/');
 const buildBalloonElement = (
   element: HTMLDivElement,
   props: {
-    balloonImageUrl: string;
+    balloonImage: HTMLImageElement;
     size: number;
     positionX: number;
     riseDuration: number;
@@ -19,9 +19,7 @@ const buildBalloonElement = (
   element.classList.add('balloon');
 
   // Add an image to the balloon
-  const image = document.createElement('img');
-  image.src = props.balloonImageUrl;
-  element.appendChild(image);
+  element.appendChild(props.balloonImage);
 
   // Set the balloon's width and height
   element.style.width = props.size + 'px';
@@ -42,11 +40,15 @@ export default abstract class Balloon {
 
   protected balloonImageUrl: string =
     resourceLocation + this.constructor.name.toLowerCase() + '/icon.png';
+  protected balloonImage: HTMLImageElement = document.createElement('img');
   protected popSoundUrl: string =
     resourceLocation + this.constructor.name.toLowerCase() + '/pop.mp3';
   protected popSound: HTMLAudioElement = new Audio(this.popSoundUrl);
 
   constructor() {
+    // Load the balloon image
+    this.balloonImage.src = this.balloonImageUrl;
+    // Create the balloon element
     this.element = document.createElement('div');
     // Add an event listener to the balloon
     this.element.addEventListener('click', this.pop.bind(this));
@@ -60,7 +62,7 @@ export default abstract class Balloon {
     // Build the balloon element
     buildBalloonElement(this.element, {
       size: generateRandomNumber(50, 75),
-      balloonImageUrl: this.balloonImageUrl,
+      balloonImage: this.balloonImage,
       positionX: generateRandomNumber(5, 95),
       riseDuration: this.getRandomDuration(),
       onAnimationend: this.remove.bind(this),
