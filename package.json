@@ -7,10 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:chrome": "cross-env BROWSER=chrome webpack --mode development",
     "dev:firefox": "cross-env BROWSER=firefox webpack --mode development",
+    "_build:prepare": "mkdir -p build",
     "build:chrome": "cross-env BROWSER=chrome webpack --mode production",
-    "build:chrome:zip": "npm run build:chrome && bestzip ./dist/pop-a-loon-chrome.zip ./dist/*",
+    "build:chrome:zip": "npm run build:chrome && npm run _build:prepare && cd dist && bestzip ../build/pop-a-loon-chrome.zip * && cd ..",
     "build:firefox": "cross-env BROWSER=firefox webpack --mode production",
-    "build:firefox:zip": "npm run build:firefox && bestzip ./dist/pop-a-loon-firefox.zip ./dist/*",
+    "build:firefox:zip": "npm run build:firefox && npm run _build:prepare && cd dist && bestzip ../build/pop-a-loon-firefox.zip * && cd ..",
     "prepare": "husky"
   },
   "author": "",
