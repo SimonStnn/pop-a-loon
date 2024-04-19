@@ -39,7 +39,7 @@ export async function sendMessage(message: Message) {
 }
 
 export function getBrowser() {
-  const userAgent = navigator.userAgent;
+  const userAgent = navigator.userAgent.toLocaleLowerCase();
 
   if (/firefox/i.test(userAgent)) {
     return 'Firefox';
