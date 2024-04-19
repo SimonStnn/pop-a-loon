@@ -29,8 +29,8 @@ import './style.css';
       );
 
       // Create a new balloon and make it rise
-      const Balloon = weightedRandom(balloonClasses, spawnChances);
-      if (!Balloon) return;
+      const Balloon =
+        weightedRandom(balloonClasses, spawnChances) || balloons.Default;
       const balloon = new Balloon();
       balloon.rise();
     }
