@@ -1,5 +1,4 @@
 {
-  "permissions": ["storage", "alarms", "scripting"],
   "background": {
     "scripts": ["./background.js"]
   },
