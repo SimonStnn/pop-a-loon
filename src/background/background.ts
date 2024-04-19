@@ -22,10 +22,6 @@ const updateBadgeColors = () => {
 };
 
 (() => {
-  // Check if the script is running in the background
-  // If the window object exists, we're not in the background script
-  // if (typeof window !== 'undefined') return;
-
   const setup = async () => {
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
