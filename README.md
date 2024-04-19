@@ -1,4 +1,4 @@
-# <h1 align="center">Pop-a-loon</h1>
+<h1 align="center">Pop-a-loon</h1>
 
 <p align="center">
 The new rising trend (literally) that changes the browser game completely.
@@ -18,11 +18,10 @@ The new rising trend (literally) that changes the browser game completely.
 
 ## Table of Contents
 
-- [Pop-a-loon](#pop-a-loon)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-    - [Chrome Web Store](#chrome-web-store)
-    - [Firefox Add-ons](#firefox-add-ons)
+- [Table of Contents](#table-of-contents)
+- [Installation](#installation)
+  - [Chrome Web Store](#chrome-web-store)
+  - [Firefox Add-ons](#firefox-add-ons)
 
 ## Installation
 
