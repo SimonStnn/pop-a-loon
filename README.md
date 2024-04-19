@@ -48,6 +48,6 @@ The new rising trend (literally) that changes the browser game completely.
 
 ### Manual Installation
 
-Refer to the [docs](./docs/README.md) for manual installation instructions.
+Refer to the [docs](./docs/README.md#getting-started) for manual installation instructions.
 
 [^1]: The extension runs a small script on every page that adds balloons to the page. To do this it needs this permission. You can view this script in [src/content/content.ts](./src/content/content.ts).
