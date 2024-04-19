@@ -5,6 +5,8 @@ import { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, List, Settings } from 'lucide-react';
 import remote from '@/remote';
+import browser from 'webextension-polyfill';
+import { Button } from './ui/button';
 
 type iconProps = {
   to: string;
@@ -66,6 +68,17 @@ export default (props: HeaderProps) => {
       {!isAvailable && (
         <div className="flex justify-center items-center bg-destructive text-destructive-foreground p-1">
           Remote not available
+        </div>
+      )}
+      {true && (
+        <div className="flex justify-center items-center flex-col bg-secondary text-secondary-foreground p-1">
+          <p className="block">
+            This extension requires the "Access your data for all websites"
+            permission to function properly.
+          </p>
+          <Button onClick={() => window.open('about:addons')}>
+            Grant Permissions
+          </Button>
         </div>
       )}
     </>
