@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:chrome": "cross-env BROWSER=chrome webpack --mode development",
+    "dev:chrome": "npm run dev:chrome:noremote --",
+    "dev:chrome:remote": "cross-env REMOTE=\"remote\" BROWSER=chrome webpack --mode development",
+    "dev:chrome:noremote": "cross-env REMOTE=\"noremote\" BROWSER=chrome webpack --mode development",
     "dev:firefox": "cross-env BROWSER=firefox webpack --mode development",
     "_build:prepare": "mkdirp build",
     "build:chrome": "cross-env BROWSER=chrome webpack --mode production",
