@@ -12,7 +12,6 @@
     - [dev:chrome](#devchrome)
     - [dev:firefox](#devfirefox)
   - [Debugging in Visual Studio Code](#debugging-in-visual-studio-code)
-  - [Debugging the Frontend](#debugging-the-frontend)
   - [Deployment](#deployment)
     - [build:chrome](#buildchrome)
     - [build:chrome:zip](#buildchromezip)
@@ -100,8 +99,6 @@ The extension can be loaded in the browser by following the steps below:
 7. Pin the extension to the toolbar for easy access.
 
 ### Debugging in Visual Studio Code
-
-### Debugging the Frontend
 
 1. Open the project in Visual Studio Code.
 2. Go to the Run view (Ctrl+Shift+D).
