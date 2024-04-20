@@ -4,7 +4,7 @@
     {
       "label": "npm: dev:chrome",
       "type": "shell",
-      "command": "npm run dev:chrome -- --watch",
+      "command": "echo $pid > .pid; npm run dev:chrome -- --watch",
       "isBackground": true,
       "problemMatcher": {
         "owner": "custom",
@@ -24,7 +24,7 @@
     {
       "label": "npm: dev:firefox",
       "type": "shell",
-      "command": "npm run dev:firefox -- --watch",
+      "command": "echo $pid > .pid; npm run dev:firefox -- --watch",
       "isBackground": true,
       "problemMatcher": {
         "owner": "custom",
@@ -44,10 +44,7 @@
     {
       "label": "stop node",
       "type": "shell",
-      "command": "taskkill /F /IM node.exe",
-      "windows": {
-        "command": "taskkill /F /IM node.exe"
-      },
+      "command": "kill $(cat .pid) ; rm .pid",
       "presentation": {
         "reveal": "never"
       }
