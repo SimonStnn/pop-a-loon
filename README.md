@@ -1,4 +1,4 @@
-# <h1 align="center">Pop-a-loon</h1>
+<h1 align="center">Pop-a-loon</h1>
 
 <p align="center">
 The new rising trend (literally) that changes the browser game completely.
@@ -18,11 +18,11 @@ The new rising trend (literally) that changes the browser game completely.
 
 ## Table of Contents
 
-- [Pop-a-loon](#pop-a-loon)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-    - [Chrome Web Store](#chrome-web-store)
-    - [Firefox Add-ons](#firefox-add-ons)
+- [Table of Contents](#table-of-contents)
+- [Installation](#installation)
+  - [Chrome Web Store](#chrome-web-store)
+  - [Firefox Add-ons](#firefox-add-ons)
+  - [Manual Installation](#manual-installation)
 
 ## Installation
 
@@ -45,5 +45,9 @@ The new rising trend (literally) that changes the browser game completely.
    > Firefox will prompt: _Add "Pop-a-loon"?_. This is a standard permission for extensions that modify the appearance of web pages. Pop-a-loon does not collect any personal data. [^1]
 
 4. The extension is now installed and ready to use. Balloons will start rising soon!
+
+### Manual Installation
+
+Refer to the [docs](./docs/README.md#getting-started) for manual installation instructions.
 
 [^1]: The extension runs a small script on every page that adds balloons to the page. To do this it needs this permission. You can view this script in [src/content/content.ts](./src/content/content.ts).
