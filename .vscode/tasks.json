@@ -20,6 +20,17 @@
       "presentation": {
         "reveal": "always"
       }
+    },
+    {
+      "label": "stop node",
+      "type": "shell",
+      "command": "taskkill /F /IM node.exe",
+      "windows": {
+        "command": "taskkill /F /IM node.exe"
+      },
+      "presentation": {
+        "reveal": "never"
+      }
     }
   ]
 }
