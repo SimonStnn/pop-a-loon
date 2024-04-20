@@ -170,6 +170,7 @@ The default balloon is a simple balloon that rises and pops when clicked.
 classDiagram
 direction LR
 class Balloon { <<Abstract>> }
+click Balloon href "#abstract-balloon-class" "Abstract balloon class"
 
 class Default {
   +spawn_chance: number$
