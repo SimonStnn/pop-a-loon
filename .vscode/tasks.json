@@ -22,6 +22,26 @@
       }
     },
     {
+      "label": "npm: dev:firefox",
+      "type": "shell",
+      "command": "npm run dev:firefox -- --watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Compiling...",
+          "endsPattern": "compiled successfully"
+        }
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
       "label": "stop node",
       "type": "shell",
       "command": "taskkill /F /IM node.exe",
