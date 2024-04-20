@@ -26,7 +26,7 @@ class BackendAPI {
 
   private async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-    endpoint: string,
+    endpoint: Endpoint,
     params?: RequestParams
   ): Promise<T> {
     const url = new URL(`${BackendAPI.BASE_URL}/api${endpoint}`);
@@ -93,7 +93,10 @@ class BackendAPI {
   }
 
   public async getUser(id: string) {
-    return await this.request<RemoteResponse['user']>('GET', `/user/${id}`);
+    return await this.request<RemoteResponse['user']>(
+      'GET',
+      `/user/${id as ':id'}`
+    );
   }
 
   public async putUser(props: { [K in 'username' | 'email']?: string }) {

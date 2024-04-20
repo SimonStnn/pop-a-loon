@@ -64,7 +64,14 @@ export type RemoteResponse = {
   };
 };
 
-export type Endpoint = keyof RemoteResponse;
+export type Endpoint =
+  | '/status'
+  | '/configuration'
+  | '/user/new'
+  | '/user/:id'
+  | '/user'
+  | '/user/count/increment'
+  | '/leaderboard';
 
 //
 // * Storage types
