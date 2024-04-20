@@ -12,6 +12,16 @@
       "runtimeArgs": ["--load-extension=${workspaceFolder}/dist"],
       "preLaunchTask": "npm: dev:chrome",
       "postDebugTask": "stop node"
+    },
+    {
+      "name": "Launch Firefox",
+      "request": "launch",
+      "type": "firefox",
+      "url": "https://google.com/",
+      "reAttach": true,
+      "addonPath": "${workspaceFolder}/dist",
+      "preLaunchTask": "npm: dev:firefox",
+      "postDebugTask": "stop node"
     }
   ]
 }
