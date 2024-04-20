@@ -3,6 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const { EnvironmentPlugin } = require('webpack');
 
 let mode;
 if (process.env.npm_lifecycle_script.includes('development'))
@@ -47,6 +48,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new EnvironmentPlugin(['REMOTE']),
     new HtmlWebpackPlugin({
       template: './src/popup/index.html', // Specify the path to your HTML template
       filename: './popup.html', // Specify the output filename
