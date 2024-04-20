@@ -18,6 +18,7 @@
     - [build:firefox:zip](#buildfirefoxzip)
 - [Balloons](#balloons)
   - [Abstract balloon class](#abstract-balloon-class)
+  - [Default balloon](#default-balloon)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -159,4 +160,20 @@ class Balloon {
   +remove() void
   +pop() void
 }
+```
+
+### Default balloon
+
+The default balloon is a simple balloon that rises and pops when clicked.
+
+```mermaid
+classDiagram
+direction LR
+class Balloon { <<Abstract>> }
+
+class Default {
+  +spawn_chance: number$
+  +getRandomDuration() number*
+}
+Default --|> Balloon
 ```
