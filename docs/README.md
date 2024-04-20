@@ -16,6 +16,8 @@
     - [build:chrome:zip](#buildchromezip)
     - [build:firefox](#buildfirefox)
     - [build:firefox:zip](#buildfirefoxzip)
+- [Balloons](#balloons)
+  - [Abstract balloon class](#abstract-balloon-class)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -133,3 +135,28 @@ npm run build:firefox:zip
 ```
 
 The zip file will be created in the `build/` directory.
+
+## Balloons
+
+### Abstract balloon class
+
+The abstract balloon class is the base class for all balloons.
+
+```mermaid
+classDiagram
+direction LR
+class Balloon {
+  <<Abstract>>
+  -element: HTMLDivElement
+  #balloonImageUrl: string
+  #balloonImage: HTMLImageElement
+  #popSoundUrl: string
+  #popSound: HTMLAudioElement
+  +constructor()
+  #getRandomDuration() number*
+  +isRising() boolean
+  +rise() void
+  +remove() void
+  +pop() void
+}
+```
