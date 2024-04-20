@@ -13,6 +13,8 @@ else mode = 'production';
 const browser = process.env.BROWSER;
 
 console.log(`Building for ${browser} in ${mode} mode`);
+console.log(`Version: ${process.env.npm_package_version}`);
+console.log(`Remote: ${process.env.REMOTE}`);
 
 module.exports = {
   mode,
