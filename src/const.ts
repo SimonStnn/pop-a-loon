@@ -127,34 +127,41 @@ const dev_user: User = {
   updatedAt: '2021-10-10T10:00:00Z',
   createdAt: '2021-10-10T10:00:00Z',
 };
+let dev_user_count = dev_user.count;
 
-export const devRemoteResponse: Record<
-  Endpoint,
-  RemoteResponse[keyof RemoteResponse]
-> = {
-  '/status': { status: 'up', version: '1.0.0' },
-  '/configuration': {
-    ...initalConfig,
-    spawnInterval: {
-      min: 1000,
-      max: 0.01 * 60000,
+export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
+  {
+    '/status': { status: 'up', version: '1.0.0' },
+    '/configuration': {
+      ...initalConfig,
+      spawnInterval: {
+        min: 1000,
+        max: 0.01 * 60000,
+      },
+    },
+    '/user/count/increment': {},
+    '/user/new': { token: 'token', user: dev_user },
+    '/user/:id': dev_user,
+    '/user': dev_user,
+    '/leaderboard': {
+      user: dev_user,
+      rank: 1,
+      topUsers: [dev_user],
     },
   },
-  '/user/new': { token: 'token', user: dev_user } as any,
-  '/user/:id': dev_user,
-  '/user': dev_user,
-  '/user/count/increment': {
-    id: dev_user.id,
-    count: 1,
-    updatedAt: '2021-10-10T10:00:00Z',
-  },
-  '/leaderboard': {
-    user: dev_user,
-    rank: 1,
-    topUsers: [dev_user],
-  },
-};
-
+  {
+    get: function (target, prop, receiver) {
+      if (prop === '/user/count/increment') {
+        return {
+          id: dev_user.id,
+          count: ++dev_user_count,
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return Reflect.get(target, prop, receiver);
+    },
+  }
+);
 //
 // * Other
 //
