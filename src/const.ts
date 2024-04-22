@@ -116,6 +116,40 @@ export type Message =
 export type AlarmName = 'spawnBalloon' | 'restart';
 
 //
+// * Development
+//
+
+const dev_user: User = {
+  id: '1',
+  username: 'John',
+  email: '',
+  count: 0,
+  updatedAt: '2021-10-10T10:00:00Z',
+  createdAt: '2021-10-10T10:00:00Z',
+};
+
+export const devRemoteResponse: Record<
+  Endpoint,
+  RemoteResponse[keyof RemoteResponse]
+> = {
+  '/status': { status: 'up', version: '1.0.0' },
+  '/configuration': initalConfig,
+  '/user/new': { token: 'token', user: dev_user } as any,
+  '/user/:id': dev_user,
+  '/user': dev_user,
+  '/user/count/increment': {
+    id: dev_user.id,
+    count: 1,
+    updatedAt: '2021-10-10T10:00:00Z',
+  },
+  '/leaderboard': {
+    user: dev_user,
+    rank: 1,
+    topUsers: [dev_user],
+  },
+};
+
+//
 // * Other
 //
 
