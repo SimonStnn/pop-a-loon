@@ -133,7 +133,13 @@ export const devRemoteResponse: Record<
   RemoteResponse[keyof RemoteResponse]
 > = {
   '/status': { status: 'up', version: '1.0.0' },
-  '/configuration': initalConfig,
+  '/configuration': {
+    ...initalConfig,
+    spawnInterval: {
+      min: 1000,
+      max: 0.01 * 60000,
+    },
+  },
   '/user/new': { token: 'token', user: dev_user } as any,
   '/user/:id': dev_user,
   '/user': dev_user,
