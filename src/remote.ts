@@ -1,4 +1,4 @@
-import { RemoteResponse, Prettify } from '@/const';
+import { RemoteResponse, devRemoteResponse, Prettify, Endpoint } from '@/const';
 import storage from '@/storage';
 
 interface RequestParams {
@@ -29,6 +29,12 @@ class BackendAPI {
     endpoint: Endpoint,
     params?: RequestParams
   ): Promise<T> {
+    if (process.env.REMOTE === 'noremote') {
+      if (endpoint.startsWith('/user/')) {
+        endpoint = '/user/:id';
+      }
+      return devRemoteResponse[endpoint] as any;
+    }
     const url = new URL(`${BackendAPI.BASE_URL}/api${endpoint}`);
     if (params) {
       Object.keys(params).forEach((key) => {
