@@ -127,7 +127,6 @@ const dev_user: User = {
   updatedAt: '2021-10-10T10:00:00Z',
   createdAt: '2021-10-10T10:00:00Z',
 };
-let dev_user_count = dev_user.count;
 
 export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
   {
@@ -154,7 +153,7 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
       if (prop === '/user/count/increment') {
         return {
           id: dev_user.id,
-          count: ++dev_user_count,
+          count: ++dev_user.count,
           updatedAt: new Date().toISOString(),
         };
       }
