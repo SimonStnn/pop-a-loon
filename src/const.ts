@@ -139,7 +139,7 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
       },
     },
     '/user/count/increment': {},
-    '/user/new': { token: 'token', user: dev_user },
+    '/user/new': { token: 'token', ...dev_user },
     '/user/:id': dev_user,
     '/user': dev_user,
     '/leaderboard': {
