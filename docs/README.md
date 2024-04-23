@@ -11,6 +11,7 @@
   - [Development](#development)
     - [dev:chrome](#devchrome)
     - [dev:firefox](#devfirefox)
+  - [Debugging in Visual Studio Code](#debugging-in-visual-studio-code)
   - [Deployment](#deployment)
     - [build:chrome](#buildchrome)
     - [build:chrome:zip](#buildchromezip)
@@ -96,6 +97,15 @@ The extension can be loaded in the browser by following the steps below:
 5. Click the `Load Temporary Add-on` button and select the `manifest.json` file in the `dist/` directory.
 6. The extension should now be loaded and you can see the icon in the browser toolbar.
 7. Pin the extension to the toolbar for easy access.
+
+### Debugging in Visual Studio Code
+
+1. Open the project in Visual Studio Code.
+2. Go to the Run view (Ctrl+Shift+D).
+3. Select `Launch Chrome` or `Launch Firefox` from the dropdown at the top of the Run view.
+4. Press the Start Debugging button (F5).
+
+This will start the development server (if it's not already running) and open a new browser instance with debugging enabled.
 
 ### Deployment
 

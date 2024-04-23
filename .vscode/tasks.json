@@ -1,0 +1,93 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm: dev:chrome:noremote",
+      "type": "shell",
+      "command": "echo $pid > .pid; npm run dev:chrome:noremote -- --watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Compiling...",
+          "endsPattern": "compiled successfully"
+        }
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "npm: dev:chrome:remote",
+      "type": "shell",
+      "command": "echo $pid > .pid; npm run dev:chrome:remote -- --watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Compiling...",
+          "endsPattern": "compiled successfully"
+        }
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "npm: dev:firefox:noremote",
+      "type": "shell",
+      "command": "echo $pid > .pid; npm run dev:firefox:noremote -- --watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Compiling...",
+          "endsPattern": "compiled successfully"
+        }
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "npm: dev:firefox:remote",
+      "type": "shell",
+      "command": "echo $pid > .pid; npm run dev:firefox:remote -- --watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^(.*)$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Compiling...",
+          "endsPattern": "compiled successfully"
+        }
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "stop node",
+      "type": "shell",
+      "command": "kill $(cat .pid) ; rm .pid",
+      "presentation": {
+        "reveal": "never"
+      }
+    }
+  ]
+}
