@@ -86,7 +86,10 @@ const updateBadgeColors = () => {
     await browser.alarms.create(name, { when: Date.now() + randomDelay });
   };
 
+  let backgroundScriptRunning = false;
   const backgroundScript = async () => {
+    if (backgroundScriptRunning) return;
+    backgroundScriptRunning = true;
     try {
       // If extension is being run in firefox, set the browserAction popup
       if (getBrowser() === 'Firefox' && !('action' in browser)) {
@@ -148,4 +151,5 @@ const updateBadgeColors = () => {
 
   browser.runtime.onStartup.addListener(backgroundScript);
   browser.runtime.onInstalled.addListener(backgroundScript);
+  setTimeout(backgroundScript, 500);
 })();
