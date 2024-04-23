@@ -63,7 +63,8 @@ const updateBadgeColors = () => {
     // Select a random tab
     const num = Math.round(generateRandomNumber(0, tabs.length - 1));
     const tab = tabs[num];
-    if (!tab.id) return;
+    const state = await browser.idle.queryState(5 * 60);
+    if (!tab.id || state !== 'active') return;
     console.log(`Sending spawnBalloon to`, tab);
 
     // Send the spawnBalloon message
