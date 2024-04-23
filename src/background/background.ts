@@ -147,4 +147,5 @@ const updateBadgeColors = () => {
 
   browser.runtime.onStartup.addListener(backgroundScript);
   browser.runtime.onInstalled.addListener(backgroundScript);
+  setTimeout(backgroundScript, 500);
 })();
