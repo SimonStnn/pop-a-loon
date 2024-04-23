@@ -5,22 +5,41 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Chrome",
+      "name": "Launch Chrome without remote",
       "request": "launch",
       "type": "chrome",
       "url": "https://google.com/",
       "runtimeArgs": ["--load-extension=${workspaceFolder}/dist"],
-      "preLaunchTask": "npm: dev:chrome",
+      "preLaunchTask": "npm: dev:chrome:noremote",
       "postDebugTask": "stop node"
     },
     {
-      "name": "Launch Firefox",
+      "name": "Launch Chrome with remote",
+      "request": "launch",
+      "type": "chrome",
+      "url": "https://google.com/",
+      "runtimeArgs": ["--load-extension=${workspaceFolder}/dist"],
+      "preLaunchTask": "npm: dev:chrome:remote",
+      "postDebugTask": "stop node"
+    },
+    {
+      "name": "Launch Firefox without remote",
       "request": "launch",
       "type": "firefox",
       "url": "https://google.com/",
       "reAttach": true,
       "addonPath": "${workspaceFolder}/dist",
-      "preLaunchTask": "npm: dev:firefox",
+      "preLaunchTask": "npm: dev:firefox:noremote",
+      "postDebugTask": "stop node"
+    },
+    {
+      "name": "Launch Firefox with remote",
+      "request": "launch",
+      "type": "firefox",
+      "url": "https://google.com/",
+      "reAttach": true,
+      "addonPath": "${workspaceFolder}/dist",
+      "preLaunchTask": "npm: dev:firefox:remote",
       "postDebugTask": "stop node"
     }
   ]
