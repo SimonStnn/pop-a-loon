@@ -64,7 +64,14 @@ export type RemoteResponse = {
   };
 };
 
-export type Endpoint = keyof RemoteResponse;
+export type Endpoint =
+  | '/status'
+  | '/configuration'
+  | '/user/new'
+  | '/user/:id'
+  | '/user'
+  | '/user/count/increment'
+  | '/leaderboard';
 
 //
 // * Storage types
@@ -108,6 +115,52 @@ export type Message =
 
 export type AlarmName = 'spawnBalloon' | 'restart';
 
+//
+// * Development
+//
+
+const dev_user: User = {
+  id: '1',
+  username: 'John',
+  email: '',
+  count: 0,
+  updatedAt: '2021-10-10T10:00:00Z',
+  createdAt: '2021-10-10T10:00:00Z',
+};
+
+export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
+  {
+    '/status': { status: 'up', version: '1.0.0' },
+    '/configuration': {
+      ...initalConfig,
+      spawnInterval: {
+        min: 1000,
+        max: 0.01 * 60000,
+      },
+    },
+    '/user/count/increment': {},
+    '/user/new': { token: 'token', ...dev_user },
+    '/user/:id': dev_user,
+    '/user': dev_user,
+    '/leaderboard': {
+      user: dev_user,
+      rank: 1,
+      topUsers: [dev_user],
+    },
+  },
+  {
+    get: function (target, prop, receiver) {
+      if (prop === '/user/count/increment') {
+        return {
+          id: dev_user.id,
+          count: ++dev_user.count,
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return Reflect.get(target, prop, receiver);
+    },
+  }
+);
 //
 // * Other
 //
