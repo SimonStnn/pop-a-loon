@@ -5,6 +5,22 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { EnvironmentPlugin } = require('webpack');
 
+function checkEnvVar(varName, defaultValue) {
+  if (process.env[varName] === undefined) {
+    if (defaultValue !== undefined) {
+      process.env[varName] = defaultValue;
+    } else {
+      console.error(`${varName} environment variable not set`);
+      process.exit(1);
+    }
+  }
+}
+
+checkEnvVar('BROWSER');
+checkEnvVar('npm_package_version');
+checkEnvVar('npm_lifecycle_script');
+checkEnvVar('REMOTE', 'remote');
+
 let mode;
 if (process.env.npm_lifecycle_script.includes('development'))
   mode = 'development';
