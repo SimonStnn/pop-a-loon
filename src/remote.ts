@@ -60,6 +60,7 @@ class BackendAPI {
     // If the result is less than one minute old, return the stored result
     if (
       this.lastChecked &&
+      this.available !== null &&
       now.getTime() - this.lastChecked.getTime() < 60000
     ) {
       return this.available;
