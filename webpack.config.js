@@ -21,11 +21,9 @@ checkEnvVar('npm_package_version');
 checkEnvVar('npm_lifecycle_script');
 checkEnvVar('REMOTE', 'remote');
 
-let mode;
-if (process.env.npm_lifecycle_script.includes('development'))
-  mode = 'development';
-else mode = 'production';
-
+const mode = process.env.npm_lifecycle_script.includes('development')
+  ? 'development'
+  : 'production';
 const browser = process.env.BROWSER;
 
 console.log(`Building for ${browser} in ${mode} mode`);
