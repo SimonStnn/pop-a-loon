@@ -33,7 +33,7 @@ const HeaderIcon = (props: iconProps) => {
 };
 
 export default (props: HeaderProps) => {
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const location = useLocation();
   const navIcons =
     (isAvailable && [
