@@ -1,6 +1,12 @@
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { Button } from './ui/button';
+import { getBrowser } from '@/utils';
+
+const chromewebstoreUrl =
+  'https://chromewebstore.google.com/detail/pop-a-loon/pahcoancbdjmffpmfbnjablnabomdocp/reviews';
+const firefoxAddonUrl =
+  'https://addons.mozilla.org/.../firefox/addon/pop-a-loon/';
 
 export default () => {
   return (
@@ -25,7 +31,9 @@ export default () => {
         <a
           target="_blank"
           rel="noreferrer noopener"
-          href="https://chromewebstore.google.com/detail/pop-a-loon/pahcoancbdjmffpmfbnjablnabomdocp/reviews"
+          href={
+            getBrowser() === 'Firefox' ? firefoxAddonUrl : chromewebstoreUrl
+          }
         >
           Leave a review
         </a>
