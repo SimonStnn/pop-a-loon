@@ -30,7 +30,10 @@ class BackendAPI {
     params?: RequestParams
   ): Promise<T> {
     if (process.env.REMOTE === 'noremote') {
-      if ((endpoint as any) === `/user/1`) {
+      if (
+        (endpoint as string).startsWith(`/user/`) &&
+        endpoint.split('/')[2].match(/^[0-9a-fA-F]{24}$/)
+      ) {
         endpoint = '/user/:id';
       }
       return devRemoteResponse[endpoint] as any;
