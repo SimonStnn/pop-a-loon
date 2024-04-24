@@ -1,4 +1,4 @@
-import { RemoteResponse, Prettify } from '@/const';
+import { RemoteResponse, devRemoteResponse, Prettify, Endpoint } from '@/const';
 import storage from '@/storage';
 
 interface RequestParams {
@@ -26,9 +26,15 @@ class BackendAPI {
 
   private async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-    endpoint: string,
+    endpoint: Endpoint,
     params?: RequestParams
   ): Promise<T> {
+    if (process.env.REMOTE === 'noremote') {
+      if ((endpoint as any) === `/user/1`) {
+        endpoint = '/user/:id';
+      }
+      return devRemoteResponse[endpoint] as any;
+    }
     const url = new URL(`${BackendAPI.BASE_URL}/api${endpoint}`);
     if (params) {
       Object.keys(params).forEach((key) => {
@@ -54,6 +60,7 @@ class BackendAPI {
     // If the result is less than one minute old, return the stored result
     if (
       this.lastChecked &&
+      this.available !== null &&
       now.getTime() - this.lastChecked.getTime() < 60000
     ) {
       return this.available;
@@ -93,7 +100,10 @@ class BackendAPI {
   }
 
   public async getUser(id: string) {
-    return await this.request<RemoteResponse['user']>('GET', `/user/${id}`);
+    return await this.request<RemoteResponse['user']>(
+      'GET',
+      `/user/${id as ':id'}`
+    );
   }
 
   public async putUser(props: { [K in 'username' | 'email']?: string }) {

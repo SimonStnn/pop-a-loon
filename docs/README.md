@@ -11,11 +11,15 @@
   - [Development](#development)
     - [dev:chrome](#devchrome)
     - [dev:firefox](#devfirefox)
+  - [Debugging in Visual Studio Code](#debugging-in-visual-studio-code)
   - [Deployment](#deployment)
     - [build:chrome](#buildchrome)
     - [build:chrome:zip](#buildchromezip)
     - [build:firefox](#buildfirefox)
     - [build:firefox:zip](#buildfirefoxzip)
+- [Balloons](#balloons)
+  - [Abstract balloon class](#abstract-balloon-class)
+  - [Default balloon](#default-balloon)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -94,6 +98,15 @@ The extension can be loaded in the browser by following the steps below:
 6. The extension should now be loaded and you can see the icon in the browser toolbar.
 7. Pin the extension to the toolbar for easy access.
 
+### Debugging in Visual Studio Code
+
+1. Open the project in Visual Studio Code.
+2. Go to the Run view (Ctrl+Shift+D).
+3. Select `Launch Chrome` or `Launch Firefox` from the dropdown at the top of the Run view.
+4. Press the Start Debugging button (F5).
+
+This will start the development server (if it's not already running) and open a new browser instance with debugging enabled.
+
 ### Deployment
 
 To build the extension for production, use the `build:{browser}` script. Replace `{browser}` with the browser you want to build for. The available options are `chrome` and `firefox`. You can also include `:zip` to create a zip file of the extension.
@@ -133,3 +146,45 @@ npm run build:firefox:zip
 ```
 
 The zip file will be created in the `build/` directory.
+
+## Balloons
+
+### Abstract balloon class
+
+The abstract balloon class is the base class for all balloons.
+
+```mermaid
+classDiagram
+direction LR
+class Balloon {
+  <<Abstract>>
+  -element: HTMLDivElement
+  #balloonImageUrl: string
+  #balloonImage: HTMLImageElement
+  #popSoundUrl: string
+  #popSound: HTMLAudioElement
+  +constructor()
+  #getRandomDuration() number*
+  +isRising() boolean
+  +rise() void
+  +remove() void
+  +pop() void
+}
+```
+
+### Default balloon
+
+The default balloon is a simple balloon that rises and pops when clicked.
+
+```mermaid
+classDiagram
+direction LR
+class Balloon { <<Abstract>> }
+click Balloon href "#abstract-balloon-class" "Abstract balloon class"
+
+class Default {
+  +spawn_chance: number$
+  +getRandomDuration() number*
+}
+Default --|> Balloon
+```
