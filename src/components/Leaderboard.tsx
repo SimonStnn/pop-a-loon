@@ -37,13 +37,13 @@ export default () => {
   const loadingBody = new Array(limit).fill(0).map((item, index) => (
     <TableRow key={index} className="">
       <TableCell className="p-2 text-right">
-        <TextSkeleton className="w-3" />
+        <TextSkeleton className="w-4" />
       </TableCell>
       <TableCell className="p-2 w-full">
         <TextSkeleton className="w-20" />
       </TableCell>
       <TableCell className="p-2">
-        <TextSkeleton className="w-4" />
+        <TextSkeleton className="w-8" />
       </TableCell>
     </TableRow>
   ));
