@@ -27,8 +27,9 @@ const buildBalloonElement = (
   element.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
   element.style.animationDuration = props.riseDuration.toString() + 'ms';
   element.style.animationTimingFunction = 'linear';
+  element.style.animationFillMode = 'forwards';
   element.style.animationName = 'rise';
-  element.addEventListener('animationend', props.onAnimationend);
+  // element.addEventListener('animationend', props.onAnimationend);
 
   return element;
 };
