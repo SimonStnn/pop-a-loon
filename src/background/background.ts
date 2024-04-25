@@ -23,6 +23,9 @@ const updateBadgeColors = () => {
 
 (() => {
   const setup = async () => {
+    // Clear all alarms
+    await browser.alarms.clearAll();
+
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
       console.log('Remote is not available, retrying in 1 minute');

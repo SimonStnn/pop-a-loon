@@ -120,7 +120,7 @@ export type AlarmName = 'spawnBalloon' | 'restart';
 //
 
 const dev_user: User = {
-  id: '1',
+  id: '6623b79f2fc0a498832e993d',
   username: 'John',
   email: '',
   count: 0,
