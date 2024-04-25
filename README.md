@@ -12,6 +12,7 @@ The new rising trend (literally) that changes the browser game completely.
 [![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/pahcoancbdjmffpmfbnjablnabomdocp)
 ](https://chromewebstore.google.com/detail/pop-a-loon/pahcoancbdjmffpmfbnjablnabomdocp/reviews)
 [![Mozilla Add-on Version](https://img.shields.io/amo/v/pop-a-loon?logo=firefox)](https://addons.mozilla.org/.../firefox/addon/pop-a-loon/)
+[![Mozilla Add-on Rating](https://img.shields.io/amo/rating/pop-a-loon?logo=firefox)](https://addons.mozilla.org/.../firefox/addon/pop-a-loon/reviews/)
 
 </div>
 
