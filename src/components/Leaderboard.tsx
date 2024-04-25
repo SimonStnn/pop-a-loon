@@ -48,8 +48,6 @@ export default () => {
     </TableRow>
   ));
 
-  console.log(loadingBody);
-
   return (
     <>
       <Table>
