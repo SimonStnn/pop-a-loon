@@ -26,7 +26,7 @@ export default () => {
   return (
     <>
       <Table>
-        <TableCaption>Your are #{data.rank}!</TableCaption>
+        <TableCaption>You are #{data.rank}!</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="h-8 px-2 text-right">#</TableHead>
