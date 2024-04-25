@@ -29,7 +29,7 @@ const buildBalloonElement = (
   element.style.animationTimingFunction = 'linear';
   element.style.animationFillMode = 'forwards';
   element.style.animationName = 'rise';
-  // element.addEventListener('animationend', props.onAnimationend);
+  element.addEventListener('animationend', props.onAnimationend);
 
   return element;
 };
