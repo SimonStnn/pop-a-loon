@@ -8,9 +8,11 @@ The new rising trend (literally) that changes the browser game completely.
 
 [![GitHub contributors](https://img.shields.io/github/contributors/SimonStnn/pop-a-loon)](https://github.com/SimonStnn/pop-a-loon/graphs/contributors)
 [![GitHub Release Date](https://img.shields.io/github/release-date-pre/SimonStnn/pop-a-loon)](https://github.com/SimonStnn/pop-a-loon/releases/latest)
-[![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/pahcoancbdjmffpmfbnjablnabomdocp)](https://chromewebstore.google.com/detail/empty-title/pahcoancbdjmffpmfbnjablnabomdocp)
-[![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/pahcoancbdjmffpmfbnjablnabomdocp)
+[![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/pahcoancbdjmffpmfbnjablnabomdocp?logo=googlechrome)](https://chromewebstore.google.com/detail/empty-title/pahcoancbdjmffpmfbnjablnabomdocp)
+[![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/pahcoancbdjmffpmfbnjablnabomdocp?logo=googlechrome)
 ](https://chromewebstore.google.com/detail/pop-a-loon/pahcoancbdjmffpmfbnjablnabomdocp/reviews)
+[![Mozilla Add-on Version](https://img.shields.io/amo/v/pop-a-loon?logo=firefox)](https://addons.mozilla.org/.../firefox/addon/pop-a-loon/)
+[![Mozilla Add-on Rating](https://img.shields.io/amo/rating/pop-a-loon?logo=firefox)](https://addons.mozilla.org/.../firefox/addon/pop-a-loon/reviews/)
 
 </div>
 
