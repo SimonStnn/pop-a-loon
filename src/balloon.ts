@@ -35,16 +35,20 @@ const buildBalloonElement = (
 };
 
 export default abstract class Balloon {
+  public abstract readonly name: string;
   public abstract getRandomDuration(): number;
 
   private readonly element: HTMLDivElement;
 
-  protected balloonImageUrl: string =
-    resourceLocation + this.constructor.name.toLowerCase() + '/icon.png';
   protected balloonImage: HTMLImageElement = document.createElement('img');
-  protected popSoundUrl: string =
-    resourceLocation + this.constructor.name.toLowerCase() + '/pop.mp3';
   protected popSound: HTMLAudioElement = new Audio(this.popSoundUrl);
+
+  protected get balloonImageUrl(): string {
+    return resourceLocation + this.name + '/icon.png';
+  }
+  protected get popSoundUrl(): string {
+    return resourceLocation + this.name + '/icon.png';
+  }
 
   constructor() {
     // Load the balloon image
