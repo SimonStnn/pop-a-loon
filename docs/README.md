@@ -159,12 +159,13 @@ direction LR
 class Balloon {
   <<Abstract>>
   -element: HTMLDivElement
-  #balloonImageUrl: string
   #balloonImage: HTMLImageElement
-  #popSoundUrl: string
-  #popSound: HTMLAudioElement
+  #<< get >>balloonImageUrl: string
+  #<< get >>popSoundUrl: string
+  #<< get >>popSound: HTMLAudioElement
+  +name: string*
   +constructor()
-  #getRandomDuration() number*
+  +getRandomDuration() number*
   +isRising() boolean
   +rise() void
   +remove() void
