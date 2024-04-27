@@ -49,7 +49,7 @@ export default abstract class Balloon {
     return resourceLocation + this.name + '/icon.png';
   }
   protected get popSoundUrl(): string {
-    return resourceLocation + this.name + '/icon.png';
+    return resourceLocation + this.name + '/pop.mp3';
   }
 
   constructor() {
