@@ -40,7 +40,8 @@ export default abstract class Balloon {
 
   private readonly element: HTMLDivElement;
 
-  protected balloonImage: HTMLImageElement = document.createElement('img');
+  protected readonly balloonImage: HTMLImageElement =
+    document.createElement('img');
 
   protected get popSound(): HTMLAudioElement {
     return new Audio(this.popSoundUrl);
