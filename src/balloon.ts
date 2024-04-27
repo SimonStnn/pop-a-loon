@@ -41,8 +41,10 @@ export default abstract class Balloon {
   private readonly element: HTMLDivElement;
 
   protected balloonImage: HTMLImageElement = document.createElement('img');
-  protected popSound: HTMLAudioElement = new Audio(this.popSoundUrl);
 
+  protected get popSound(): HTMLAudioElement {
+    return new Audio(this.popSoundUrl);
+  }
   protected get balloonImageUrl(): string {
     return resourceLocation + this.name + '/icon.png';
   }
@@ -51,8 +53,6 @@ export default abstract class Balloon {
   }
 
   constructor() {
-    // Load the balloon image
-    this.balloonImage.src = this.balloonImageUrl;
     // Create the balloon element
     this.element = document.createElement('div');
     // Add an event listener to the balloon
@@ -64,6 +64,8 @@ export default abstract class Balloon {
   }
 
   public rise() {
+    // Load the balloon image
+    this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
     buildBalloonElement(this.element, {
       size: generateRandomNumber(50, 75),
