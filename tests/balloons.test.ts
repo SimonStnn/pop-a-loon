@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import Balloon from '@/balloon';
 import * as balloons from '@/balloons';
 
 test('all balloons are exported in the index file', () => {
@@ -9,6 +10,12 @@ test('all balloons are exported in the index file', () => {
     .filter((name) => name !== 'index');
 
   balloonNames.forEach((name) => {
-    expect(balloons).toHaveProperty(name[0].toUpperCase() + name.slice(1));
+    const balloonName = name[0].toUpperCase() + name.slice(1);
+    expect(balloons).toHaveProperty(balloonName);
+
+    const balloon = (balloons as { [key: string]: typeof Balloon })[
+      balloonName
+    ];
+    expect(balloon.name).toBe(balloonName);
   });
 });
