@@ -3,6 +3,9 @@ import path from 'path';
 import Balloon from '@/balloon';
 import * as balloons from '@/balloons';
 
+const balloonName = (name: string): keyof typeof balloons =>
+  (name[0].toUpperCase() + name.slice(1)) as keyof typeof balloons;
+
 describe('Balloons', () => {
   let balloonNames: string[];
 
@@ -21,13 +24,40 @@ describe('Balloons', () => {
 
   test('all balloons are exported in the index file', () => {
     balloonNames.forEach((name) => {
-      const balloonName = name[0].toUpperCase() + name.slice(1);
-      expect(balloons).toHaveProperty(balloonName);
+      expect(balloons).toHaveProperty(balloonName(name));
+    });
+  });
 
-      const balloon = (balloons as { [key: string]: typeof Balloon })[
-        balloonName
-      ];
-      expect(balloon.name).toBe(balloonName);
+  test('all balloons extend the Balloon class', () => {
+    balloonNames.forEach((name) => {
+      const BalloonClass = balloons[balloonName(name)];
+      expect(BalloonClass.prototype instanceof Balloon).toBeTruthy();
+    });
+  });
+
+  test("all balloons' names are unique", () => {
+    const uniqueNames = new Set(balloonNames);
+    expect(uniqueNames.size).toBe(balloonNames.length);
+  });
+
+  test("all balloons' names are valid", () => {
+    balloonNames.forEach((name) => {
+      expect(name).toMatch(/^[a-z]+$/);
+    });
+  });
+
+  test('all balloons have static spawn_chance property', () => {
+    balloonNames.forEach((name) => {
+      const BalloonClass = balloons[balloonName(name)];
+      expect(BalloonClass).toHaveProperty('spawn_chance');
+    });
+  });
+
+  test("all balloons' spawn_chance is a number between 0 and 1", () => {
+    balloonNames.forEach((name) => {
+      const BalloonClass = balloons[balloonName(name)];
+      expect(BalloonClass.spawn_chance).toBeGreaterThanOrEqual(0);
+      expect(BalloonClass.spawn_chance).toBeLessThanOrEqual(1);
     });
   });
 
