@@ -47,4 +47,19 @@ describe('Balloons', () => {
       expect(fs.existsSync(balloonResourcePath)).toBeTruthy();
     });
   });
+
+  test('each balloon has an icon.png and pop.mp3 file', () => {
+    balloonNames.forEach((name) => {
+      const iconPath = path.resolve(
+        __dirname,
+        `../resources/balloons/${name}/icon.png`
+      );
+      const popPath = path.resolve(
+        __dirname,
+        `../resources/balloons/${name}/pop.mp3`
+      );
+      expect(fs.existsSync(iconPath)).toBeTruthy();
+      expect(fs.existsSync(popPath)).toBeTruthy();
+    });
+  });
 });
