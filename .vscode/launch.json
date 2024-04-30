@@ -5,6 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Jest Tests",
+      "request": "launch",
+      "type": "node",
+      "runtimeArgs": ["${workspaceRoot}/node_modules/.bin/jest", "--runInBand"],
+      "windows": {
+        "runtimeArgs": [
+          "${workspaceRoot}/node_modules/jest/bin/jest",
+          "--runInBand"
+        ]
+      },
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Launch Chrome without remote",
       "request": "launch",
       "type": "chrome",

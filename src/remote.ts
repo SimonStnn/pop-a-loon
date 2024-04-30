@@ -8,9 +8,9 @@ interface RequestParams {
 class BackendAPI {
   private static instance: BackendAPI;
   private static readonly BASE_URL =
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000'
-      : 'https://pop-a-loon.stijnen.be';
+    process.env.NODE_ENV === 'production'
+      ? 'https://pop-a-loon.stijnen.be'
+      : 'http://localhost:3000';
 
   private available: boolean | null = null;
   private lastChecked: Date | null = null;
