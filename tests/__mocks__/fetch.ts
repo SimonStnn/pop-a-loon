@@ -6,7 +6,7 @@ fetchMock.enableMocks();
 
 const testToken = 'testToken';
 
-const user: User = {
+export const user: User = {
   id: '123',
   username: 'test',
   email: '',
@@ -42,35 +42,25 @@ const response: RemoteResponse = {
 
 export const mockFetchResponse = () => {
   fetchMock.resetMocks();
-  fetchMock.mockIf(
-    (req) => req.method === 'GET' && req.url.endsWith('/status'),
-    JSON.stringify(response.status)
-  );
-  fetchMock.mockIf(
-    (req) => req.method === 'GET' && req.url.endsWith('/configuration'),
-    JSON.stringify(response.configuration)
-  );
-  fetchMock.mockIf(
-    (req) => req.method === 'POST' && req.url.endsWith('/user/new'),
-    JSON.stringify(response.user)
-  );
-  fetchMock.mockIf(
-    (req) => req.method === 'GET' && req.url.endsWith(`/user/${user.id}`),
-    JSON.stringify(response.user)
-  );
-  fetchMock.mockIf(
-    (req) => req.method === 'PUT' && req.url.endsWith('/user'),
-    JSON.stringify({ ...user, token: testToken })
-  );
-  fetchMock.mockIf(
-    (req) => req.method === 'DELETE' && req.url.endsWith('/user'),
-    JSON.stringify(user)
-  );
-  fetchMock.mockIf(
-    (req) => req.method === 'POST' && req.url.endsWith('/user/count/increment'),
-    (() => {
-      response.count.count++;
-      return JSON.stringify(response.count);
-    })()
-  );
+  fetchMock.mockIf(/^https?:\/\/.+$/, async (req) => {
+    switch (true) {
+      case req.method === 'GET' && req.url.endsWith('/status'):
+        return JSON.stringify(response.status);
+      case req.method === 'GET' && req.url.endsWith('/configuration'):
+        return JSON.stringify(response.configuration);
+      case req.method === 'POST' && req.url.endsWith('/user/new'):
+        return JSON.stringify(response.user);
+      case req.method === 'GET' && req.url.endsWith(`/user/${user.id}`):
+        return JSON.stringify(response.user);
+      case req.method === 'PUT' && req.url.endsWith('/user'):
+        return JSON.stringify({ ...user, token: testToken });
+      case req.method === 'DELETE' && req.url.endsWith('/user'):
+        return JSON.stringify(user);
+      case req.method === 'POST' && req.url.endsWith('/user/count/increment'):
+        response.count.count++;
+        return JSON.stringify(response.count);
+      default:
+        return JSON.stringify({});
+    }
+  });
 };
