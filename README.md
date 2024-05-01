@@ -31,6 +31,7 @@ Pop-a-loon is a browser extension that adds balloons to every website you visit.
 
 > See your position in the leaderboard and compete with others to get the highest score!
 > Pop as many balloons as you can to earn points and climb the leaderboard!
+> _Leaderboard from 27/04/2024_
 
 ## Table of Contents
 
