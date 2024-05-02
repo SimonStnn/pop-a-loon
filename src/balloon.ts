@@ -81,6 +81,7 @@ export default abstract class Balloon {
 
   public remove() {
     this.element.remove();
+    this.element.style.animationName = 'none';
   }
 
   public async pop() {

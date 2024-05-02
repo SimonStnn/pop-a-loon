@@ -145,7 +145,11 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
     '/leaderboard': {
       user: dev_user,
       rank: 1,
-      topUsers: [dev_user],
+      topUsers: Array.from({ length: 10 }, (_, i) => ({
+        ...dev_user,
+        username: `User_${i}`,
+        count: (10 - i) * 10,
+      })),
     },
   },
   {

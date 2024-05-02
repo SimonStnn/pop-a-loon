@@ -16,7 +16,22 @@ The new rising trend (literally) that changes the browser game completely.
 
 </div>
 
+Pop-a-loon is a browser extension that adds balloons to every website you visit. The balloons rise up the page and can be popped by clicking on them. See the [installation](#installation) instructions to get started with the extension.
+
 ![Screenshot-1](./resources/images/Screenshot-1.png)
+
+> Balloons rise up the page on every website you visit. Click on them to pop them and earn points!
+> Pop balloons by clicking on them. The more balloons you pop, the higher your score!
+
+![Screenshot-2](./resources/images/Screenshot-2.png)
+
+> View your score and the number of balloons popped in the extension popup.
+
+![Screenshot-3](./resources/images/Screenshot-3.png)
+
+> See your position in the leaderboard and compete with others to get the highest score!
+> Pop as many balloons as you can to earn points and climb the leaderboard!
+> _Leaderboard from 27/04/2024_
 
 ## Table of Contents
 

@@ -4,7 +4,7 @@
   "description": "A fun Chrome extension that lets balloons rise on your screen",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev:chrome": "npm run dev:chrome:noremote --",
     "dev:chrome:remote": "cross-env REMOTE=\"remote\" BROWSER=chrome webpack --mode development",
     "dev:chrome:noremote": "cross-env REMOTE=\"noremote\" BROWSER=chrome webpack --mode development",
@@ -51,6 +51,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/mocha": "^10.0.6",
     "@types/react": "^18.2.52",
     "@types/react-dom": "^18.2.18",
     "@types/webextension-polyfill": "^0.10.7",
@@ -61,6 +63,9 @@
     "css-loader": "^6.10.0",
     "html-webpack-plugin": "^5.6.0",
     "husky": "^9.0.10",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-fetch-mock": "^3.0.3",
     "lint-staged": "^15.2.1",
     "mkdirp": "^3.0.1",
     "postcss": "^8.4.33",
@@ -69,6 +74,7 @@
     "rimraf": "^5.0.5",
     "style-loader": "^3.3.4",
     "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "webextension-polyfill": "^0.10.0",
