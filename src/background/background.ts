@@ -22,6 +22,10 @@ const updateBadgeColors = () => {
 };
 
 (() => {
+  const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
+  let lastSpawn: number;
+  let spawnTimeout: number | null = null;
+
   const setup = async () => {
     // Clear all alarms
     await browser.alarms.clearAll();
@@ -61,15 +65,29 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    // Check if there is a spawn timeout
+    if (spawnTimeout !== null && Date.now() < spawnTimeout) return;
+
+    // Check if the last spawn was too recent
+    if (
+      lastSpawn &&
+      Date.now() - lastSpawn < (await storage.get('config')).spawnInterval.min
+    ) {
+      spawnTimeout = Date.now() + rapidSpawnPenalty;
+      return;
+    }
+
     // Get all active tabs
     const tabs = await browser.tabs.query({ active: true });
     // Select a random tab
     const num = Math.round(generateRandomNumber(0, tabs.length - 1));
     const tab = tabs[num];
+    // Check if the browser is idle
     const state = await browser.idle.queryState(5 * 60);
     if (!tab.id || state !== 'active') return;
     console.log(`Sending spawnBalloon to`, tab);
 
+    lastSpawn = Date.now();
     // Send the spawnBalloon message
     const response = await browser.tabs
       .sendMessage(tab.id, { action: 'spawnBalloon' })
