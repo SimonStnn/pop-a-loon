@@ -98,7 +98,6 @@ class BackendAPI {
     >('POST', '/user/new', {
       username,
       email,
-      initialCount: (await storage.get('balloonCount' as any))?.balloonCount,
     });
   }
 
