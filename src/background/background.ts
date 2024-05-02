@@ -22,7 +22,9 @@ const updateBadgeColors = () => {
 };
 
 (() => {
+  const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
+  let spawnTimeout: number | null = null;
 
   const setup = async () => {
     // Clear all alarms
@@ -63,12 +65,15 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    // Check if there is a spawn timeout
+    if (spawnTimeout !== null && Date.now() < spawnTimeout) return;
+
     // Check if the last spawn was too recent
     if (
       lastSpawn &&
       Date.now() - lastSpawn < (await storage.get('config')).spawnInterval.min
     ) {
-      console.log('Last spawn was too recent, skipping');
+      spawnTimeout = Date.now() + rapidSpawnPenalty;
       return;
     }
 
