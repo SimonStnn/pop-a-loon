@@ -50,6 +50,13 @@ export function getBrowser() {
   }
 }
 
+export function isRunningInBackground() {
+  const views = browser.extension?.getViews?.() as Window[] | undefined;
+  const isRunningInPopup =
+    views?.some((view) => view.location.href.includes('popup.html')) ?? false;
+  return !isRunningInPopup;
+}
+
 export function weightedRandom<T>(results: T[], weights: number[]): T | null {
   // Calculate the total weight
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);

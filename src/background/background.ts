@@ -1,9 +1,14 @@
 import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { AlarmName, Message, initalConfig } from '@const';
-import { generateRandomNumber, getBrowser, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
+import {
+  generateRandomNumber,
+  getBrowser,
+  isRunningInBackground,
+  sendMessage,
+} from '@utils';
 
 const setBadgeNumber = (count: number) => {
   browser.action.setBadgeText({
@@ -22,6 +27,9 @@ const updateBadgeColors = () => {
 };
 
 (() => {
+  // Check if the background script is running in the background
+  if (!isRunningInBackground()) return;
+
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
