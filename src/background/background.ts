@@ -71,8 +71,12 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    const skipSpawnMessage = (note: any, level: 'log' | 'warn' = 'warn') =>
+      console[level](`Skipping spawnBalloon message: \r\n\t`, note);
+
     // Check if there is a spawn timeout
-    if (spawnTimeout !== null && Date.now() < spawnTimeout) return;
+    if (spawnTimeout !== null && Date.now() < spawnTimeout)
+      return skipSpawnMessage('balloon spawn in timeout');
 
     // Check if the last spawn was too recent
     if (
@@ -80,7 +84,7 @@ const updateBadgeColors = () => {
       Date.now() - lastSpawn < (await storage.get('config')).spawnInterval.min
     ) {
       spawnTimeout = Date.now() + rapidSpawnPenalty;
-      return;
+      return skipSpawnMessage('Spawned too recently, setting timeout');
     }
 
     // Get all active tabs
@@ -88,10 +92,17 @@ const updateBadgeColors = () => {
     // Select a random tab
     const num = Math.round(generateRandomNumber(0, tabs.length - 1));
     const tab = tabs[num];
+    if (!tab.id) return skipSpawnMessage('No tab id');
+
     // Check if the browser is idle
     const state = await browser.idle.queryState(5 * 60);
-    if (!tab.id || state !== 'active') return;
-    console.log(`Sending spawnBalloon to`, tab);
+    if (state !== 'active') return skipSpawnMessage('Browser is idle', 'log');
+
+    // Check if no spawn alarms are already set
+    const alarms = await browser.alarms.getAll();
+    if (alarms.some((alarm) => alarm.name === 'spawnBalloon'))
+      return skipSpawnMessage('Spawn alarm already set');
+    console.log(`Sending spawnBalloon message`);
 
     lastSpawn = Date.now();
     // Send the spawnBalloon message
