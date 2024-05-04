@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import { Message } from '@const';
 import { balloonContainer } from '@/balloon';
-import { weightedRandom } from '@/utils';
+import { sendMessage, weightedRandom } from '@/utils';
 import * as balloons from '@/balloons';
 import './style.css';
 
@@ -14,6 +14,16 @@ import './style.css';
   ) {
     return;
   }
+
+  let secret: string | undefined;
+  browser.runtime.onMessage.addListener(
+    async (message: Message, sender, sendResponse) => {
+      if (message.action === 'setSecret') {
+        secret = message.secret;
+      }
+    }
+  );
+  sendMessage({ action: 'getSecret' });
 
   browser.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
