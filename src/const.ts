@@ -134,7 +134,7 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
     '/configuration': {
       ...initalConfig,
       spawnInterval: {
-        min: 1000,
+        min: 500,
         max: 0.01 * 60000,
       },
     },

@@ -79,15 +79,19 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    const now = Date.now();
+    const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
     // Check if there is a spawn timeout
-    if (spawnTimeout !== null && Date.now() < spawnTimeout) return;
+    if (spawnTimeout !== null && now < spawnTimeout - minSpawnInterval)
+      return console.log('Spawn timeout until', now);
 
     // Check if the last spawn was too recent
-    if (
-      lastSpawn &&
-      Date.now() - lastSpawn < (await storage.get('config')).spawnInterval.min
-    ) {
-      spawnTimeout = Date.now() + rapidSpawnPenalty;
+    if (lastSpawn && now - lastSpawn < minSpawnInterval) {
+      spawnTimeout = now + rapidSpawnPenalty;
+      console.log(
+        'Rapid spawn penalty, setting timeout penalty until',
+        spawnTimeout
+      );
       return;
     }
 
@@ -101,7 +105,6 @@ const updateBadgeColors = () => {
     if (!tab.id || state !== 'active') return;
     console.log(`Sending spawnBalloon to`, tab);
 
-    lastSpawn = Date.now();
     // Send the spawnBalloon message
     const response = await browser.tabs
       .sendMessage(tab.id, { action: 'spawnBalloon' })
@@ -109,6 +112,7 @@ const updateBadgeColors = () => {
     if (browser.runtime.lastError) {
       browser.runtime.lastError;
     }
+    lastSpawn = now;
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
