@@ -104,10 +104,21 @@ type SpawnBalloonMessage = {
   action: 'spawnBalloon';
 };
 
+type SecretMessage = {
+  action: 'getSecret';
+};
+
+type SecretResponse = {
+  action: 'setSecret';
+  secret: string;
+};
+
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
-  | SpawnBalloonMessage;
+  | SpawnBalloonMessage
+  | SecretMessage
+  | SecretResponse;
 
 //
 // * Alarms
