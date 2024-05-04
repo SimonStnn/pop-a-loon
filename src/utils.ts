@@ -51,6 +51,10 @@ export function getBrowser() {
   }
 }
 
+export function generateSecret() {
+  return Math.random().toString(36).substring(2, 15);
+}
+
 export function isRunningInBackground() {
   const views = browser.extension?.getViews?.() as Window[] | undefined;
   const isRunningInPopup =
