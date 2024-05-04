@@ -102,6 +102,7 @@ type IncrementCount = {
 
 type SpawnBalloonMessage = {
   action: 'spawnBalloon';
+  secret: string;
 };
 
 type SecretMessage = {
