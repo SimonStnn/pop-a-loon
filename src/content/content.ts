@@ -18,7 +18,7 @@ import './style.css';
   let secret: string | undefined;
   browser.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
-      if (message.action === 'setSecret') {
+      if (message.action === 'setSecret' && message.secret === undefined) {
         secret = message.secret;
       }
     }
