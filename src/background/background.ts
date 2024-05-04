@@ -1,9 +1,14 @@
 import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { AlarmName, Message, initalConfig } from '@const';
-import { generateRandomNumber, getBrowser, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
+import {
+  generateRandomNumber,
+  getBrowser,
+  isRunningInBackground,
+  sendMessage,
+} from '@utils';
 
 const setBadgeNumber = (count: number) => {
   browser.action.setBadgeText({
@@ -22,6 +27,9 @@ const updateBadgeColors = () => {
 };
 
 (() => {
+  // Check if the background script is running in the background
+  if (!isRunningInBackground()) return;
+
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
@@ -71,6 +79,8 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    const now = Date.now();
+    const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
     const skipSpawnMessage = (note: any, level: 'log' | 'warn' = 'warn') =>
       console[level](`Skipping spawnBalloon message: \r\n\t`, note);
 
@@ -79,11 +89,8 @@ const updateBadgeColors = () => {
       return skipSpawnMessage('balloon spawn in timeout');
 
     // Check if the last spawn was too recent
-    if (
-      lastSpawn &&
-      Date.now() - lastSpawn < (await storage.get('config')).spawnInterval.min
-    ) {
-      spawnTimeout = Date.now() + rapidSpawnPenalty;
+    if (lastSpawn && now - lastSpawn < minSpawnInterval) {
+      spawnTimeout = now + rapidSpawnPenalty;
       return skipSpawnMessage('Spawned too recently, setting timeout');
     }
 
@@ -104,7 +111,6 @@ const updateBadgeColors = () => {
       return skipSpawnMessage('Spawn alarm already set');
     console.log(`Sending spawnBalloon message`);
 
-    lastSpawn = Date.now();
     // Send the spawnBalloon message
     const response = await browser.tabs
       .sendMessage(tab.id, { action: 'spawnBalloon' })
@@ -112,6 +118,7 @@ const updateBadgeColors = () => {
     if (browser.runtime.lastError) {
       browser.runtime.lastError;
     }
+    lastSpawn = now;
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
