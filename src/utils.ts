@@ -50,8 +50,10 @@ export function getBrowser() {
   }
 }
 
-export function generateSecret(): Secret {
-  return Math.random().toString(36).substring(2, 15);
+export function generateSecret(chunks: number = 10): Secret {
+  return Array.from({ length: chunks }, () =>
+    Math.random().toString(36).substring(2, 15)
+  ).join('');
 }
 
 export function isRunningInBackground() {
