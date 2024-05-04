@@ -35,6 +35,7 @@ export async function sendMessage(message: Message) {
       );
       browser.runtime.lastError;
     }
+    return res;
   } catch (e) {}
 }
 
