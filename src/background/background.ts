@@ -30,6 +30,12 @@ const updateBadgeColors = () => {
     // Clear all alarms
     await browser.alarms.clearAll();
 
+    //! Fix for #145
+    try {
+      console.log('Checking for depricated balloonCount');
+      await storage.remove('balloonCount' as any);
+    } catch (e) {}
+
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
       console.log('Remote is not available, retrying in 1 minute');
