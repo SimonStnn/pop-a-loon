@@ -102,7 +102,7 @@ type IncrementCount = {
 
 type SpawnBalloonMessage = {
   action: 'spawnBalloon';
-  secret: string;
+  secret: Secret;
 };
 
 type SecretMessage = {
@@ -111,7 +111,7 @@ type SecretMessage = {
 
 type SecretResponse = {
   action: 'setSecret';
-  secret: string;
+  secret: Secret;
 };
 
 export type Message =
@@ -180,6 +180,8 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
 //
 // * Other
 //
+
+export type Secret = string;
 
 export type hexColor = string;
 
