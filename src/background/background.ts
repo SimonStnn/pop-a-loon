@@ -115,7 +115,7 @@ const updateBadgeColors = () => {
 
     // Send the spawnBalloon message
     const response = await browser.tabs
-      .sendMessage(tab.id, { action: 'spawnBalloon' })
+      .sendMessage(tab.id, { action: 'spawnBalloon', secret: secrets[tab.id] })
       .catch((e) => {});
     if (browser.runtime.lastError) {
       browser.runtime.lastError;
