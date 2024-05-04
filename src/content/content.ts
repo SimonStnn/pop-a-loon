@@ -16,33 +16,33 @@ import './style.css';
   }
 
   let secret: string | undefined;
-  browser.runtime.onMessage.addListener(
-    async (message: Message, sender, sendResponse) => {
-      if (message.action === 'setSecret' && message.secret === undefined) {
-        secret = message.secret;
-      }
-    }
-  );
   sendMessage({ action: 'getSecret' });
 
   browser.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
-      // Always call sendResponse, this is required
-      sendResponse();
-      // If the message is not spawnBalloon, ignore it
-      if (message.action !== 'spawnBalloon') return;
+      switch (message.action) {
+        case 'setSecret':
+          if (message.action === 'setSecret' && secret === undefined)
+            secret = message.secret;
+          break;
+        case 'spawnBalloon':
+          // Check if the secret matches
+          if (!secret || message.secret !== secret)
+            return console.warn('Secret mismatch');
 
-      const balloonClasses = Object.values(balloons);
-      // Make a list from the spawn_chance from each balloon class
-      const spawnChances = balloonClasses.map(
-        (BalloonType) => BalloonType.spawn_chance
-      );
+          const balloonClasses = Object.values(balloons);
+          // Make a list from the spawn_chance from each balloon class
+          const spawnChances = balloonClasses.map(
+            (BalloonType) => BalloonType.spawn_chance
+          );
 
-      // Create a new balloon and make it rise
-      const Balloon =
-        weightedRandom(balloonClasses, spawnChances) || balloons.Default;
-      const balloon = new Balloon();
-      balloon.rise();
+          // Create a new balloon and make it rise
+          const Balloon =
+            weightedRandom(balloonClasses, spawnChances) || balloons.Default;
+          const balloon = new Balloon();
+          balloon.rise();
+          break;
+      }
     }
   );
 
