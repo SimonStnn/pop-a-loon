@@ -166,6 +166,12 @@ const updateBadgeColors = () => {
     }
   });
 
+  browser.tabs.onRemoved.addListener((tabId) => {
+    try {
+      delete secrets[tabId];
+    } catch (e) {}
+  });
+
   browser.runtime.onMessage.addListener(async function messageListener(
     message: Message,
     sender,
