@@ -22,9 +22,10 @@ import './style.css';
     async (message: Message, sender, sendResponse) => {
       switch (message.action) {
         case 'setSecret':
-          if (secret === undefined && message.token === requestToken)
+          if (secret === undefined && message.token === requestToken) {
             secret = message.secret;
-          requestToken = undefined;
+            requestToken = undefined;
+          }
           break;
         case 'spawnBalloon':
           // Check if the secret matches
@@ -42,6 +43,11 @@ import './style.css';
             weightedRandom(balloonClasses, spawnChances) || balloons.Default;
           const balloon = new Balloon();
           balloon.rise();
+
+          // Reset the secret
+          secret = undefined;
+          requestToken = generateSecret(2);
+          sendMessage({ action: 'getSecret', token: requestToken });
           break;
       }
     }
