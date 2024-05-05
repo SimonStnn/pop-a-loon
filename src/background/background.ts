@@ -203,8 +203,13 @@ const updateBadgeColors = () => {
         const secret = generateSecret();
         const tabId = sender.tab?.id;
         if (!tabId) return console.error('No tab id when getting secret');
+        const requestToken = message.token;
         secrets[tabId] = secret;
-        await browser.tabs.sendMessage(tabId, { action: 'setSecret', secret });
+        await browser.tabs.sendMessage(tabId, {
+          action: 'setSecret',
+          secret,
+          token: requestToken,
+        } as Message);
         break;
     }
   });
