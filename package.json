@@ -1,6 +1,6 @@
 {
   "name": "pop-a-loon",
-  "version": "1.7.2",
+  "version": "1.7.4",
   "description": "A fun Chrome extension that lets balloons rise on your screen",
   "private": true,
   "scripts": {
@@ -18,7 +18,9 @@
     "build:firefox:zip": "rimraf ./build/pop-a-loon-firefox.zip && npm run build:firefox && npm run _build:prepare && cd dist && bestzip ../build/pop-a-loon-firefox.zip * && cd ..",
     "prepare": "husky"
   },
-  "author": "",
+  "author": {
+    "name": "Simon Stijnen"
+  },
   "license": "Apache-2.0",
   "husky": {
     "hooks": {

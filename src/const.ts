@@ -102,12 +102,26 @@ type IncrementCount = {
 
 type SpawnBalloonMessage = {
   action: 'spawnBalloon';
+  secret: Secret;
+};
+
+type SecretMessage = {
+  action: 'getSecret';
+  token: string;
+};
+
+type SecretResponse = {
+  action: 'setSecret';
+  token: string;
+  secret: Secret;
 };
 
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
-  | SpawnBalloonMessage;
+  | SpawnBalloonMessage
+  | SecretMessage
+  | SecretResponse;
 
 //
 // * Alarms
@@ -134,7 +148,7 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
     '/configuration': {
       ...initalConfig,
       spawnInterval: {
-        min: 1000,
+        min: 500,
         max: 0.01 * 60000,
       },
     },
@@ -168,6 +182,8 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
 //
 // * Other
 //
+
+export type Secret = string;
 
 export type hexColor = string;
 

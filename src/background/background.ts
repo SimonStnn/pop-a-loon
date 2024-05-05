@@ -1,9 +1,15 @@
-import browser from 'webextension-polyfill';
+import browser, { action } from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { AlarmName, Message, initalConfig } from '@const';
-import { generateRandomNumber, getBrowser, sendMessage, sleep } from '@utils';
 import storage from '@/storage';
 import remote from '@/remote';
+import {
+  generateRandomNumber,
+  generateSecret,
+  getBrowser,
+  isRunningInBackground,
+  sendMessage,
+} from '@utils';
 
 const setBadgeNumber = (count: number) => {
   browser.action.setBadgeText({
@@ -22,13 +28,23 @@ const updateBadgeColors = () => {
 };
 
 (() => {
+  // Check if the background script is running in the background
+  if (!isRunningInBackground()) return;
+
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
+  const secrets: { [tabId: number]: string } = {};
 
   const setup = async () => {
     // Clear all alarms
     await browser.alarms.clearAll();
+
+    //! Fix for #145
+    try {
+      console.log('Checking for depricated balloonCount');
+      await storage.remove('balloonCount' as any);
+    } catch (e) {}
 
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
@@ -65,16 +81,19 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    const now = Date.now();
+    const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
+    const skipSpawnMessage = (note: any, level: 'log' | 'warn' = 'warn') =>
+      console[level](`Skipping spawnBalloon message: \r\n\t`, note);
+
     // Check if there is a spawn timeout
-    if (spawnTimeout !== null && Date.now() < spawnTimeout) return;
+    if (spawnTimeout !== null && Date.now() < spawnTimeout)
+      return skipSpawnMessage('balloon spawn in timeout');
 
     // Check if the last spawn was too recent
-    if (
-      lastSpawn &&
-      Date.now() - lastSpawn < (await storage.get('config')).spawnInterval.min
-    ) {
-      spawnTimeout = Date.now() + rapidSpawnPenalty;
-      return;
+    if (lastSpawn && now - lastSpawn < minSpawnInterval) {
+      spawnTimeout = now + rapidSpawnPenalty;
+      return skipSpawnMessage('Spawned too recently, setting timeout');
     }
 
     // Get all active tabs
@@ -82,19 +101,26 @@ const updateBadgeColors = () => {
     // Select a random tab
     const num = Math.round(generateRandomNumber(0, tabs.length - 1));
     const tab = tabs[num];
+    if (!tab.id) return skipSpawnMessage('No tab id');
+
     // Check if the browser is idle
     const state = await browser.idle.queryState(5 * 60);
-    if (!tab.id || state !== 'active') return;
-    console.log(`Sending spawnBalloon to`, tab);
+    if (state !== 'active') return skipSpawnMessage('Browser is idle', 'log');
 
-    lastSpawn = Date.now();
+    // Check if no spawn alarms are already set
+    const alarms = await browser.alarms.getAll();
+    if (alarms.some((alarm) => alarm.name === 'spawnBalloon'))
+      return skipSpawnMessage('Spawn alarm already set');
+    console.log(`Sending spawnBalloon message`);
+
     // Send the spawnBalloon message
     const response = await browser.tabs
-      .sendMessage(tab.id, { action: 'spawnBalloon' })
+      .sendMessage(tab.id, { action: 'spawnBalloon', secret: secrets[tab.id] })
       .catch((e) => {});
     if (browser.runtime.lastError) {
       browser.runtime.lastError;
     }
+    lastSpawn = now;
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
@@ -140,6 +166,12 @@ const updateBadgeColors = () => {
     }
   });
 
+  browser.tabs.onRemoved.addListener((tabId) => {
+    try {
+      delete secrets[tabId];
+    } catch (e) {}
+  });
+
   browser.runtime.onMessage.addListener(async function messageListener(
     message: Message,
     sender,
@@ -166,6 +198,18 @@ const updateBadgeColors = () => {
         sendMessage(msg);
         // Call the listener again to update the badge number
         messageListener(msg, sender, sendResponse);
+        break;
+      case 'getSecret':
+        const secret = generateSecret();
+        const tabId = sender.tab?.id;
+        if (!tabId) return console.error('No tab id when getting secret');
+        const requestToken = message.token;
+        secrets[tabId] = secret;
+        await browser.tabs.sendMessage(tabId, {
+          action: 'setSecret',
+          secret,
+          token: requestToken,
+        } as Message);
         break;
     }
   });

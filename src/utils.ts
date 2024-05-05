@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { Message } from '@const';
+import { Message, Secret } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -48,6 +48,19 @@ export function getBrowser() {
   } else {
     return 'Unknown';
   }
+}
+
+export function generateSecret(chunks: number = 10): Secret {
+  return Array.from({ length: chunks }, () =>
+    Math.random().toString(36).substring(2, 15)
+  ).join('');
+}
+
+export function isRunningInBackground() {
+  const views = browser.extension?.getViews?.() as Window[] | undefined;
+  const isRunningInPopup =
+    views?.some((view) => view.location.href.includes('popup.html')) ?? false;
+  return !isRunningInPopup;
 }
 
 export function weightedRandom<T>(results: T[], weights: number[]): T | null {
