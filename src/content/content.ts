@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import { Message } from '@const';
 import { balloonContainer } from '@/balloon';
-import { sendMessage, weightedRandom } from '@/utils';
+import { generateSecret, sendMessage, weightedRandom } from '@/utils';
 import * as balloons from '@/balloons';
 import './style.css';
 
@@ -14,16 +14,17 @@ import './style.css';
   ) {
     return;
   }
-
+  let requestToken: string | undefined = generateSecret(2);
   let secret: string | undefined;
-  sendMessage({ action: 'getSecret' });
+  sendMessage({ action: 'getSecret', token: requestToken });
 
   browser.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
       switch (message.action) {
         case 'setSecret':
-          if (message.action === 'setSecret' && secret === undefined)
+          if (secret === undefined && message.token === requestToken)
             secret = message.secret;
+          requestToken = undefined;
           break;
         case 'spawnBalloon':
           // Check if the secret matches
