@@ -107,10 +107,12 @@ type SpawnBalloonMessage = {
 
 type SecretMessage = {
   action: 'getSecret';
+  token: string;
 };
 
 type SecretResponse = {
   action: 'setSecret';
+  token: string;
   secret: Secret;
 };
 
