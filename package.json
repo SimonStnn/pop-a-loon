@@ -16,6 +16,7 @@
     "build:chrome:zip": "rimraf ./build/pop-a-loon-chrome.zip && npm run build:chrome && npm run _build:prepare && cd dist && bestzip ../build/pop-a-loon-chrome.zip * && cd ..",
     "build:firefox": "cross-env BROWSER=firefox webpack --mode production",
     "build:firefox:zip": "rimraf ./build/pop-a-loon-firefox.zip && npm run build:firefox && npm run _build:prepare && cd dist && bestzip ../build/pop-a-loon-firefox.zip * && cd ..",
+    "zip:source": "git archive --format zip --output ./build/source.zip HEAD",
     "prepare": "husky"
   },
   "author": {
