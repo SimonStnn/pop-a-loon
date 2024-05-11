@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { Message, Secret } from '@const';
+import { Message } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -48,12 +48,6 @@ export function getBrowser() {
   } else {
     return 'Unknown';
   }
-}
-
-export function generateSecret(chunks: number = 10): Secret {
-  return Array.from({ length: chunks }, () =>
-    Math.random().toString(36).substring(2, 15)
-  ).join('');
 }
 
 export function isRunningInBackground() {

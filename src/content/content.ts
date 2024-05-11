@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import { Message } from '@const';
 import { balloonContainer } from '@/balloon';
-import { generateSecret, sendMessage, weightedRandom } from '@/utils';
+import { weightedRandom } from '@/utils';
 import * as balloons from '@/balloons';
 import './style.css';
 
@@ -14,42 +14,25 @@ import './style.css';
   ) {
     return;
   }
-  let requestToken: string | undefined = generateSecret(2);
-  let secret: string | undefined;
-  sendMessage({ action: 'getSecret', token: requestToken });
 
   browser.runtime.onMessage.addListener(
     async (message: Message, sender, sendResponse) => {
-      switch (message.action) {
-        case 'setSecret':
-          if (secret === undefined && message.token === requestToken) {
-            secret = message.secret;
-            requestToken = undefined;
-          }
-          break;
-        case 'spawnBalloon':
-          // Check if the secret matches
-          if (!secret || message.secret !== secret)
-            return console.warn('Secret mismatch');
+      // Always call sendResponse, this is required
+      sendResponse();
+      // If the message is not spawnBalloon, ignore it
+      if (message.action !== 'spawnBalloon') return;
 
-          const balloonClasses = Object.values(balloons);
-          // Make a list from the spawn_chance from each balloon class
-          const spawnChances = balloonClasses.map(
-            (BalloonType) => BalloonType.spawn_chance
-          );
+      const balloonClasses = Object.values(balloons);
+      // Make a list from the spawn_chance from each balloon class
+      const spawnChances = balloonClasses.map(
+        (BalloonType) => BalloonType.spawn_chance
+      );
 
-          // Create a new balloon and make it rise
-          const Balloon =
-            weightedRandom(balloonClasses, spawnChances) || balloons.Default;
-          const balloon = new Balloon();
-          balloon.rise();
-
-          // Reset the secret
-          secret = undefined;
-          requestToken = generateSecret(2);
-          sendMessage({ action: 'getSecret', token: requestToken });
-          break;
-      }
+      // Create a new balloon and make it rise
+      const Balloon =
+        weightedRandom(balloonClasses, spawnChances) || balloons.Default;
+      const balloon = new Balloon();
+      balloon.rise();
     }
   );
 
