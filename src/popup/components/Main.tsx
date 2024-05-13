@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { ClassValue } from 'clsx';
 
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@components/ui/scroll-area';
 import { cn } from '@/utils';
 
 interface MainProps {

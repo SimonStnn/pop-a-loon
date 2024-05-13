@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2, CheckIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from '@components/ui/input';
+import { Button } from '@components/ui/button';
 import {
   Form,
   FormControl,
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@components/ui/form';
 import {
   Dialog,
   DialogContent,
@@ -22,10 +22,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+} from '@components/ui/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import Main from '@/components/Main';
+import Main from '@components/Main';
 import storage from '@/storage';
 import remote from '@/remote';
 import { User } from '@/const';

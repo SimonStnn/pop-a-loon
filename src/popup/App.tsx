@@ -2,7 +2,7 @@ import browser from 'webextension-polyfill';
 import React, { useState, useEffect } from 'react';
 import storage from '@/storage';
 import { Message } from '@const';
-import Main from '@/components/Main';
+import Main from '@components/Main';
 
 const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);
