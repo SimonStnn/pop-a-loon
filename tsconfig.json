@@ -10,18 +10,10 @@
     "esModuleInterop": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@components/*": [
-        "./components/*"
-      ],
-      "@const": [
-        "./const"
-      ],
-      "@utils": [
-        "./utils"
-      ],
-    },
+      "@/*": ["./*"],
+      "@components/*": ["./popup/components/*"],
+      "@const": ["./const"],
+      "@utils": ["./utils"]
+    }
   }
 }
