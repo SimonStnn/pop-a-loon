@@ -11,6 +11,7 @@ import {
 } from '@components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
 import Main from '@components/Main';
+import LocalSettings from '@components/forms/LocalSettings';
 import UpdateUser from '@components/forms/UpdateUser';
 import DeleteUser from '@components/forms/DeleteUser';
 
@@ -19,6 +20,9 @@ export default () => {
     <>
       <Main className="">
         <div className="h-[156px] grid gap-4">
+          <section>
+            <LocalSettings />
+          </section>
           <section>
             <UpdateUser />
           </section>
