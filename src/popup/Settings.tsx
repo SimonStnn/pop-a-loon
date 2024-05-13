@@ -11,7 +11,7 @@ import {
 } from '@components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
 import Main from '@components/Main';
-import UpdateUser from './components/forms/UpdateUser';
+import UpdateUser from '@components/forms/UpdateUser';
 import DeleteUser from '@components/forms/DeleteUser';
 
 export default () => {
