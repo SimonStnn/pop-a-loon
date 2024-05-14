@@ -5,12 +5,12 @@ import {
   Form,
   FormField,
   FormControl,
-  FormDescription,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@components/ui/form';
 import { Slider } from '@components/ui/slider';
+import InfoIcon from '@components/InfoIcon';
 import { Default as DefaultBalloon } from '@/balloons';
 import storage from '@/storage';
 
@@ -67,7 +67,14 @@ export default () => {
           name="popVolume"
           render={({ field: { onChange } }) => (
             <FormItem>
-              <FormLabel>Pop Volume</FormLabel>
+              <FormLabel className="flex justify-between gap-1">
+                <span>Pop Volume</span>
+                <InfoIcon>
+                  <p className="text-sm font-normal">
+                    The volume of the pop sound when a balloon is popped.
+                  </p>
+                </InfoIcon>
+              </FormLabel>
               <FormControl>
                 <Slider
                   min={MIN_POP_VOLUME}
@@ -80,9 +87,6 @@ export default () => {
                   }}
                 />
               </FormControl>
-              <FormDescription>
-                The volume of the pop sound when a balloon is popped.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
