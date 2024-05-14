@@ -11,7 +11,7 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "components",
+    "components": "@/popup/components",
     "utils": "@utils"
   }
 }

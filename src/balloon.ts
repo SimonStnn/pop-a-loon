@@ -43,13 +43,13 @@ export default abstract class Balloon {
   protected readonly balloonImage: HTMLImageElement =
     document.createElement('img');
 
-  protected get popSound(): HTMLAudioElement {
+  public get popSound(): HTMLAudioElement {
     return new Audio(this.popSoundUrl);
   }
-  protected get balloonImageUrl(): string {
+  public get balloonImageUrl(): string {
     return resourceLocation + this.name + '/icon.png';
   }
-  protected get popSoundUrl(): string {
+  public get popSoundUrl(): string {
     return resourceLocation + this.name + '/pop.mp3';
   }
 
