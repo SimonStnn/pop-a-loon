@@ -69,11 +69,17 @@ export default () => {
             <FormItem>
               <FormLabel className="flex justify-between gap-1">
                 <span>Pop Volume</span>
-                <InfoIcon>
-                  <p className="text-sm font-normal">
-                    The volume of the pop sound when a balloon is popped.
-                  </p>
-                </InfoIcon>
+                <span className="flex gap-2">
+                  <span className="">{popVolume}</span>
+                  <InfoIcon>
+                    <h4 className="font-medium leading-none mb-1">
+                      Pop Volume
+                    </h4>
+                    <p className="text-sm font-normal text-muted-foreground leading-tight">
+                      The volume of the pop sound when a balloon is popped.
+                    </p>
+                  </InfoIcon>
+                </span>
               </FormLabel>
               <FormControl>
                 <Slider
