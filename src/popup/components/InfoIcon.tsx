@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CircleHelp } from 'lucide-react';
+import { ClassValue } from 'clsx';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@components/ui/hover-card';
+import { cn } from '@/utils';
 
 type InfoIconProps = {
+  className?: ClassValue;
   children?: React.ReactNode;
 };
 
-export default ({ children }: InfoIconProps) => {
+export default (props: InfoIconProps) => {
   return (
     <HoverCard>
       <HoverCardTrigger>
-        <CircleHelp size={14} className="text-muted-foreground" />
+        <CircleHelp
+          size={14}
+          className={cn('text-muted-foreground', props.className)}
+        />
       </HoverCardTrigger>
-      <HoverCardContent asChild>{children}</HoverCardContent>
+      <HoverCardContent>{props.children}</HoverCardContent>
     </HoverCard>
   );
 };
