@@ -4,11 +4,13 @@
 
 type _initialConfig = {
   popVolume: number;
+  spawnRate: number;
 } & RemoteConfig;
 
 export const initalConfig: _initialConfig = {
   // Local config
   popVolume: 70,
+  spawnRate: 1,
 
   // Remote config -> can be overriden by the remote
   badge: {
