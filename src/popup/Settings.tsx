@@ -20,15 +20,15 @@ export default () => {
   return (
     <>
       <Main className="">
-        <div className="h-[256px] grid gap-4 mt-2">
+        <div className="h-[286px] grid gap-4 mt-2">
           <section>
             <LocalSettings />
           </section>
-          <Separator className=" my-1" />
+          <Separator />
           <section>
             <UpdateUser />
           </section>
-          <Separator className=" my-1" />
+          <Separator />
           <section>
             <Dialog>
               <DialogTrigger asChild>
