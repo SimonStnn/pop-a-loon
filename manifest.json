@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pop-a-loon",
-  "description": "A fun Chrome extension that lets balloons rise on your screen",
+  "description": "The new rising trend (literally) that changes the browser game completely.",
   "permissions": ["storage", "alarms", "idle"],
   "icons": {
     "16": "./resources/icons/icon-16.png",
