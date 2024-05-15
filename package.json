@@ -1,7 +1,7 @@
 {
   "name": "pop-a-loon",
-  "version": "1.8.0",
-  "description": "A fun Chrome extension that lets balloons rise on your screen",
+  "version": "1.8.1",
+  "description": "The new rising trend (literally) that changes the browser game completely.",
   "private": true,
   "scripts": {
     "test": "jest",
@@ -11,11 +11,12 @@
     "dev:firefox": "npm run dev:firefox:noremote --",
     "dev:firefox:remote": "cross-env REMOTE=\"remote\" BROWSER=firefox webpack --mode development",
     "dev:firefox:noremote": "cross-env REMOTE=\"noremote\" BROWSER=firefox webpack --mode development",
-    "_build:prepare": "mkdirp build",
-    "build:chrome": "cross-env BROWSER=chrome webpack --mode production",
-    "build:chrome:zip": "rimraf ./build/pop-a-loon-chrome.zip && npm run build:chrome && npm run _build:prepare && cd dist && bestzip ../build/pop-a-loon-chrome.zip * && cd ..",
-    "build:firefox": "cross-env BROWSER=firefox webpack --mode production",
-    "build:firefox:zip": "rimraf ./build/pop-a-loon-firefox.zip && npm run build:firefox && npm run _build:prepare && cd dist && bestzip ../build/pop-a-loon-firefox.zip * && cd ..",
+    "_build:prepare": "mkdirp build && rimraf dist/",
+    "build:chrome": "npm run _build:prepare && cross-env BROWSER=chrome webpack --mode production",
+    "build:chrome:zip": "npm run _build:prepare && rimraf ./build/pop-a-loon-chrome.zip && npm run build:chrome && cd dist && bestzip ../build/pop-a-loon-chrome.zip * && cd ..",
+    "build:firefox": "npm run _build:prepare && cross-env BROWSER=firefox webpack --mode production",
+    "build:firefox:zip": "npm run _build:prepare && rimraf ./build/pop-a-loon-firefox.zip && npm run build:firefox && cd dist && bestzip ../build/pop-a-loon-firefox.zip * && cd ..",
+    "build:all:zip": "npm run build:chrome:zip && npm run build:firefox:zip && npm run zip:source",
     "zip:source": "npm run _build:prepare && node tasks/zip-source.js",
     "prepare": "husky"
   },
