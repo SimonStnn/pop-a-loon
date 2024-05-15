@@ -69,7 +69,11 @@ const updateBadgeColors = () => {
     // Get the config from the local storage
     const config = (await storage.get('config')) || initalConfig;
     // Merge the local config with the remote config
-    await storage.set('config', { ...config, ...remoteConfig });
+    await storage.set('config', {
+      ...initalConfig,
+      ...config, // config overrides the initial config
+      ...remoteConfig, // remoteConfig overrides the config
+    });
 
     // Create the alarm for the spawn interval
     createSpawnAlarm('spawnBalloon');
