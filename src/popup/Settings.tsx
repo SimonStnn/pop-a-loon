@@ -10,7 +10,9 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
+import { Separator } from '@components/ui/separator';
 import Main from '@components/Main';
+import LocalSettings from '@components/forms/LocalSettings';
 import UpdateUser from '@components/forms/UpdateUser';
 import DeleteUser from '@components/forms/DeleteUser';
 
@@ -18,10 +20,15 @@ export default () => {
   return (
     <>
       <Main className="">
-        <div className="h-[156px] grid gap-4">
+        <div className="h-[286px] grid gap-4 mt-2">
+          <section>
+            <LocalSettings />
+          </section>
+          <Separator />
           <section>
             <UpdateUser />
           </section>
+          <Separator />
           <section>
             <Dialog>
               <DialogTrigger asChild>

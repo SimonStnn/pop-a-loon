@@ -4,6 +4,7 @@ import { AlarmName, Message, initalConfig } from '@const';
 import storage from '@/storage';
 import remote from '@/remote';
 import {
+  calculateBalloonSpawnDelay,
   generateRandomNumber,
   getBrowser,
   isRunningInBackground,
@@ -122,13 +123,9 @@ const updateBadgeColors = () => {
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
-    const config = await storage.get('config');
-    // Generate a random delay between the min and max spawn interval
-    const randomDelay = generateRandomNumber(
-      config.spawnInterval.min,
-      config.spawnInterval.max
-    );
-    await browser.alarms.create(name, { when: Date.now() + randomDelay });
+    await browser.alarms.create(name, {
+      when: Date.now() + (await calculateBalloonSpawnDelay()),
+    });
   };
 
   let backgroundScriptRunning = false;

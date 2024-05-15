@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import storage from '@/storage';
 import { generateRandomNumber, sendMessage } from '@utils';
 
 export const balloonContainer = document.createElement('div');
@@ -39,12 +40,14 @@ export default abstract class Balloon {
   public abstract getRandomDuration(): number;
 
   private readonly element: HTMLDivElement;
+  private readonly _popSound: HTMLAudioElement = new Audio();
 
   protected readonly balloonImage: HTMLImageElement =
     document.createElement('img');
 
   public get popSound(): HTMLAudioElement {
-    return new Audio(this.popSoundUrl);
+    if (!this._popSound.src) this._popSound.src = this.popSoundUrl;
+    return this._popSound;
   }
   public get balloonImageUrl(): string {
     return resourceLocation + this.name + '/icon.png';
@@ -87,6 +90,9 @@ export default abstract class Balloon {
   public async pop() {
     // Remove the balloon
     this.remove();
+
+    // Set volume
+    this.popSound.volume = (await storage.get('config')).popVolume / 100;
     // Play the pop sound
     this.popSound.play();
 
