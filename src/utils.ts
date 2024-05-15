@@ -85,6 +85,7 @@ export async function calculateBalloonSpawnDelay() {
     config.spawnInterval.min,
     config.spawnInterval.max
   );
+  const spawnRateMultiplier = Math.max(0, Math.min(config.spawnRate, 1));
 
-  return randomDelay / config.spawnRate;
+  return randomDelay / spawnRateMultiplier;
 }
