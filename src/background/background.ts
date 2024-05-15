@@ -1,11 +1,11 @@
-import browser, { action } from 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { AlarmName, Message, initalConfig } from '@const';
 import storage from '@/storage';
 import remote from '@/remote';
 import {
+  calculateBalloonSpawnDelay,
   generateRandomNumber,
-  generateSecret,
   getBrowser,
   isRunningInBackground,
   sendMessage,
@@ -34,7 +34,6 @@ const updateBadgeColors = () => {
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
-  const secrets: { [tabId: number]: string } = {};
 
   const setup = async () => {
     // Clear all alarms
@@ -115,7 +114,7 @@ const updateBadgeColors = () => {
 
     // Send the spawnBalloon message
     const response = await browser.tabs
-      .sendMessage(tab.id, { action: 'spawnBalloon', secret: secrets[tab.id] })
+      .sendMessage(tab.id, { action: 'spawnBalloon' })
       .catch((e) => {});
     if (browser.runtime.lastError) {
       browser.runtime.lastError;
@@ -124,13 +123,9 @@ const updateBadgeColors = () => {
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
-    const config = await storage.get('config');
-    // Generate a random delay between the min and max spawn interval
-    const randomDelay = generateRandomNumber(
-      config.spawnInterval.min,
-      config.spawnInterval.max
-    );
-    await browser.alarms.create(name, { when: Date.now() + randomDelay });
+    await browser.alarms.create(name, {
+      when: Date.now() + (await calculateBalloonSpawnDelay()),
+    });
   };
 
   let backgroundScriptRunning = false;
@@ -166,12 +161,6 @@ const updateBadgeColors = () => {
     }
   });
 
-  browser.tabs.onRemoved.addListener((tabId) => {
-    try {
-      delete secrets[tabId];
-    } catch (e) {}
-  });
-
   browser.runtime.onMessage.addListener(async function messageListener(
     message: Message,
     sender,
@@ -198,18 +187,6 @@ const updateBadgeColors = () => {
         sendMessage(msg);
         // Call the listener again to update the badge number
         messageListener(msg, sender, sendResponse);
-        break;
-      case 'getSecret':
-        const secret = generateSecret();
-        const tabId = sender.tab?.id;
-        if (!tabId) return console.error('No tab id when getting secret');
-        const requestToken = message.token;
-        secrets[tabId] = secret;
-        await browser.tabs.sendMessage(tabId, {
-          action: 'setSecret',
-          secret,
-          token: requestToken,
-        } as Message);
         break;
     }
   });

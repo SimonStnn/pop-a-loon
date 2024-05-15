@@ -1,7 +1,8 @@
 import browser from 'webextension-polyfill';
-import { Message, Secret } from '@const';
+import { Message } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import storage from '@/storage';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -50,12 +51,6 @@ export function getBrowser() {
   }
 }
 
-export function generateSecret(chunks: number = 10): Secret {
-  return Array.from({ length: chunks }, () =>
-    Math.random().toString(36).substring(2, 15)
-  ).join('');
-}
-
 export function isRunningInBackground() {
   const views = browser.extension?.getViews?.() as Window[] | undefined;
   const isRunningInPopup =
@@ -81,4 +76,16 @@ export function weightedRandom<T>(results: T[], weights: number[]): T | null {
 
   // Return null if no result is found (shouldn't happen if the weights are correct)
   return null;
+}
+
+export async function calculateBalloonSpawnDelay() {
+  const config = await storage.get('config');
+  // Generate a random delay between the min and max spawn interval
+  const randomDelay = generateRandomNumber(
+    config.spawnInterval.min,
+    config.spawnInterval.max
+  );
+  const spawnRateMultiplier = Math.max(0, Math.min(config.spawnRate, 1));
+
+  return randomDelay / spawnRateMultiplier;
 }

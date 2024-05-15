@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@components/ui/separator';
 import { Button } from './ui/button';
 import remote from '@/remote';
 import { getBrowser } from '@/utils';

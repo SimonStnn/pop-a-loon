@@ -4,11 +4,13 @@
 
 type _initialConfig = {
   popVolume: number;
+  spawnRate: number;
 } & RemoteConfig;
 
 export const initalConfig: _initialConfig = {
   // Local config
   popVolume: 70,
+  spawnRate: 1,
 
   // Remote config -> can be overriden by the remote
   badge: {
@@ -102,26 +104,12 @@ type IncrementCount = {
 
 type SpawnBalloonMessage = {
   action: 'spawnBalloon';
-  secret: Secret;
-};
-
-type SecretMessage = {
-  action: 'getSecret';
-  token: string;
-};
-
-type SecretResponse = {
-  action: 'setSecret';
-  token: string;
-  secret: Secret;
 };
 
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
-  | SpawnBalloonMessage
-  | SecretMessage
-  | SecretResponse;
+  | SpawnBalloonMessage;
 
 //
 // * Alarms
@@ -182,8 +170,6 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
 //
 // * Other
 //
-
-export type Secret = string;
 
 export type hexColor = string;
 
