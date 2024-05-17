@@ -5,7 +5,12 @@ import { generateRandomNumber, sendMessage } from '@utils';
 export const balloonContainer = document.createElement('div');
 balloonContainer.id = 'balloon-container';
 
-const resourceLocation = browser.runtime.getURL('resources/balloons/');
+export const balloonResourceLocation = browser.runtime.getURL(
+  'resources/balloons/'
+);
+export const defaultBalloonFolderName = 'default';
+export const defaultBalloonResourceLocation =
+  balloonResourceLocation + `${defaultBalloonFolderName}/`;
 
 const buildBalloonElement = (
   element: HTMLDivElement,
@@ -52,11 +57,11 @@ export default abstract class Balloon {
   }
 
   public get balloonImageUrl(): string {
-    return resourceLocation + this.name + '/icon.png';
+    return balloonResourceLocation + this.name + '/icon.png';
   }
 
   public get popSoundUrl(): string {
-    return resourceLocation + this.name + '/pop.mp3';
+    return balloonResourceLocation + this.name + '/pop.mp3';
   }
 
   constructor() {
@@ -64,6 +69,13 @@ export default abstract class Balloon {
     this.element = document.createElement('div');
     // Add an event listener to the balloon
     this.element.addEventListener('click', this._pop.bind(this));
+
+    this.balloonImage.addEventListener('error', (e) => {
+      this.balloonImage.src = defaultBalloonResourceLocation + 'icon.png';
+    });
+    this._popSound.addEventListener('error', (e) => {
+      this._popSound.src = defaultBalloonResourceLocation + 'pop.mp3';
+    });
   }
 
   public isRising(): boolean {
