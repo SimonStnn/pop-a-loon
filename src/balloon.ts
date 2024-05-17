@@ -15,7 +15,6 @@ export const defaultBalloonResourceLocation =
 const buildBalloonElement = (
   element: HTMLDivElement,
   props: {
-    balloonImage: HTMLImageElement;
     size: number;
     positionX: number;
     riseDuration: number;
@@ -23,9 +22,6 @@ const buildBalloonElement = (
   }
 ) => {
   element.classList.add('balloon');
-
-  // Add an image to the balloon
-  element.appendChild(props.balloonImage);
 
   // Set the balloon's width and height
   element.style.width = props.size + 'px';
@@ -69,6 +65,10 @@ export default abstract class Balloon {
   constructor() {
     // Create the balloon element
     this.element = document.createElement('div');
+
+    // Add the balloon image to the balloon element
+    this.element.appendChild(this.balloonImage);
+
     // Add an event listener to the balloon
     this.element.addEventListener('click', this._pop.bind(this));
 
@@ -93,7 +93,6 @@ export default abstract class Balloon {
     // Build the balloon element
     buildBalloonElement(this.element, {
       size: generateRandomNumber(50, 75),
-      balloonImage: this.balloonImage,
       positionX: generateRandomNumber(5, 95),
       riseDuration: this.getRandomDuration(),
       onAnimationend: this.remove.bind(this),
@@ -125,5 +124,5 @@ export default abstract class Balloon {
     this.pop(event);
   }
 
-  public pop(event: MouseEvent): void | Promise<void> {}
+  public pop(event?: MouseEvent): void | Promise<void> {}
 }
