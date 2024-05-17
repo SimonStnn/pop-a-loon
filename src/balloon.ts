@@ -5,12 +5,16 @@ import { generateRandomNumber, sendMessage } from '@utils';
 export const balloonContainer = document.createElement('div');
 balloonContainer.id = 'balloon-container';
 
-const resourceLocation = browser.runtime.getURL('resources/balloons/');
+export const balloonResourceLocation = browser.runtime.getURL(
+  'resources/balloons/'
+);
+export const defaultBalloonFolderName = 'default';
+export const defaultBalloonResourceLocation =
+  balloonResourceLocation + `${defaultBalloonFolderName}/`;
 
 const buildBalloonElement = (
   element: HTMLDivElement,
   props: {
-    balloonImage: HTMLImageElement;
     size: number;
     positionX: number;
     riseDuration: number;
@@ -18,9 +22,6 @@ const buildBalloonElement = (
   }
 ) => {
   element.classList.add('balloon');
-
-  // Add an image to the balloon
-  element.appendChild(props.balloonImage);
 
   // Set the balloon's width and height
   element.style.width = props.size + 'px';
@@ -37,43 +38,61 @@ const buildBalloonElement = (
 
 export default abstract class Balloon {
   public abstract readonly name: string;
-  public abstract getRandomDuration(): number;
 
-  private readonly element: HTMLDivElement;
   private readonly _popSound: HTMLAudioElement = new Audio();
 
   protected readonly balloonImage: HTMLImageElement =
     document.createElement('img');
 
+  public readonly element: HTMLDivElement;
+  public readonly riseDurationThreshold: [number, number] = [10000, 15000];
+
   public get popSound(): HTMLAudioElement {
-    if (!this._popSound.src) this._popSound.src = this.popSoundUrl;
+    if (!this._popSound.src) {
+      this._popSound.src = this.popSoundUrl;
+    }
     return this._popSound;
   }
+
   public get balloonImageUrl(): string {
-    return resourceLocation + this.name + '/icon.png';
+    return balloonResourceLocation + this.name + '/icon.png';
   }
+
   public get popSoundUrl(): string {
-    return resourceLocation + this.name + '/pop.mp3';
+    return balloonResourceLocation + this.name + '/pop.mp3';
   }
 
   constructor() {
     // Create the balloon element
     this.element = document.createElement('div');
+
+    // Add the balloon image to the balloon element
+    this.element.appendChild(this.balloonImage);
+
     // Add an event listener to the balloon
-    this.element.addEventListener('click', this.pop.bind(this));
+    this.element.addEventListener('click', this._pop.bind(this));
+
+    this.balloonImage.addEventListener('error', (e) => {
+      this.balloonImage.src = defaultBalloonResourceLocation + 'icon.png';
+    });
   }
 
-  public isRising() {
+  public isRising(): boolean {
     return this.element.style.animationName === 'rise';
   }
 
-  public rise() {
+  public getRandomDuration(
+    duration: [number, number] = this.riseDurationThreshold
+  ): number {
+    return generateRandomNumber(duration[0], duration[1]);
+  }
+
+  public rise(): void {
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
     buildBalloonElement(this.element, {
       size: generateRandomNumber(50, 75),
-      balloonImage: this.balloonImage,
       positionX: generateRandomNumber(5, 95),
       riseDuration: this.getRandomDuration(),
       onAnimationend: this.remove.bind(this),
@@ -82,21 +101,28 @@ export default abstract class Balloon {
     balloonContainer.appendChild(this.element);
   }
 
-  public remove() {
+  public remove(): void {
     this.element.remove();
     this.element.style.animationName = 'none';
   }
 
-  public async pop() {
+  private async _pop(event: MouseEvent): Promise<void> {
     // Remove the balloon
     this.remove();
+
+    // Send message with the new count
+    sendMessage({ action: 'incrementCount' });
 
     // Set volume
     this.popSound.volume = (await storage.get('config')).popVolume / 100;
     // Play the pop sound
-    this.popSound.play();
+    this.popSound.play().catch((e) => {
+      this.popSound.src = defaultBalloonResourceLocation + 'pop.mp3';
+      this.popSound.play();
+    });
 
-    // Send message with the new count
-    sendMessage({ action: 'incrementCount' });
+    this.pop(event);
   }
+
+  public pop(event?: MouseEvent): void | Promise<void> {}
 }
