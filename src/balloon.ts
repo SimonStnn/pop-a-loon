@@ -37,21 +37,24 @@ const buildBalloonElement = (
 
 export default abstract class Balloon {
   public abstract readonly name: string;
-  public abstract getRandomDuration(): number;
 
-  private readonly element: HTMLDivElement;
   private readonly _popSound: HTMLAudioElement = new Audio();
 
   protected readonly balloonImage: HTMLImageElement =
     document.createElement('img');
 
+  public readonly element: HTMLDivElement;
+  public readonly riseDurationThreshold: [number, number] = [10000, 15000];
+
   public get popSound(): HTMLAudioElement {
     if (!this._popSound.src) this._popSound.src = this.popSoundUrl;
     return this._popSound;
   }
+
   public get balloonImageUrl(): string {
     return resourceLocation + this.name + '/icon.png';
   }
+
   public get popSoundUrl(): string {
     return resourceLocation + this.name + '/pop.mp3';
   }
@@ -60,14 +63,20 @@ export default abstract class Balloon {
     // Create the balloon element
     this.element = document.createElement('div');
     // Add an event listener to the balloon
-    this.element.addEventListener('click', this.pop.bind(this));
+    this.element.addEventListener('click', this._pop.bind(this));
   }
 
-  public isRising() {
+  public isRising(): boolean {
     return this.element.style.animationName === 'rise';
   }
 
-  public rise() {
+  public getRandomDuration(
+    duration: [number, number] = this.riseDurationThreshold
+  ): number {
+    return generateRandomNumber(duration[0], duration[1]);
+  }
+
+  public rise(): void {
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
@@ -82,21 +91,25 @@ export default abstract class Balloon {
     balloonContainer.appendChild(this.element);
   }
 
-  public remove() {
+  public remove(): void {
     this.element.remove();
     this.element.style.animationName = 'none';
   }
 
-  public async pop() {
+  private async _pop(event: MouseEvent): Promise<void> {
     // Remove the balloon
     this.remove();
+
+    // Send message with the new count
+    sendMessage({ action: 'incrementCount' });
 
     // Set volume
     this.popSound.volume = (await storage.get('config')).popVolume / 100;
     // Play the pop sound
     this.popSound.play();
 
-    // Send message with the new count
-    sendMessage({ action: 'incrementCount' });
+    this.pop(event);
   }
+
+  public pop(event: MouseEvent): void | Promise<void> {}
 }
