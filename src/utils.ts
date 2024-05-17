@@ -58,7 +58,15 @@ export function isRunningInBackground() {
   return !isRunningInPopup;
 }
 
-export function weightedRandom<T>(results: T[], weights: number[]): T | null {
+type WeightedRandomOptions<T> = {
+  default?: T;
+};
+
+export function weightedRandom<T, D = null>(
+  results: T[],
+  weights: number[],
+  options: WeightedRandomOptions<D> = {}
+): T | D {
   // Calculate the total weight
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
 
@@ -74,8 +82,8 @@ export function weightedRandom<T>(results: T[], weights: number[]): T | null {
     }
   }
 
-  // Return null if no result is found (shouldn't happen if the weights are correct)
-  return null;
+  // Return the default value if no result was selected or null if no default was provided
+  return (options.default ?? null) as D;
 }
 
 export async function calculateBalloonSpawnDelay() {
