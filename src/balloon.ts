@@ -52,7 +52,9 @@ export default abstract class Balloon {
   public readonly riseDurationThreshold: [number, number] = [10000, 15000];
 
   public get popSound(): HTMLAudioElement {
-    if (!this._popSound.src) this._popSound.src = this.popSoundUrl;
+    if (!this._popSound.src) {
+      this._popSound.src = this.popSoundUrl;
+    }
     return this._popSound;
   }
 
@@ -72,9 +74,6 @@ export default abstract class Balloon {
 
     this.balloonImage.addEventListener('error', (e) => {
       this.balloonImage.src = defaultBalloonResourceLocation + 'icon.png';
-    });
-    this._popSound.addEventListener('error', (e) => {
-      this._popSound.src = defaultBalloonResourceLocation + 'pop.mp3';
     });
   }
 
@@ -118,7 +117,10 @@ export default abstract class Balloon {
     // Set volume
     this.popSound.volume = (await storage.get('config')).popVolume / 100;
     // Play the pop sound
-    this.popSound.play();
+    this.popSound.play().catch((e) => {
+      this.popSound.src = defaultBalloonResourceLocation + 'pop.mp3';
+      this.popSound.play();
+    });
 
     this.pop(event);
   }
