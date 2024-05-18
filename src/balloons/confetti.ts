@@ -4,7 +4,7 @@ import '@/../resources/balloons/confetti/confetti.css';
 
 export default class Confetti extends Balloon {
   public readonly name = 'confetti';
-  public static readonly spawn_chance = 0.95;
+  public static readonly spawn_chance = 0.1;
 
   private readonly mask = document.createElement('img');
 
