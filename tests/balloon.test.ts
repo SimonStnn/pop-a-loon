@@ -1,11 +1,11 @@
 import Balloon from '@/balloon';
-import { generateRandomNumber } from '@/utils';
+import { random } from '@utils';
 
 // Create a concrete subclass of Balloon for testing
 class TestBalloon extends Balloon {
   public readonly name = 'test';
   getRandomDuration() {
-    return generateRandomNumber(10000, 15000);
+    return random(10000, 15000);
   }
 }
 
