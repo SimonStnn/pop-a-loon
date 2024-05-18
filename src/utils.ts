@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { Message } from '@const';
+import { Message, BalloonContainerId } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import storage from '@/storage';
@@ -99,4 +99,16 @@ export async function calculateBalloonSpawnDelay() {
   const spawnRateMultiplier = Math.max(0, Math.min(config.spawnRate, 1));
 
   return randomDelay / spawnRateMultiplier;
+}
+
+function createBalloonContainer() {
+  const balloonContainer = document.createElement('div');
+  balloonContainer.id = BalloonContainerId;
+  document.body.appendChild(balloonContainer);
+  return balloonContainer;
+}
+export function getBalloonContainer() {
+  return (
+    document.getElementById(BalloonContainerId) ?? createBalloonContainer()
+  );
 }

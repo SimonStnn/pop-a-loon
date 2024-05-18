@@ -1,9 +1,7 @@
 import browser from 'webextension-polyfill';
 import storage from '@/storage';
 import { random, sendMessage } from '@utils';
-
-export const balloonContainer = document.createElement('div');
-balloonContainer.id = 'balloon-container';
+import { BalloonContainerId } from '@const';
 
 export const balloonResourceLocation = browser.runtime.getURL(
   'resources/balloons/'
@@ -98,7 +96,7 @@ export default abstract class Balloon {
       onAnimationend: this.remove.bind(this),
     });
     // Add the balloon to the container
-    balloonContainer.appendChild(this.element);
+    document.getElementById(BalloonContainerId)?.appendChild(this.element);
   }
 
   public remove(): void {
