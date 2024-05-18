@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 import storage from '@/storage';
-import { generateRandomNumber, sendMessage } from '@utils';
+import { random, sendMessage } from '@utils';
 
 export const balloonContainer = document.createElement('div');
 balloonContainer.id = 'balloon-container';
@@ -84,7 +84,7 @@ export default abstract class Balloon {
   public getRandomDuration(
     duration: [number, number] = this.riseDurationThreshold
   ): number {
-    return generateRandomNumber(duration[0], duration[1]);
+    return random(duration[0], duration[1]);
   }
 
   public rise(): void {
@@ -92,8 +92,8 @@ export default abstract class Balloon {
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
     buildBalloonElement(this.element, {
-      size: generateRandomNumber(50, 75),
-      positionX: generateRandomNumber(5, 95),
+      size: random(50, 75),
+      positionX: random(5, 95),
       riseDuration: this.getRandomDuration(),
       onAnimationend: this.remove.bind(this),
     });
