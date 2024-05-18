@@ -16,8 +16,11 @@ export function minutesToMilliseconds(minutes: number) {
   return secondsToMilliseconds(minutes * 60);
 }
 
-export function generateRandomNumber(min: number, max: number) {
-  return Math.random() * (max - min) + min;
+export function random(max: number): number;
+export function random(min: number, max: number): number;
+export function random(minOrMax: number, max?: number): number {
+  if (max === undefined) return Math.random() * (minOrMax - 0) + 0;
+  return Math.random() * (max - minOrMax) + minOrMax;
 }
 
 export function sleep(ms: number) {
@@ -58,7 +61,15 @@ export function isRunningInBackground() {
   return !isRunningInPopup;
 }
 
-export function weightedRandom<T>(results: T[], weights: number[]): T | null {
+type WeightedRandomOptions<T> = {
+  default?: T;
+};
+
+export function weightedRandom<T, D = null>(
+  results: T[],
+  weights: number[],
+  options: WeightedRandomOptions<D> = {}
+): T | D {
   // Calculate the total weight
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
 
@@ -74,14 +85,14 @@ export function weightedRandom<T>(results: T[], weights: number[]): T | null {
     }
   }
 
-  // Return null if no result is found (shouldn't happen if the weights are correct)
-  return null;
+  // Return the default value if no result was selected or null if no default was provided
+  return (options.default ?? null) as D;
 }
 
 export async function calculateBalloonSpawnDelay() {
   const config = await storage.get('config');
   // Generate a random delay between the min and max spawn interval
-  const randomDelay = generateRandomNumber(
+  const randomDelay = random(
     config.spawnInterval.min,
     config.spawnInterval.max
   );

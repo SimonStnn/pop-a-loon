@@ -5,7 +5,7 @@ import storage from '@/storage';
 import remote from '@/remote';
 import {
   calculateBalloonSpawnDelay,
-  generateRandomNumber,
+  random,
   getBrowser,
   isRunningInBackground,
   sendMessage,
@@ -102,7 +102,7 @@ const updateBadgeColors = () => {
     // Get all active tabs
     const tabs = await browser.tabs.query({ active: true });
     // Select a random tab
-    const num = Math.round(generateRandomNumber(0, tabs.length - 1));
+    const num = Math.round(random(0, tabs.length - 1));
     const tab = tabs[num];
     if (!tab.id) return skipSpawnMessage('No tab id');
 

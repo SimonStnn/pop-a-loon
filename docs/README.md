@@ -18,7 +18,7 @@
     - [build:firefox](#buildfirefox)
     - [build:firefox:zip](#buildfirefoxzip)
 - [Architecture](#architecture)
-  - [Secure spawn messages](#secure-spawn-messages)
+- [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
   - [Abstract balloon class](#abstract-balloon-class)
   - [Default balloon](#default-balloon)
@@ -151,27 +151,13 @@ The zip file will be created in the `build/` directory.
 
 ## Architecture
 
-### Secure spawn messages
-
-To prevent spawning balloons from untrusted sources like devtools, the extension keeps secrets in the content script an background.
+## Balloon spawn chances
 
 ```mermaid
-sequenceDiagram
-    participant Content
-    participant Background
-
-    Content->>Background: Get secret
-    Background->>Content: Secret
-    Note over Background,Content: Secret is stored
-    loop Random interval
-      Background->>Content: Spawn balloon
-      alt Secret is correct
-        Note over Content: Balloon is spawned
-        Content->>Background: Get secret
-        Background->>Content: Secret
-        Note over Background,Content: Secret is stored
-      end
-    end
+pie showdata
+title Balloon spawn chances
+   "Default" : 0.90
+   "Confetti" : 0.10
 ```
 
 ## Balloons
