@@ -4,7 +4,7 @@ import '@/../resources/balloons/confetti/confetti.css';
 
 export default class Confetti extends Balloon {
   public readonly name = 'confetti';
-  public static readonly spawn_chance = 0.15;
+  public static readonly spawn_chance = 0.95;
 
   private readonly mask = document.createElement('img');
 
@@ -33,7 +33,7 @@ export default class Confetti extends Balloon {
     confetti.style.pointerEvents = 'none';
     document.body.appendChild(confetti);
     // Throw confetti
-    throwConfetti(confetti, 100, 2000);
+    throwConfetti(confetti, 100);
     // Remove the confetti after 2 seconds
     setTimeout(() => {
       confetti.remove();
@@ -41,28 +41,43 @@ export default class Confetti extends Balloon {
   }
 }
 
-function throwConfetti(
-  element: HTMLElement,
-  amount: number = 100,
-  duration: number = 2000
-) {
+function throwConfetti(element: HTMLElement, amount: number = 100) {
   const df = document.createDocumentFragment();
+  const offset = 10;
+  const particles: HTMLElement[] = [];
   for (let i = 0; i < amount; i++) {
     const c = document.createElement('i');
     c.className = 'particle';
     const angle = random(360);
     const radius = random(250);
-    const x = radius * Math.cos(angle);
-    const y = radius * Math.sin(angle);
+    let x = radius * Math.cos(angle);
+    let y = radius * Math.sin(angle);
     c.style.cssText = `
         transform: translate3d(${x}px, ${y}px, 0)
         rotate(${angle}deg);
         background: hsla(${random(360)},100%,50%,1);
       `;
     df.appendChild(c);
-    setTimeout(() => {
-      c.remove();
-    }, duration);
+    particles.push(c);
   }
   element.appendChild(df);
+
+  function checkBounds() {
+    particles.forEach((particle, index) => {
+      const rect = particle.getBoundingClientRect();
+      if (
+        rect.bottom < +offset ||
+        rect.top > window.innerHeight - offset ||
+        rect.left > window.innerWidth - offset ||
+        rect.right < +offset
+      ) {
+        particle.remove();
+        particles.splice(index, 1);
+      }
+    });
+    if (particles.length > 0) {
+      requestAnimationFrame(checkBounds);
+    }
+  }
+  requestAnimationFrame(checkBounds);
 }
