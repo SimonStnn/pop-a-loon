@@ -1,0 +1,17 @@
+@keyframes bang {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+i.particle {
+  animation: bang 750ms ease-out forwards;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 0;
+  width: 3px;
+  height: 8px;
+  opacity: 0;
+}
