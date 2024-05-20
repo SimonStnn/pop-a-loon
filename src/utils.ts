@@ -112,3 +112,20 @@ export function getBalloonContainer() {
     document.getElementById(BalloonContainerId) ?? createBalloonContainer()
   );
 }
+
+export async function importStylesheet(id: string, href: string) {
+  id = `pop-a-loon-${id}`;
+  if (!document.getElementById(id)) {
+    // Fetch the CSS file content
+    const response = await fetch(href);
+    const css = await response.text();
+
+    // Create a <style> element with the CSS content
+    let style = document.createElement('style');
+    style.id = id;
+    style.textContent = css;
+
+    // Append the <style> element to the <head>
+    document.head.appendChild(style);
+  }
+}
