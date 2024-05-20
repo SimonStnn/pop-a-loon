@@ -1,10 +1,15 @@
+import browser from 'webextension-polyfill';
 import * as balloons from '@/balloons';
-import { getBalloonContainer, weightedRandom } from '@/utils';
-import './style.css';
+import { getBalloonContainer, importStylesheet, weightedRandom } from '@/utils';
 
 (() => {
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
+
+  importStylesheet(
+    'balloon-styles',
+    browser.runtime.getURL('resources/stylesheets/style.css')
+  );
 
   // Add the balloon container to the document
   const _ = getBalloonContainer();
