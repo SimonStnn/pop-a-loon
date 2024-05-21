@@ -18,19 +18,31 @@ const buildBalloonElement = (
     onAnimationend: () => void;
   }
 ) => {
-  element.classList.add('balloon');
+  const balloon = document.createElement('div');
+  balloon.classList.add('balloon');
 
   // Set the balloon's width and height
-  element.style.width = props.size + 'px';
-  element.style.height = element.style.width;
-  element.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
-  element.style.animationDuration = props.riseDuration.toString() + 'ms';
-  element.style.animationTimingFunction = 'linear';
-  element.style.animationFillMode = 'forwards';
-  element.style.animationName = 'rise';
-  element.addEventListener('animationend', props.onAnimationend);
+  balloon.style.width = props.size + 'px';
+  balloon.style.height = balloon.style.width;
+  balloon.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
+  balloon.style.animationDuration = props.riseDuration.toString() + 'ms';
+  balloon.style.animationTimingFunction = 'linear';
+  balloon.style.animationFillMode = 'forwards';
+  balloon.style.animationName = 'rise';
+  balloon.addEventListener('animationend', props.onAnimationend);
 
-  return element;
+  // Create a second div and apply the swing animation to it
+  const swingElement = document.createElement('div');
+  swingElement.style.animation = 'swing 2s infinite ease-in-out';
+  const waveElement = document.createElement('div');
+  waveElement.style.animation = 'wave 1s infinite ease-in-out alternate';
+  waveElement.style.animationDelay = '0.5s';
+
+  balloon.appendChild(swingElement);
+  swingElement.appendChild(waveElement);
+  waveElement.appendChild(element);
+
+  return balloon;
 };
 
 export default abstract class Balloon {
@@ -88,14 +100,14 @@ export default abstract class Balloon {
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
-    buildBalloonElement(this.element, {
+    const balloonElement = buildBalloonElement(this.element, {
       size: random(50, 75),
       positionX: random(5, 95),
       riseDuration: this.getRandomDuration(),
       onAnimationend: this.remove.bind(this),
     });
     // Add the balloon to the container
-    getBalloonContainer().appendChild(this.element);
+    getBalloonContainer().appendChild(balloonElement);
   }
 
   public remove(): void {
