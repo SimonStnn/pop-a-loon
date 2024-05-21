@@ -74,6 +74,20 @@ export default abstract class Balloon {
     return balloonResourceLocation + this.name + '/pop.mp3';
   }
 
+  public get topElement(): HTMLDivElement {
+    let element = this.element;
+    while (!element.classList.contains('balloon')) {
+      if (
+        !element.parentElement ||
+        !(element.parentElement instanceof HTMLDivElement) ||
+        element.parentElement === getBalloonContainer()
+      )
+        return element;
+      element = element.parentElement;
+    }
+    return element;
+  }
+
   constructor() {
     // Create the balloon element
     this.element = document.createElement('div');
@@ -115,7 +129,8 @@ export default abstract class Balloon {
   }
 
   public remove(): void {
-    this.element.remove();
+    // loop until the parent node has 'balloon' class
+    this.topElement.remove();
     this.element.style.animationName = 'none';
   }
 
