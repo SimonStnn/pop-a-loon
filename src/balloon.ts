@@ -56,6 +56,7 @@ export default abstract class Balloon {
 
   public readonly element: HTMLDivElement;
   public readonly riseDurationThreshold: [number, number] = [10000, 15000];
+  public readonly swingDurationThreshold: [number, number] = [2, 4];
 
   public get popSound(): HTMLAudioElement {
     if (!this._popSound.src) {
@@ -91,12 +92,6 @@ export default abstract class Balloon {
     return this.element.style.animationName === 'rise';
   }
 
-  public getRandomDuration(
-    duration: [number, number] = this.riseDurationThreshold
-  ): number {
-    return random(duration[0], duration[1]);
-  }
-
   public rise(): void {
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
@@ -104,8 +99,14 @@ export default abstract class Balloon {
     const balloonElement = buildBalloonElement(this.element, {
       size: random(50, 75),
       positionX: random(5, 95),
-      riseDuration: this.getRandomDuration(),
-      waveDuration: random(2, 4),
+      riseDuration: random(
+        this.riseDurationThreshold[0],
+        this.riseDurationThreshold[1]
+      ),
+      waveDuration: random(
+        this.swingDurationThreshold[0],
+        this.swingDurationThreshold[1]
+      ),
       onAnimationend: this.remove.bind(this),
     });
     // Add the balloon to the container
