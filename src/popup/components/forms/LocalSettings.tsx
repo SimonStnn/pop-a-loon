@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import browser, { manifest, type Permissions } from 'webextension-polyfill';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Button } from '@components/ui/button';
 import {
   Form,
   FormField,
@@ -24,11 +26,18 @@ const SPAWN_RATE_STEP = 0.1;
 const formSchema = z.object({
   popVolume: z.number().int().min(MIN_POP_VOLUME).max(MAX_POP_VOLUME),
   spawnRate: z.number().int().min(MIN_SPAWN_RATE).max(MAX_SPAWN_RATE),
+  permissions: z.object({
+    origins: z.array(z.string()),
+    permissions: z.array(z.string()),
+  }),
 });
 
 export default () => {
   const [popVolume, setPopVolume] = useState(0);
   const [spawnRate, setSpawnRate] = useState(0);
+  const [permissions, setPermissions] = useState<Permissions.AnyPermissions>(
+    {}
+  );
   const form = useForm<z.infer<typeof formSchema>>({});
   const popSound = new DefaultBalloon().popSound;
 
@@ -66,12 +75,25 @@ export default () => {
     );
   };
 
+  const onGrantOriginPermissionClick = async () => {
+    const host_permissions =
+      await browser.runtime.getManifest().host_permissions;
+    if (!host_permissions) return console.error('No host_permissions found');
+    const permissions = await browser.permissions.request({
+      origins: host_permissions,
+    });
+    console.log('Permissions granted for', permissions);
+
+    setPermissions(await browser.permissions.getAll());
+  };
+
   useEffect(() => {
     const loadVolume = async () => {
       const config = await storage.get('config');
       // Load volume from storage
       setPopVolume(config.popVolume);
       setSpawnRate(config.spawnRate);
+      setPermissions(await browser.permissions.getAll());
     };
 
     loadVolume();
@@ -151,6 +173,41 @@ export default () => {
             </FormItem>
           )}
         />
+        {/* If the user hasn't granted the host permissions; show the grant permission button */}
+        {!(permissions.origins?.length !== 0) && (
+          <FormField
+            control={form.control}
+            name="permissions.origins"
+            render={({ field: { onChange } }) => (
+              <FormItem>
+                <FormLabel className="flex justify-between gap-1">
+                  <span>Host Permission</span>
+                  <InfoIcon>
+                    <h4 className="font-medium leading-none mb-1">
+                      Host Permission
+                    </h4>
+                    <p className="text-sm font-normal text-muted-foreground leading-tight">
+                      Pop-a-loon requires host permissions to function properly.
+                      Allowing this permission is recommended.
+                    </p>
+                  </InfoIcon>
+                </FormLabel>
+                <FormControl>
+                  <span className="flex gap-2">
+                    <Button
+                      className="w-full"
+                      size={'sm'}
+                      onClick={onGrantOriginPermissionClick}
+                    >
+                      Grant permission
+                    </Button>
+                  </span>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
       </form>
     </Form>
   );
