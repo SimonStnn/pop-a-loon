@@ -15,6 +15,7 @@ const buildBalloonElement = (
     size: number;
     positionX: number;
     riseDuration: number;
+    waveDuration: number;
     onAnimationend: () => void;
   }
 ) => {
@@ -33,10 +34,10 @@ const buildBalloonElement = (
 
   // Create a second div and apply the swing animation to it
   const swingElement = document.createElement('div');
-  swingElement.style.animation = 'swing 2s infinite ease-in-out';
+  swingElement.style.animation = `swing ${props.waveDuration}s infinite ease-in-out`;
   const waveElement = document.createElement('div');
-  waveElement.style.animation = 'wave 1s infinite ease-in-out alternate';
-  waveElement.style.animationDelay = '0.5s';
+  waveElement.style.animation = `wave ${props.waveDuration / 2}s infinite ease-in-out alternate`;
+  waveElement.style.animationDelay = `${props.waveDuration / 4}s`;
 
   balloon.appendChild(swingElement);
   swingElement.appendChild(waveElement);
@@ -104,6 +105,7 @@ export default abstract class Balloon {
       size: random(50, 75),
       positionX: random(5, 95),
       riseDuration: this.getRandomDuration(),
+      waveDuration: random(2, 4),
       onAnimationend: this.remove.bind(this),
     });
     // Add the balloon to the container
