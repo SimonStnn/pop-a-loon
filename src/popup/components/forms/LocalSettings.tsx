@@ -184,11 +184,11 @@ export default () => {
                   <span>Host Permission</span>
                   <InfoIcon>
                     <h4 className="font-medium leading-none mb-1">
-                      Host Permission
+                      Host Permission{' '}
+                      <span className="text-red-500 text-xs">*recommended</span>
                     </h4>
                     <p className="text-sm font-normal text-muted-foreground leading-tight">
                       Pop-a-loon requires host permissions to function properly.
-                      Allowing this permission is recommended.
                     </p>
                   </InfoIcon>
                 </FormLabel>
