@@ -167,9 +167,12 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
     },
   }
 );
+
 //
 // * Other
 //
+
+export const BalloonContainerId = 'balloon-container';
 
 export type hexColor = string;
 

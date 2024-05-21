@@ -1,6 +1,5 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
-import { random } from '@/utils';
-import '@/../resources/balloons/confetti/confetti.css';
+import { importStylesheet, random } from '@/utils';
 
 export default class Confetti extends Balloon {
   public readonly name = 'confetti';
@@ -10,6 +9,10 @@ export default class Confetti extends Balloon {
 
   constructor() {
     super();
+    importStylesheet(
+      'confetti-styles',
+      balloonResourceLocation + 'confetti/confetti.css'
+    );
 
     this.element.appendChild(this.mask);
     this.mask.src = balloonResourceLocation + this.name + '/mask.png';
