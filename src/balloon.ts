@@ -37,7 +37,8 @@ const buildBalloonElement = (
   swingElement.style.animation = `swing ${props.waveDuration}s infinite ease-in-out`;
   const waveElement = document.createElement('div');
   waveElement.style.animation = `wave ${props.waveDuration / 2}s infinite ease-in-out alternate`;
-  waveElement.style.animationDelay = `${props.waveDuration / 4}s`;
+  // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
+  waveElement.style.animationDelay = `-${(props.waveDuration * 3) / 4}s`;
 
   balloon.appendChild(swingElement);
   swingElement.appendChild(waveElement);
