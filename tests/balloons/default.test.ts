@@ -15,9 +15,4 @@ describe('Default Balloon', () => {
     expect(balloon.name).toBe('default');
     expect(balloon.name).toBe(Default.name.toLowerCase());
   });
-
-  test('getRandomDuration should return a number', () => {
-    const duration = balloon.getRandomDuration();
-    expect(typeof duration).toBe('number');
-  });
 });

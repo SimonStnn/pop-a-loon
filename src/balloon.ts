@@ -1,7 +1,6 @@
 import browser from 'webextension-polyfill';
 import storage from '@/storage';
-import { random, sendMessage } from '@utils';
-import { BalloonContainerId } from '@const';
+import { getBalloonContainer, random, sendMessage } from '@utils';
 
 export const balloonResourceLocation = browser.runtime.getURL(
   'resources/balloons/'
@@ -16,22 +15,36 @@ const buildBalloonElement = (
     size: number;
     positionX: number;
     riseDuration: number;
+    waveDuration: number;
     onAnimationend: () => void;
   }
 ) => {
-  element.classList.add('balloon');
+  const balloon = document.createElement('div');
+  balloon.classList.add('balloon');
 
   // Set the balloon's width and height
-  element.style.width = props.size + 'px';
-  element.style.height = element.style.width;
-  element.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
-  element.style.animationDuration = props.riseDuration.toString() + 'ms';
-  element.style.animationTimingFunction = 'linear';
-  element.style.animationFillMode = 'forwards';
-  element.style.animationName = 'rise';
-  element.addEventListener('animationend', props.onAnimationend);
+  balloon.style.width = props.size + 'px';
+  balloon.style.height = balloon.style.width;
+  balloon.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
+  balloon.style.animationDuration = props.riseDuration.toString() + 'ms';
+  balloon.style.animationTimingFunction = 'linear';
+  balloon.style.animationFillMode = 'forwards';
+  balloon.style.animationName = 'rise';
+  balloon.addEventListener('animationend', props.onAnimationend);
 
-  return element;
+  // Create a second div and apply the swing animation to it
+  const swingElement = document.createElement('div');
+  swingElement.style.animation = `swing ${props.waveDuration}s infinite ease-in-out`;
+  const waveElement = document.createElement('div');
+  waveElement.style.animation = `wave ${props.waveDuration / 2}s infinite ease-in-out alternate`;
+  // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
+  waveElement.style.animationDelay = `-${(props.waveDuration * 3) / 4}s`;
+
+  balloon.appendChild(swingElement);
+  swingElement.appendChild(waveElement);
+  waveElement.appendChild(element);
+
+  return balloon;
 };
 
 export default abstract class Balloon {
@@ -44,6 +57,7 @@ export default abstract class Balloon {
 
   public readonly element: HTMLDivElement;
   public readonly riseDurationThreshold: [number, number] = [10000, 15000];
+  public readonly swingDurationThreshold: [number, number] = [2, 4];
 
   public get popSound(): HTMLAudioElement {
     if (!this._popSound.src) {
@@ -79,24 +93,25 @@ export default abstract class Balloon {
     return this.element.style.animationName === 'rise';
   }
 
-  public getRandomDuration(
-    duration: [number, number] = this.riseDurationThreshold
-  ): number {
-    return random(duration[0], duration[1]);
-  }
-
   public rise(): void {
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
-    buildBalloonElement(this.element, {
+    const balloonElement = buildBalloonElement(this.element, {
       size: random(50, 75),
       positionX: random(5, 95),
-      riseDuration: this.getRandomDuration(),
+      riseDuration: random(
+        this.riseDurationThreshold[0],
+        this.riseDurationThreshold[1]
+      ),
+      waveDuration: random(
+        this.swingDurationThreshold[0],
+        this.swingDurationThreshold[1]
+      ),
       onAnimationend: this.remove.bind(this),
     });
     // Add the balloon to the container
-    document.getElementById(BalloonContainerId)?.appendChild(this.element);
+    getBalloonContainer().appendChild(balloonElement);
   }
 
   public remove(): void {
