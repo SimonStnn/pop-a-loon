@@ -94,7 +94,7 @@ export default (props: HeaderProps) => {
 
   return (
     <>
-      <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground">
+      <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground select-none">
         <div className="absolute left-1 flex items-center justify-center">
           {location.pathname !== '/' && <HeaderIcon to="/" icon={ArrowLeft} />}
         </div>
