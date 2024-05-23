@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "Pop-a-loon",
   "description": "The new rising trend (literally) that changes the browser game completely.",
-  "permissions": ["storage", "alarms", "idle"],
+  "permissions": ["storage", "alarms", "idle", "scripting"],
+  "host_permissions": ["https://*/*", "http://*/*"],
   "icons": {
     "16": "./resources/icons/icon-16.png",
     "24": "./resources/icons/icon-24.png",
@@ -10,12 +11,17 @@
     "48": "./resources/icons/icon-48.png",
     "128": "./resources/icons/icon-128.png"
   },
-  "content_scripts": [
-    {
-      "matches": ["https://*/*", "http://*/*"],
-      "js": ["./content.js"]
-    }
-  ],
+  "action": {
+    "default_icon": {
+      "16": "./resources/icons/icon-16.png",
+      "24": "./resources/icons/icon-24.png",
+      "32": "./resources/icons/icon-32.png",
+      "48": "./resources/icons/icon-48.png",
+      "128": "./resources/icons/icon-128.png"
+    },
+    "default_title": "Pop-a-loon",
+    "default_popup": "./popup.html"
+  },
   "web_accessible_resources": [
     {
       "matches": ["https://*/*", "http://*/*"],

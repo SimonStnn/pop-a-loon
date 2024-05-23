@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const glob = require('glob');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -30,12 +31,20 @@ console.log(`Building for ${browser} in ${mode} mode`);
 console.log(`Version: ${process.env.npm_package_version}`);
 console.log(`Remote: ${process.env.REMOTE}`);
 
+const contentScripts = glob
+  .sync('./src/content/*.ts')
+  .reduce((acc, filePath) => {
+    const fileName = path.basename(filePath, path.extname(filePath));
+    acc[fileName] = './' + filePath;
+    return acc;
+  }, {});
+
 module.exports = {
   mode,
   entry: {
     background: './src/background/background.ts',
-    content: './src/content/content.ts',
     popup: './src/popup/index.tsx',
+    ...contentScripts,
   },
   output: {
     filename: '[name].js',
@@ -73,6 +82,14 @@ module.exports = {
       patterns: [
         // Copy resource files to dist
         { from: 'resources/', to: 'resources/' },
+        // Copy sylesheets to dist but exclude stylesheets from popup folder
+        {
+          from: 'src/**/*.css',
+          globOptions: {
+            ignore: ['**/popup/**'],
+          },
+          to: 'resources/stylesheets/[name][ext]',
+        },
         // Copy manifest.json to dist
         {
           from: `manifest.json`,

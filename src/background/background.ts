@@ -114,15 +114,15 @@ const updateBadgeColors = () => {
     const alarms = await browser.alarms.getAll();
     if (alarms.some((alarm) => alarm.name === 'spawnBalloon'))
       return skipSpawnMessage('Spawn alarm already set');
-    console.log(`Sending spawnBalloon message`);
+    console.log(`Spawning balloon on tab`, tab.id);
 
-    // Send the spawnBalloon message
-    const response = await browser.tabs
-      .sendMessage(tab.id, { action: 'spawnBalloon' })
-      .catch((e) => {});
-    if (browser.runtime.lastError) {
-      browser.runtime.lastError;
-    }
+    try {
+      // Execute content script on tab
+      await browser.scripting.executeScript({
+        files: ['spawn-balloon.js'],
+        target: { tabId: tab.id },
+      });
+    } catch (e) {}
     lastSpawn = now;
   };
 
