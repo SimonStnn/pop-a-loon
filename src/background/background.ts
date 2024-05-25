@@ -84,37 +84,45 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    console.groupCollapsed(`Spawning Balloon...`);
+
     const now = Date.now();
     const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
-    const skipSpawnMessage = (note: any, level: 'log' | 'warn' = 'warn') =>
+    const skipSpawnMessage = (note: any, level: 'log' | 'warn' = 'warn') => {
       console[level](`Skipping spawnBalloon message: \r\n\t`, note);
+      console.groupEnd();
+    };
 
     // Check if there is a spawn timeout
     if (spawnTimeout !== null && Date.now() < spawnTimeout)
       return skipSpawnMessage('balloon spawn in timeout');
+    console.log(' - No spawn timeout');
 
     // Check if the last spawn was too recent
     if (lastSpawn && now - lastSpawn < minSpawnInterval) {
       spawnTimeout = now + rapidSpawnPenalty;
       return skipSpawnMessage('Spawned too recently, setting timeout');
     }
+    console.log(' - Last spawn was not too recent');
+
+    // Check if the browser is idle
+    const state = await browser.idle.queryState(5 * 60);
+    if (state !== 'active') return skipSpawnMessage('Browser is idle', 'log');
+    console.log(' - Browser is not idle');
+
+    // Check if no spawn alarms are already set
+    const alarms = await browser.alarms.getAll();
+    if (alarms.some((alarm) => alarm.name === 'spawnBalloon'))
+      return skipSpawnMessage('Spawn alarm already set');
+    console.log(' - No spawn alarm already set');
 
     // Get all active tabs
     const tabs = await browser.tabs.query({ active: true });
     // Select a random tab
     const num = Math.round(random(0, tabs.length - 1));
     const tab = tabs[num];
-    if (!tab.id) return skipSpawnMessage('No tab id');
-
-    // Check if the browser is idle
-    const state = await browser.idle.queryState(5 * 60);
-    if (state !== 'active') return skipSpawnMessage('Browser is idle', 'log');
-
-    // Check if no spawn alarms are already set
-    const alarms = await browser.alarms.getAll();
-    if (alarms.some((alarm) => alarm.name === 'spawnBalloon'))
-      return skipSpawnMessage('Spawn alarm already set');
-    console.log(`Spawning balloon on tab`, tab.id);
+    if (!tab.id) return skipSpawnMessage('No tab id', 'warn');
+    console.log(' - Selected tab', tab.id);
 
     try {
       // Execute content script on tab
@@ -122,8 +130,10 @@ const updateBadgeColors = () => {
         files: ['spawn-balloon.js'],
         target: { tabId: tab.id },
       });
+      console.log(' - Successfully sent spawn balloon script to tab', tab.id);
     } catch (e) {}
     lastSpawn = now;
+    console.groupEnd();
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
