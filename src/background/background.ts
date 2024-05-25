@@ -84,7 +84,9 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
-    console.groupCollapsed(`Spawning Balloon...`);
+    console.groupCollapsed(
+      `(${new Date().toLocaleTimeString()}) Spawning Balloon...`
+    );
 
     const now = Date.now();
     const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
