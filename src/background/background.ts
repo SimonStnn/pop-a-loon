@@ -87,11 +87,13 @@ const updateBadgeColors = () => {
     console.groupCollapsed(
       `(${new Date().toLocaleTimeString()}) Spawning Balloon...`
     );
+    console.time('Spawn Time');
 
     const now = Date.now();
     const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
     const skipSpawnMessage = (note: any, level: 'log' | 'warn' = 'warn') => {
       console[level](`Skipping spawnBalloon message: \r\n\t`, note);
+      console.timeEnd('Spawn Time');
       console.groupEnd();
     };
 
@@ -135,6 +137,7 @@ const updateBadgeColors = () => {
       console.log(' - Successfully sent spawn balloon script to tab', tab.id);
     } catch (e) {}
     lastSpawn = now;
+    console.timeEnd('Spawn Time');
     console.groupEnd();
   };
 
