@@ -3,6 +3,7 @@ import { Message, BalloonContainerId } from '@const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import storage from '@/storage';
+import log from 'loglevel';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -128,4 +129,15 @@ export async function importStylesheet(id: string, href: string) {
     // Append the <style> element to the <head>
     document.head.appendChild(style);
   }
+}
+
+export function setupLogging() {
+  if (process.env.NODE_ENV === 'development') log.setLevel(log.levels.DEBUG);
+
+  log.info('Pop-a-loon version:', process.env.npm_package_version);
+  log.debug(`Mode: ${process.env.NODE_ENV}`);
+  log.debug('Browser:', getBrowser());
+  log.debug('Running in background:', isRunningInBackground());
+  log.debug('Logging level:', log.getLevel());
+  log.debug('');
 }

@@ -9,6 +9,7 @@ import {
   getBrowser,
   isRunningInBackground,
   sendMessage,
+  setupLogging,
 } from '@utils';
 
 const setBadgeNumber = (count: number) => {
@@ -36,6 +37,7 @@ const updateBadgeColors = () => {
   let spawnTimeout: number | null = null;
 
   const setup = async () => {
+    setupLogging();
     // Clear all alarms
     await browser.alarms.clearAll();
 
