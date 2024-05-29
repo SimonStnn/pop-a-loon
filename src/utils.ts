@@ -134,6 +134,29 @@ export async function importStylesheet(id: string, href: string) {
 export function setupLogging() {
   if (process.env.NODE_ENV === 'development') log.setLevel(log.levels.DEBUG);
 
+  // Save the original factory method
+  const originalFactory = log.methodFactory;
+
+  // Modify the method factory
+  log.methodFactory = (methodName, logLevel, loggerName) => {
+    const rawMethod = originalFactory(methodName, logLevel, loggerName);
+
+    // Return a new method that prepends the date and colored prefix to the message
+    return (...message) => {
+      let prefix = '%c' + methodName.toUpperCase();
+      const styles: Record<log.LogLevelNames, string> = {
+        trace: 'color: #888;',
+        debug: 'color: #888;',
+        info: 'color: #4d0;',
+        warn: 'color: #fa0;',
+        error: 'color: #d00;',
+      };
+      rawMethod(`${prefix.padStart(7)}:`, styles[methodName], ...message);
+    };
+  };
+
+  log.rebuild();
+
   log.info('Pop-a-loon version:', process.env.npm_package_version);
   log.debug(`Mode: ${process.env.NODE_ENV}`);
   log.debug('Browser:', getBrowser());
