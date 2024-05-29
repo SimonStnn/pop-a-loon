@@ -11,6 +11,7 @@ import {
   sendMessage,
   setupLogging,
 } from '@utils';
+import log from 'loglevel';
 
 const setBadgeNumber = (count: number) => {
   browser.action.setBadgeText({
@@ -43,13 +44,13 @@ const updateBadgeColors = () => {
 
     //! Fix for #145
     try {
-      console.log('Checking for depricated balloonCount');
+      log.debug('Checking for depricated balloonCount');
       await storage.remove('balloonCount' as any);
     } catch (e) {}
 
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
-      console.log('Remote is not available, retrying in 1 minute');
+      log.warn('Remote is not available, retrying in 1 minute');
       await browser.alarms.create('restart', { when: Date.now() + 60000 });
       return;
     }
@@ -86,41 +87,42 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
-    console.groupCollapsed(
+    log.groupCollapsed(
+      'info',
       `(${new Date().toLocaleTimeString()}) Spawning Balloon...`
     );
-    console.time('Spawn Time');
+    log.time('info', 'Spawn Time');
 
     const now = Date.now();
     const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
-    const skipSpawnMessage = (note: any, level: 'log' | 'warn' = 'warn') => {
-      console[level](`Skipping spawnBalloon message: \r\n\t`, note);
-      console.timeEnd('Spawn Time');
-      console.groupEnd();
+    const skipSpawnMessage = (note: any, level: log.LogLevelNames = 'warn') => {
+      log[level](`Skipping spawnBalloon message: \r\n\t`, note);
+      log.timeEnd('info', 'Spawn Time');
+      log.groupEnd('info');
     };
 
     // Check if there is a spawn timeout
     if (spawnTimeout !== null && Date.now() < spawnTimeout)
       return skipSpawnMessage('balloon spawn in timeout');
-    console.log(' - No spawn timeout');
+    log.debug(' - No spawn timeout');
 
     // Check if the last spawn was too recent
     if (lastSpawn && now - lastSpawn < minSpawnInterval) {
       spawnTimeout = now + rapidSpawnPenalty;
       return skipSpawnMessage('Spawned too recently, setting timeout');
     }
-    console.log(' - Last spawn was not too recent');
+    log.debug(' - Last spawn was not too recent');
 
     // Check if the browser is idle
     const state = await browser.idle.queryState(5 * 60);
-    if (state !== 'active') return skipSpawnMessage('Browser is idle', 'log');
-    console.log(' - Browser is not idle');
+    if (state !== 'active') return skipSpawnMessage('Browser is idle', 'info');
+    log.debug(' - Browser is not idle');
 
     // Check if no spawn alarms are already set
     const alarms = await browser.alarms.getAll();
     if (alarms.some((alarm) => alarm.name === 'spawnBalloon'))
       return skipSpawnMessage('Spawn alarm already set');
-    console.log(' - No spawn alarm already set');
+    log.debug(' - No spawn alarm already set');
 
     // Get all active tabs
     const tabs = await browser.tabs.query({ active: true });
@@ -128,7 +130,7 @@ const updateBadgeColors = () => {
     const num = Math.round(random(0, tabs.length - 1));
     const tab = tabs[num];
     if (!tab.id) return skipSpawnMessage('No tab id', 'warn');
-    console.log(' - Selected tab', tab.id);
+    log.debug(' - Selected tab', tab.id);
 
     try {
       // Execute content script on tab
@@ -136,11 +138,11 @@ const updateBadgeColors = () => {
         files: ['spawn-balloon.js'],
         target: { tabId: tab.id },
       });
-      console.log(' - Successfully sent spawn balloon script to tab', tab.id);
+      log.info(' - Successfully sent spawn balloon script to tab', tab.id);
     } catch (e) {}
     lastSpawn = now;
-    console.timeEnd('Spawn Time');
-    console.groupEnd();
+    log.timeEnd('info', 'Spawn Time');
+    log.groupEnd('info');
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
@@ -161,8 +163,8 @@ const updateBadgeColors = () => {
 
       await setup();
     } catch (e) {
-      console.error(e);
-      console.log('Restarting in 1 minute');
+      log.error(e);
+      log.info('Restarting in 1 minute');
       browser.alarms.create('restart', { when: Date.now() + 60000 });
     }
   };

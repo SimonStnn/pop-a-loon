@@ -32,7 +32,7 @@ export async function sendMessage(message: Message) {
   try {
     const res = await browser.runtime.sendMessage(message);
     if (browser.runtime.lastError) {
-      console.log(
+      log.error(
         'Error sending message:',
         message,
         '\nError message:',

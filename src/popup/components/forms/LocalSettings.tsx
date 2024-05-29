@@ -15,6 +15,7 @@ import { Slider } from '@components/ui/slider';
 import InfoIcon from '@components/InfoIcon';
 import { Default as DefaultBalloon } from '@/balloons';
 import storage from '@/storage';
+import log from 'loglevel';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -50,10 +51,7 @@ export default () => {
     });
 
     setPopVolume(popVolume);
-    console.log(
-      'Pop volume changed to',
-      (await storage.get('config')).popVolume
-    );
+    log.debug('Pop volume changed to', (await storage.get('config')).popVolume);
 
     // Play the pop sound
     popSound.volume = popVolume / 100;
@@ -69,20 +67,17 @@ export default () => {
     });
 
     setSpawnRate(spawnRate);
-    console.log(
-      'Spawn rate changed to',
-      (await storage.get('config')).spawnRate
-    );
+    log.debug('Spawn rate changed to', (await storage.get('config')).spawnRate);
   };
 
   const onGrantOriginPermissionClick = async () => {
     const host_permissions =
       await browser.runtime.getManifest().host_permissions;
-    if (!host_permissions) return console.error('No host_permissions found');
+    if (!host_permissions) return log.error('No host_permissions found');
     const permissions = await browser.permissions.request({
       origins: host_permissions,
     });
-    console.log('Permissions granted for', permissions);
+    log.debug('Permissions granted for', permissions);
 
     setPermissions(await browser.permissions.getAll());
   };
