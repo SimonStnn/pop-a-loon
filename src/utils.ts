@@ -155,6 +155,34 @@ export function setupLogging() {
     };
   };
 
+  const shouldLog = (level: log.LogLevelNames): boolean => {
+    return (
+      log.levels[level.toUpperCase() as keyof log.LogLevel] >= log.getLevel()
+    );
+  };
+
+  // Add methods for console.time and console.group
+  log.time = (level: log.LogLevelNames, label: string) => {
+    if (!shouldLog(level)) return;
+    console.time(label);
+  };
+  log.timeEnd = (level: log.LogLevelNames, label: string) => {
+    if (!shouldLog(level)) return;
+    console.timeEnd(label);
+  };
+  log.group = (level: log.LogLevelNames, label: string) => {
+    if (!shouldLog(level)) return;
+    console.group(label);
+  };
+  log.groupCollapsed = (level: log.LogLevelNames, label: string) => {
+    if (!shouldLog(level)) return;
+    console.groupCollapsed(label);
+  };
+  log.groupEnd = (level: log.LogLevelNames) => {
+    if (!shouldLog(level)) return;
+    console.groupEnd();
+  };
+
   log.rebuild();
 
   log.info('Pop-a-loon version:', process.env.npm_package_version);
