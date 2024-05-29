@@ -138,20 +138,37 @@ export function setupLogging() {
   const originalFactory = log.methodFactory;
 
   // Modify the method factory
-  log.methodFactory = (methodName, logLevel, loggerName) => {
-    const rawMethod = originalFactory(methodName, logLevel, loggerName);
+  log.methodFactory = (
+    methodName: log.LogLevelNames | 'softwarn' | 'softerror',
+    logLevel,
+    loggerName
+  ) => {
+    const rawMethod = originalFactory(
+      (() => {
+        if (methodName == 'softwarn') return 'info';
+        if (methodName == 'softerror') return 'info';
+        return methodName;
+      })(),
+      logLevel,
+      loggerName
+    );
 
-    // Return a new method that prepends the date and colored prefix to the message
     return (...message) => {
-      let prefix = '%c' + methodName.toUpperCase();
-      const styles: Record<log.LogLevelNames, string> = {
+      let lvl = methodName;
+      if (message.length > 0 && message[0] == 'softwarn') lvl = 'warn';
+      if (message.length > 0 && message[0] == 'softerror') lvl = 'error';
+
+      let prefix = '%c' + lvl.toUpperCase();
+      const styles: Record<typeof lvl, string> = {
         trace: 'color: #888;',
         debug: 'color: #888;',
         info: 'color: #4d0;',
         warn: 'color: #fa0;',
+        softwarn: 'color: #fa0;',
         error: 'color: #d00;',
+        softerror: 'color: #d00;',
       };
-      rawMethod(`${prefix.padStart(7)}:`, styles[methodName], ...message);
+      rawMethod(`${prefix.padStart(7)}:`, styles[lvl], ...message);
     };
   };
 
@@ -181,6 +198,12 @@ export function setupLogging() {
   log.groupEnd = (level: log.LogLevelNames) => {
     if (!shouldLog(level)) return;
     console.groupEnd();
+  };
+  log.softwarn = (message?: any, ...optionalParams: any[]) => {
+    log.info('softwarn', message, ...optionalParams);
+  };
+  log.softerror = (message?: any, ...optionalParams: any[]) => {
+    log.info('softerror', message, ...optionalParams);
   };
 
   log.rebuild();
