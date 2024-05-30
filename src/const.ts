@@ -81,13 +81,13 @@ export type Endpoint =
 
 type Config = Prettify<typeof initalConfig & RemoteConfig>;
 
-export type StorageStructure = {
+export type SyncStorageStructure = {
   config: Config;
   token: string;
   user: User;
 };
 
-export type storageKey = keyof StorageStructure;
+export type SyncStorageKey = keyof SyncStorageStructure;
 
 //
 // * Chrome message types
