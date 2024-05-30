@@ -1,5 +1,6 @@
 import { RemoteResponse, devRemoteResponse, Prettify, Endpoint } from '@/const';
 import storage from '@/storage';
+import log from 'loglevel';
 
 interface RequestParams {
   [key: string]: string | number | undefined;
@@ -52,7 +53,7 @@ class BackendAPI {
       },
     });
     if (!response.ok) {
-      console.error(response, await response.json());
+      log.error(response, await response.json());
       throw new Error(`Failed to fetch ${url.toString()}`);
     }
     return response.json() as Promise<T>;
@@ -75,8 +76,8 @@ class BackendAPI {
       return this.available;
     } catch (e) {
       this.available = false;
-      console.warn('Remote is not available');
-      console.log(BackendAPI.BASE_URL, e);
+      log.warn('Remote is not available');
+      log.debug(BackendAPI.BASE_URL, e);
       return false;
     }
   }
