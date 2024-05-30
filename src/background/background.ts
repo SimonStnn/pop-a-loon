@@ -142,7 +142,9 @@ const updateBadgeColors = () => {
         target: { tabId: tab.id },
       });
       log.info(' - Successfully sent spawn balloon script to tab', tab.id);
-    } catch (e) {}
+    } catch (e) {
+      log.softerror(' - Error sending spawn balloon script to tab', tab.id, e);
+    }
     lastSpawn = now;
     log.timeEnd('info', 'Spawn Time');
     log.groupEnd('info');
