@@ -91,7 +91,7 @@ export function weightedRandom<T, D = null>(
 }
 
 export async function calculateBalloonSpawnDelay() {
-  const config = await storage.get('config');
+  const config = await storage.sync.get('config');
   // Generate a random delay between the min and max spawn interval
   const randomDelay = random(
     config.spawnInterval.min,

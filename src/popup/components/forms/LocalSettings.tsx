@@ -44,14 +44,17 @@ export default () => {
 
   const onPopVolumeChange = async (popVolume: number) => {
     // Save volume to storage
-    const config = await storage.get('config');
-    await storage.set('config', {
+    const config = await storage.sync.get('config');
+    await storage.sync.set('config', {
       ...config,
       popVolume,
     });
 
     setPopVolume(popVolume);
-    log.debug('Pop volume changed to', (await storage.get('config')).popVolume);
+    log.debug(
+      'Pop volume changed to',
+      (await storage.sync.get('config')).popVolume
+    );
 
     // Play the pop sound
     popSound.volume = popVolume / 100;
@@ -60,14 +63,17 @@ export default () => {
 
   const onSpawnRateChange = async (spawnRate: number) => {
     // Save volume to storage
-    const config = await storage.get('config');
-    await storage.set('config', {
+    const config = await storage.sync.get('config');
+    await storage.sync.set('config', {
       ...config,
       spawnRate,
     });
 
     setSpawnRate(spawnRate);
-    log.debug('Spawn rate changed to', (await storage.get('config')).spawnRate);
+    log.debug(
+      'Spawn rate changed to',
+      (await storage.sync.get('config')).spawnRate
+    );
   };
 
   const onGrantOriginPermissionClick = async () => {
@@ -84,7 +90,7 @@ export default () => {
 
   useEffect(() => {
     const loadVolume = async () => {
-      const config = await storage.get('config');
+      const config = await storage.sync.get('config');
       // Load volume from storage
       setPopVolume(config.popVolume);
       setSpawnRate(config.spawnRate);
