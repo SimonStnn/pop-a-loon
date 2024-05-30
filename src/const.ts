@@ -1,3 +1,5 @@
+import log from 'loglevel';
+
 //
 // * Config types
 //
@@ -86,8 +88,12 @@ export type SyncStorageStructure = {
   token: string;
   user: User;
 };
-
 export type SyncStorageKey = keyof SyncStorageStructure;
+
+export type SessionStorageStructure = {
+  loglevel?: log.LogLevelNumbers;
+};
+export type SessionStorageKey = keyof SessionStorageStructure;
 
 //
 // * Chrome message types
