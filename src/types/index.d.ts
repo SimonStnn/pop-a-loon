@@ -11,3 +11,5 @@ declare module 'loglevel' {
     softerror: (message?: any, ...optionalParams: any[]) => void;
   }
 }
+
+export type LogLevelNames = log.LogLevelNames | 'softwarn' | 'softerror';
