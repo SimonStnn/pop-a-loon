@@ -45,6 +45,7 @@ const updateBadgeColors = () => {
 
   const setup = async () => {
     setupLogging();
+    await storage.session.set('loglevel', log.getLevel());
 
     log.info('Pop-a-loon version:', process.env.npm_package_version);
     log.debug(`Mode: ${process.env.NODE_ENV}`);
