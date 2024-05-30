@@ -234,6 +234,9 @@ const updateBadgeColors = () => {
         // Call the listener again to update the badge number
         messageListener(msg, sender, sendResponse);
         break;
+      case 'setLogLevel':
+        log.setLevel(message.level);
+        break;
     }
   });
 

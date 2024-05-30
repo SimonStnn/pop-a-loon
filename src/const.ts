@@ -112,10 +112,16 @@ type SpawnBalloonMessage = {
   action: 'spawnBalloon';
 };
 
+type SetLogLevelMessage = {
+  action: 'setLogLevel';
+  level: log.LogLevelNumbers;
+};
+
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
-  | SpawnBalloonMessage;
+  | SpawnBalloonMessage
+  | SetLogLevelMessage;
 
 //
 // * Alarms
