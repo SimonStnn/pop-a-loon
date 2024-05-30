@@ -1,23 +1,28 @@
 import browser from 'webextension-polyfill';
-import { storageKey, StorageStructure } from '@const';
+import { SyncStorageStructure } from '@const';
 
-class StorageManager {
-  private _storage: browser.Storage.StorageAreaSync;
+class StorageManager<StorageStructure extends Record<string, any>> {
+  private _storage: browser.Storage.StorageArea;
 
-  constructor() {
-    this._storage = browser.storage.sync;
+  constructor(storage: browser.Storage.StorageArea) {
+    this._storage = storage;
   }
 
-  async get<K extends storageKey>(key: K): Promise<StorageStructure[K]> {
+  async get<K extends keyof StorageStructure & string>(
+    key: K
+  ): Promise<StorageStructure[K]> {
     const result = await this._storage.get(key);
     return result[key];
   }
 
-  async set<K extends storageKey>(key: K, value: StorageStructure[K]) {
+  async set<K extends keyof StorageStructure & string>(
+    key: K,
+    value: StorageStructure[K]
+  ) {
     return await this._storage.set({ [key]: value });
   }
 
-  async remove<K extends storageKey>(key: K) {
+  async remove<K extends keyof StorageStructure & string>(key: K) {
     return await this._storage.remove(key);
   }
 
@@ -26,4 +31,7 @@ class StorageManager {
   }
 }
 
-export default new StorageManager();
+const storage = {
+  sync: new StorageManager<SyncStorageStructure>(browser.storage.sync),
+};
+export default storage;
