@@ -15,6 +15,7 @@ import Main from '@components/Main';
 import LocalSettings from '@components/forms/LocalSettings';
 import UpdateUser from '@components/forms/UpdateUser';
 import DeleteUser from '@components/forms/DeleteUser';
+import Developer from './components/forms/Developer';
 
 export default () => {
   return (
@@ -55,6 +56,10 @@ export default () => {
                 <DeleteUser />
               </DialogContent>
             </Dialog>
+          </section>
+          <Separator />
+          <section>
+            <Developer />
           </section>
         </div>
       </Main>
