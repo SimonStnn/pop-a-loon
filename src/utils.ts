@@ -207,11 +207,4 @@ export function setupLogging() {
   };
 
   log.rebuild();
-
-  log.info('Pop-a-loon version:', process.env.npm_package_version);
-  log.debug(`Mode: ${process.env.NODE_ENV}`);
-  log.debug('Browser:', getBrowser());
-  log.debug('Running in background:', isRunningInBackground());
-  log.debug('Logging level:', log.getLevel());
-  log.debug('');
 }
