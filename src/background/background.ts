@@ -1,5 +1,7 @@
 import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
+import log from 'loglevel';
+import { type LogLevelNames } from '@/types';
 import { AlarmName, Message, initalConfig } from '@const';
 import storage from '@/storage';
 import remote from '@/remote';
@@ -11,7 +13,6 @@ import {
   sendMessage,
   setupLogging,
 } from '@utils';
-import log from 'loglevel';
 
 const setBadgeNumber = (count: number) => {
   browser.action.setBadgeText({
@@ -84,6 +85,8 @@ const updateBadgeColors = () => {
     // Set badge number and colors
     setBadgeNumber(user.count || 0);
     updateBadgeColors();
+
+    log.debug('Setup complete');
   };
 
   const spawnBalloon = async () => {
@@ -95,7 +98,7 @@ const updateBadgeColors = () => {
 
     const now = Date.now();
     const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
-    const skipSpawnMessage = (note: any, level: log.LogLevelNames = 'warn') => {
+    const skipSpawnMessage = (note: any, level: LogLevelNames = 'softwarn') => {
       log[level](`Skipping spawnBalloon message: \r\n\t`, note);
       log.timeEnd('info', 'Spawn Time');
       log.groupEnd('info');
@@ -115,7 +118,7 @@ const updateBadgeColors = () => {
 
     // Check if the browser is idle
     const state = await browser.idle.queryState(5 * 60);
-    if (state !== 'active') return skipSpawnMessage('Browser is idle', 'info');
+    if (state !== 'active') return skipSpawnMessage('Browser is idle');
     log.debug(' - Browser is not idle');
 
     // Check if no spawn alarms are already set
