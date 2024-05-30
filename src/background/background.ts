@@ -168,6 +168,7 @@ const updateBadgeColors = () => {
     try {
       // If extension is being run in firefox, set the browserAction popup
       if (getBrowser() === 'Firefox' && !('action' in browser)) {
+        log.debug('Setting browser action to browser.browserAction');
         (browser as any).action = (browser as any).browserAction;
       }
 
@@ -180,6 +181,7 @@ const updateBadgeColors = () => {
   };
 
   browser.alarms.onAlarm.addListener(async (alarm) => {
+    log.debug('Alarm triggered', alarm.name);
     switch (alarm.name as AlarmName) {
       case 'spawnBalloon':
         // Spawn a balloon
@@ -199,6 +201,7 @@ const updateBadgeColors = () => {
     sender,
     sendResponse
   ) {
+    log.debug('Message received:', message);
     switch (message.action) {
       case 'updateCounter':
         setBadgeNumber(message.balloonCount);
