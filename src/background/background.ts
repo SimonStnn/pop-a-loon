@@ -14,6 +14,11 @@ import {
   setupLogging,
 } from '@utils';
 
+console.log(
+  "%cIf someone told you to copy/paste something here you have an 11/10 chance you're being scammed.",
+  'font-size:18px; color: red; font-weight: bold; padding: 25px 10px;'
+);
+
 const setBadgeNumber = (count: number) => {
   browser.action.setBadgeText({
     text: abbreviateNumber(count),
