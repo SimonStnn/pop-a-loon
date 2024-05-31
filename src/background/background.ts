@@ -49,7 +49,13 @@ const updateBadgeColors = () => {
     log.debug(`Mode: ${process.env.NODE_ENV}`);
     log.debug('Browser:', getBrowser());
     log.debug('Running in background:', isRunningInBackground());
-    log.debug('Logging level:', log.getLevel());
+    log.debug(
+      'Logging level:',
+      log.toLogLevelName(log.getLevel()),
+      '(',
+      log.getLevel(),
+      ')'
+    );
     log.debug('');
 
     // Clear all alarms
