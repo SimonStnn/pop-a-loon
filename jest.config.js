@@ -8,8 +8,6 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@const': '<rootDir>/src/const',
-    '^@utils': '<rootDir>/src/utils',
-    '^@components/(.*)$': '<rootDir>/src/components/$1',
+    '^@/components/(.*)$': '<rootDir>/src/popup/components/$1',
   },
 };
