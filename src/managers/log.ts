@@ -35,14 +35,7 @@ class CustomLog implements loglevel.Logger {
 
   constructor() {
     loglevel.methodFactory = this.methodFactory.bind(this);
-
-    if (process.env.NODE_ENV === 'development')
-      this.setLevel(this.levels.DEBUG);
     storage.local.set('loglevel', this.getLevel());
-
-    const loglevelName = Object.keys(this.levels).find(
-      (key) => this.levels[key as keyof typeof this.levels] === this.getLevel()
-    );
   }
 
   private toLogLevelDesc(level: LogLevelDesc): loglevel.LogLevelDesc {
@@ -129,13 +122,13 @@ class CustomLog implements loglevel.Logger {
 
   public getLevel = loglevel.getLevel;
 
-  public setLevel(level: LogLevelDesc): void {
+  public async setLevel(level: LogLevelDesc): Promise<void> {
     loglevel.setLevel(this.toLogLevelDesc(level));
     if (typeof level === 'string')
       level = this.toLogLevelNumber(level.toLowerCase() as LogLevelNames);
     if (typeof level !== 'number')
       throw new TypeError('Invalid log level', level);
-    storage.local.set('loglevel', level);
+    await storage.local.set('loglevel', level);
   }
 
   public setDefaultLevel(level: LogLevelDesc): void {

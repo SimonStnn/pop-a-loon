@@ -37,6 +37,8 @@ const updateBadgeColors = () => {
   // Check if the background script is running in the background
   if (!isRunningInBackground()) return;
 
+  if (process.env.NODE_ENV === 'development') log.setLevel('debug');
+
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
@@ -231,7 +233,6 @@ const updateBadgeColors = () => {
         break;
       case 'setLogLevel':
         log.setLevel(message.level);
-        await storage.local.set('loglevel', message.level);
         break;
     }
   });
