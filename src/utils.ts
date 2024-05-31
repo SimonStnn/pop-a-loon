@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { Message, BalloonContainerId } from '@const';
+import { Message, BalloonContainerId } from '@/const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import storage from '@/storage';

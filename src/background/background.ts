@@ -2,9 +2,9 @@ import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import log from 'loglevel';
 import { type LogLevelNames } from '@/types';
-import { AlarmName, Message, initalConfig } from '@const';
 import storage from '@/storage';
 import remote from '@/remote';
+import { AlarmName, Message, initalConfig } from '@/const';
 import {
   calculateBalloonSpawnDelay,
   random,
@@ -12,7 +12,7 @@ import {
   isRunningInBackground,
   sendMessage,
   setupLogging,
-} from '@utils';
+} from '@/utils';
 
 console.log(
   "%cIf someone told you to copy/paste something here you have an 11/10 chance you're being scammed.",

@@ -1,4 +1,4 @@
-import { initalConfig, SyncStorageKey, SyncStorageStructure } from '@const';
+import { initalConfig, SyncStorageKey, SyncStorageStructure } from '@/const';
 
 const defaultStorage: SyncStorageStructure = {
   config: initalConfig,
