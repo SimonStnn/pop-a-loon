@@ -67,7 +67,7 @@ export default () => {
                   />
                 </FormControl>
               </FormLabel>
-              <FormDescription>Enable debug logging (session).</FormDescription>
+              <FormDescription>Enable debug logging.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
