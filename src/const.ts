@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import { LogLevelNumbers } from '@/managers/log';
 
 //
 // * Config types
@@ -91,7 +91,7 @@ export type SyncStorageStructure = {
 export type SyncStorageKey = keyof SyncStorageStructure;
 
 export type LocalStorageStructure = {
-  loglevel?: log.LogLevelNumbers;
+  loglevel?: LogLevelNumbers;
 };
 export type LocalStorageKey = keyof LocalStorageStructure;
 
@@ -114,7 +114,7 @@ type SpawnBalloonMessage = {
 
 type SetLogLevelMessage = {
   action: 'setLogLevel';
-  level: log.LogLevelNumbers;
+  level: LogLevelNumbers;
 };
 
 export type Message =

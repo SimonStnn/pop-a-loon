@@ -1,8 +1,7 @@
 import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
-import log from 'loglevel';
-import { type LogLevelNames } from '@/types';
-import storage from '@/storage';
+import storage from '@/managers/storage';
+import log, { type LogLevelNames } from '@/managers/log';
 import remote from '@/remote';
 import { AlarmName, Message, initalConfig } from '@/const';
 import {
@@ -11,7 +10,6 @@ import {
   getBrowser,
   isRunningInBackground,
   sendMessage,
-  setupLogging,
 } from '@/utils';
 
 console.log(
@@ -39,19 +37,25 @@ const updateBadgeColors = () => {
   // Check if the background script is running in the background
   if (!isRunningInBackground()) return;
 
+  if (process.env.NODE_ENV === 'development') log.setLevel('debug');
+  else log.setLevel('info');
+
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
 
   const setup = async () => {
-    setupLogging();
-    await storage.local.set('loglevel', log.getLevel());
-
     log.info('Pop-a-loon version:', process.env.npm_package_version);
     log.debug(`Mode: ${process.env.NODE_ENV}`);
     log.debug('Browser:', getBrowser());
     log.debug('Running in background:', isRunningInBackground());
-    log.debug('Logging level:', log.getLevel());
+    log.debug(
+      'Logging level:',
+      log.toLogLevelName(log.getLevel()),
+      '(',
+      log.getLevel(),
+      ')'
+    );
     log.debug('');
 
     // Clear all alarms
@@ -236,7 +240,6 @@ const updateBadgeColors = () => {
         break;
       case 'setLogLevel':
         log.setLevel(message.level);
-        await storage.local.set('loglevel', message.level);
         break;
     }
   });

@@ -9,6 +9,12 @@ import Footer from '@/components/Footer';
 
 // Import stylesheet
 import './style.css';
+import log from '@/managers/log';
+import storage from '@/managers/storage';
+
+(async () => {
+  log.setLevel((await storage.local.get('loglevel')) ?? log.getLevel());
+})();
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
