@@ -1,6 +1,6 @@
 import { RemoteResponse, devRemoteResponse, Prettify, Endpoint } from '@/const';
 import storage from '@/managers/storage';
-import log from 'loglevel';
+import log from '@/managers/log';
 
 interface RequestParams {
   [key: string]: string | number | undefined;

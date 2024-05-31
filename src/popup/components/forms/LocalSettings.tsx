@@ -15,7 +15,7 @@ import { Slider } from '@/components/ui/slider';
 import InfoIcon from '@/components/InfoIcon';
 import { Default as DefaultBalloon } from '@/balloons';
 import storage from '@/managers/storage';
-import log from 'loglevel';
+import log from '@/managers/log';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;

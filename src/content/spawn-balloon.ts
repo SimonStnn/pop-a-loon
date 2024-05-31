@@ -1,18 +1,12 @@
 import browser from 'webextension-polyfill';
 import * as balloons from '@/balloons';
-import {
-  getBalloonContainer,
-  importStylesheet,
-  setupLogging,
-  weightedRandom,
-} from '@/utils';
-import log from 'loglevel';
+import { getBalloonContainer, importStylesheet, weightedRandom } from '@/utils';
+import log from '@/managers/log';
 import storage from '@/managers/storage';
 
 (async () => {
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
-  setupLogging();
   log.setLevel((await storage.local.get('loglevel')) || 'info');
   log.groupCollapsed('debug', 'Pop-a-loon: Spawning balloon');
   log.time('debug', 'Balloon spawn time');

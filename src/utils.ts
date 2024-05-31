@@ -3,7 +3,7 @@ import { Message, BalloonContainerId } from '@/const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import storage from '@/managers/storage';
-import log from 'loglevel';
+import log from '@/managers/log';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -129,82 +129,4 @@ export async function importStylesheet(id: string, href: string) {
     // Append the <style> element to the <head>
     document.head.appendChild(style);
   }
-}
-
-export function setupLogging() {
-  if (process.env.NODE_ENV === 'development') log.setLevel(log.levels.DEBUG);
-
-  // Save the original factory method
-  const originalFactory = log.methodFactory;
-
-  // Modify the method factory
-  log.methodFactory = (
-    methodName: log.LogLevelNames | 'softwarn' | 'softerror',
-    logLevel,
-    loggerName
-  ) => {
-    const rawMethod = originalFactory(
-      (() => {
-        if (methodName == 'softwarn') return 'info';
-        if (methodName == 'softerror') return 'info';
-        return methodName;
-      })(),
-      logLevel,
-      loggerName
-    );
-
-    return (...message) => {
-      let lvl = methodName;
-      if (message.length > 0 && message[0] == 'softwarn') lvl = 'warn';
-      if (message.length > 0 && message[0] == 'softerror') lvl = 'error';
-
-      let prefix = '%c' + lvl.toUpperCase();
-      const styles: Record<typeof lvl, string> = {
-        trace: 'color: #888;',
-        debug: 'color: #888;',
-        info: 'color: #4d0;',
-        warn: 'color: #fa0;',
-        softwarn: 'color: #fa0;',
-        error: 'color: #d00;',
-        softerror: 'color: #d00;',
-      };
-      rawMethod(`${prefix.padStart(7)}:`, styles[lvl], ...message);
-    };
-  };
-
-  const shouldLog = (level: log.LogLevelNames): boolean => {
-    return (
-      log.levels[level.toUpperCase() as keyof log.LogLevel] >= log.getLevel()
-    );
-  };
-
-  // Add methods for console.time and console.group
-  log.time = (level: log.LogLevelNames, label: string) => {
-    if (!shouldLog(level)) return;
-    console.time(label);
-  };
-  log.timeEnd = (level: log.LogLevelNames, label: string) => {
-    if (!shouldLog(level)) return;
-    console.timeEnd(label);
-  };
-  log.group = (level: log.LogLevelNames, label: string) => {
-    if (!shouldLog(level)) return;
-    console.group(label);
-  };
-  log.groupCollapsed = (level: log.LogLevelNames, label: string) => {
-    if (!shouldLog(level)) return;
-    console.groupCollapsed(label);
-  };
-  log.groupEnd = (level: log.LogLevelNames) => {
-    if (!shouldLog(level)) return;
-    console.groupEnd();
-  };
-  log.softwarn = (message?: any, ...optionalParams: any[]) => {
-    log.info('softwarn', message, ...optionalParams);
-  };
-  log.softerror = (message?: any, ...optionalParams: any[]) => {
-    log.info('softerror', message, ...optionalParams);
-  };
-
-  log.rebuild();
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import log from 'loglevel';
+import log from '@/managers/log';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

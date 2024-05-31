@@ -1,8 +1,7 @@
 import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
-import log from 'loglevel';
-import { type LogLevelNames } from '@/types';
 import storage from '@/managers/storage';
+import log, { type LogLevelNames } from '@/managers/log';
 import remote from '@/remote';
 import { AlarmName, Message, initalConfig } from '@/const';
 import {
@@ -11,7 +10,6 @@ import {
   getBrowser,
   isRunningInBackground,
   sendMessage,
-  setupLogging,
 } from '@/utils';
 
 console.log(
@@ -44,9 +42,6 @@ const updateBadgeColors = () => {
   let spawnTimeout: number | null = null;
 
   const setup = async () => {
-    setupLogging();
-    await storage.local.set('loglevel', log.getLevel());
-
     log.info('Pop-a-loon version:', process.env.npm_package_version);
     log.debug(`Mode: ${process.env.NODE_ENV}`);
     log.debug('Browser:', getBrowser());
