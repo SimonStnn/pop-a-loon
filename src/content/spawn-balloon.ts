@@ -7,7 +7,7 @@ import {
   weightedRandom,
 } from '@/utils';
 import log from 'loglevel';
-import storage from '@/storage';
+import storage from '@/managers/storage';
 
 (async () => {
   // Prevent running in popup

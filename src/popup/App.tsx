@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 import React, { useState, useEffect } from 'react';
-import storage from '@/storage';
+import storage from '@/managers/storage';
 import { Message } from '@/const';
 import Main from '@/components/Main';
 

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { sendMessage } from '@/utils';
-import storage from '@/storage';
+import storage from '@/managers/storage';
 
 const formSchema = z.object({
   loglevel: z.boolean(),

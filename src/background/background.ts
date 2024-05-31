@@ -2,7 +2,7 @@ import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import log from 'loglevel';
 import { type LogLevelNames } from '@/types';
-import storage from '@/storage';
+import storage from '@/managers/storage';
 import remote from '@/remote';
 import { AlarmName, Message, initalConfig } from '@/const';
 import {
