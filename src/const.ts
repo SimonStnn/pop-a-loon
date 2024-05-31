@@ -1,3 +1,5 @@
+import log from 'loglevel';
+
 //
 // * Config types
 //
@@ -81,13 +83,17 @@ export type Endpoint =
 
 type Config = Prettify<typeof initalConfig & RemoteConfig>;
 
-export type StorageStructure = {
+export type SyncStorageStructure = {
   config: Config;
   token: string;
   user: User;
 };
+export type SyncStorageKey = keyof SyncStorageStructure;
 
-export type storageKey = keyof StorageStructure;
+export type LocalStorageStructure = {
+  loglevel?: log.LogLevelNumbers;
+};
+export type LocalStorageKey = keyof LocalStorageStructure;
 
 //
 // * Chrome message types
@@ -106,10 +112,16 @@ type SpawnBalloonMessage = {
   action: 'spawnBalloon';
 };
 
+type SetLogLevelMessage = {
+  action: 'setLogLevel';
+  level: log.LogLevelNumbers;
+};
+
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
-  | SpawnBalloonMessage;
+  | SpawnBalloonMessage
+  | SetLogLevelMessage;
 
 //
 // * Alarms

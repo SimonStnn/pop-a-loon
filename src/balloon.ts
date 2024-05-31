@@ -142,7 +142,7 @@ export default abstract class Balloon {
     sendMessage({ action: 'incrementCount' });
 
     // Set volume
-    this.popSound.volume = (await storage.get('config')).popVolume / 100;
+    this.popSound.volume = (await storage.sync.get('config')).popVolume / 100;
     // Play the pop sound
     this.popSound.play().catch((e) => {
       this.popSound.src = defaultBalloonResourceLocation + 'pop.mp3';

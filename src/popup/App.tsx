@@ -8,7 +8,7 @@ const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);
 
   const fetchBalloonCount = async () => {
-    const count = (await storage.get('user'))?.count;
+    const count = (await storage.sync.get('user'))?.count;
     setBalloonCount(count || 0);
   };
 

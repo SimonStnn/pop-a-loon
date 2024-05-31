@@ -33,14 +33,14 @@ export default () => {
   });
 
   const deleteFormOnSubmit = async () => {
-    const token = await storage.get('token');
+    const token = await storage.sync.get('token');
     await remote.deleteUser(token);
     browser.runtime.reload();
   };
 
   useEffect(() => {
     const loadUser = async () => {
-      const storedUser = await storage.get('user');
+      const storedUser = await storage.sync.get('user');
       setUser(storedUser);
     };
 

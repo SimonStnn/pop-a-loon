@@ -49,7 +49,7 @@ class BackendAPI {
     const response = await fetch(url.toString(), {
       method,
       headers: {
-        authorization: (await storage.get('token')) || '',
+        authorization: (await storage.sync.get('token')) || '',
       },
     });
     if (!response.ok) {
@@ -114,13 +114,13 @@ class BackendAPI {
   }
 
   public async deleteUser(token: string) {
-    if ((await storage.get('token')) !== token)
+    if ((await storage.sync.get('token')) !== token)
       throw new Error('Cannot delete user without token');
     const response = await this.request<RemoteResponse['user']>(
       'DELETE',
       `/user`
     );
-    await storage.clear();
+    await storage.sync.clear();
     return response;
   }
 

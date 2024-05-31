@@ -27,7 +27,7 @@ const setBadgeNumber = (count: number) => {
 
 const updateBadgeColors = () => {
   (async () => {
-    const config = await storage.get('config');
+    const config = await storage.sync.get('config');
     browser.action.setBadgeBackgroundColor({
       color: config.badge.backgroundColor,
     });
@@ -45,6 +45,7 @@ const updateBadgeColors = () => {
 
   const setup = async () => {
     setupLogging();
+    await storage.local.set('loglevel', log.getLevel());
 
     log.info('Pop-a-loon version:', process.env.npm_package_version);
     log.debug(`Mode: ${process.env.NODE_ENV}`);
@@ -59,7 +60,7 @@ const updateBadgeColors = () => {
     //! Fix for #145
     try {
       log.debug('Checking for depricated balloonCount');
-      await storage.remove('balloonCount' as any);
+      await storage.sync.remove('balloonCount' as any);
     } catch (e) {}
 
     const remoteAvailable = await remote.isAvailable();
@@ -70,23 +71,23 @@ const updateBadgeColors = () => {
     }
 
     // Get the user from the local storage
-    let localUser = await storage.get('user');
+    let localUser = await storage.sync.get('user');
     // If the user is not in the local storage, get a new user from the remote
     if (!localUser) {
       const usr = await remote.NewUser('Anonymous');
-      await storage.set('token', usr.token);
+      await storage.sync.set('token', usr.token);
       localUser = usr;
     }
     // Get the user from the remote and save it to the local storage
     const user = await remote.getUser(localUser.id);
-    await storage.set('user', user);
+    await storage.sync.set('user', user);
 
     // Get the config from the remote
     const remoteConfig = await remote.getConfiguration();
     // Get the config from the local storage
-    const config = (await storage.get('config')) || initalConfig;
+    const config = (await storage.sync.get('config')) || initalConfig;
     // Merge the local config with the remote config
-    await storage.set('config', {
+    await storage.sync.set('config', {
       ...initalConfig,
       ...config, // config overrides the initial config
       ...remoteConfig, // remoteConfig overrides the config
@@ -110,7 +111,8 @@ const updateBadgeColors = () => {
     log.time('info', 'Spawn Time');
 
     const now = Date.now();
-    const minSpawnInterval = (await storage.get('config')).spawnInterval.min;
+    const minSpawnInterval = (await storage.sync.get('config')).spawnInterval
+      .min;
     const skipSpawnMessage = (note: any, level: LogLevelNames = 'softwarn') => {
       log[level](`Skipping spawnBalloon message: \r\n\t`, note);
       log.timeEnd('info', 'Spawn Time');
@@ -218,8 +220,8 @@ const updateBadgeColors = () => {
       case 'incrementCount':
         // Increment the count and save it to the local storage
         const newCount = await remote.incrementCount();
-        storage.set('user', {
-          ...(await storage.get('user')),
+        storage.sync.set('user', {
+          ...(await storage.sync.get('user')),
           count: newCount.count,
         });
 
@@ -231,6 +233,10 @@ const updateBadgeColors = () => {
         sendMessage(msg);
         // Call the listener again to update the badge number
         messageListener(msg, sender, sendResponse);
+        break;
+      case 'setLogLevel':
+        log.setLevel(message.level);
+        await storage.local.set('loglevel', message.level);
         break;
     }
   });
