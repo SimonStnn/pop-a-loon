@@ -90,10 +90,10 @@ export type SyncStorageStructure = {
 };
 export type SyncStorageKey = keyof SyncStorageStructure;
 
-export type SessionStorageStructure = {
+export type LocalStorageStructure = {
   loglevel?: log.LogLevelNumbers;
 };
-export type SessionStorageKey = keyof SessionStorageStructure;
+export type LocalStorageKey = keyof LocalStorageStructure;
 
 //
 // * Chrome message types

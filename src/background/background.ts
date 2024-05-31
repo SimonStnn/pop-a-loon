@@ -45,7 +45,7 @@ const updateBadgeColors = () => {
 
   const setup = async () => {
     setupLogging();
-    await storage.session.set('loglevel', log.getLevel());
+    await storage.local.set('loglevel', log.getLevel());
 
     log.info('Pop-a-loon version:', process.env.npm_package_version);
     log.debug(`Mode: ${process.env.NODE_ENV}`);
@@ -236,6 +236,7 @@ const updateBadgeColors = () => {
         break;
       case 'setLogLevel':
         log.setLevel(message.level);
+        await storage.local.set('loglevel', message.level);
         break;
     }
   });

@@ -1,8 +1,5 @@
 import browser from 'webextension-polyfill';
-import {
-  type SessionStorageStructure,
-  type SyncStorageStructure,
-} from '@const';
+import { type LocalStorageStructure, type SyncStorageStructure } from '@const';
 
 class StorageManager<StorageStructure extends Record<string, any>> {
   private _storage: browser.Storage.StorageArea;
@@ -36,6 +33,6 @@ class StorageManager<StorageStructure extends Record<string, any>> {
 
 const storage = {
   sync: new StorageManager<SyncStorageStructure>(browser.storage.sync),
-  session: new StorageManager<SessionStorageStructure>(browser.storage.session),
+  local: new StorageManager<LocalStorageStructure>(browser.storage.local),
 };
 export default storage;

@@ -7,11 +7,13 @@ import {
   weightedRandom,
 } from '@/utils';
 import log from 'loglevel';
+import storage from '@/storage';
 
-(() => {
+(async () => {
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
   setupLogging();
+  log.setLevel((await storage.local.get('loglevel')) || 'info');
   log.groupCollapsed('debug', 'Pop-a-loon: Spawning balloon');
   log.time('debug', 'Balloon spawn time');
 

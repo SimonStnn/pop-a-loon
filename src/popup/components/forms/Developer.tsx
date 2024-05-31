@@ -14,9 +14,10 @@ import {
 } from '@components/ui/form';
 import { Checkbox } from '@components/ui/checkbox';
 import { sendMessage } from '@/utils';
+import storage from '@/storage';
 
 const formSchema = z.object({
-  loglevel: z.number().int().min(log.levels.TRACE).max(log.levels.SILENT),
+  loglevel: z.boolean(),
 });
 
 export default () => {
@@ -25,7 +26,7 @@ export default () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      loglevel: log.getLevel(),
+      loglevel: log.getLevel() === log.levels.DEBUG,
     },
   });
 
@@ -34,15 +35,14 @@ export default () => {
       loglevel === log.levels.DEBUG ? log.levels.INFO : log.levels.DEBUG;
     setLoglevel(level);
     log.setLevel(level);
-    console.log('Toggling debug logging', log.getLevel());
     await sendMessage({ action: 'setLogLevel', level });
   };
 
   useEffect(() => {
     const loadLoglevel = async () => {
-      const level = await log.getLevel();
+      const level = (await storage.local.get('loglevel')) || log.levels.INFO;
       setLoglevel(level);
-      form.setValue('loglevel', level);
+      form.setValue('loglevel', level === log.levels.DEBUG);
     };
     loadLoglevel();
   }, []);
@@ -63,6 +63,7 @@ export default () => {
                     defaultChecked={loglevel === log.levels.DEBUG}
                     {...field}
                     onCheckedChange={toggleDebugLogging}
+                    value={loglevel}
                   />
                 </FormControl>
               </FormLabel>
