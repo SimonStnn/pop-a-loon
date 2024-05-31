@@ -38,18 +38,10 @@ class CustomLog implements loglevel.Logger {
     storage.local.set('loglevel', this.getLevel());
   }
 
-  private toLogLevelDesc(level: LogLevelDesc): loglevel.LogLevelDesc {
-    if (typeof level === 'string')
-      level = this.levels[level.toUpperCase() as keyof LogLevel];
-    return level;
-  }
-  private toLogLevelName(level: LogLevelNames): loglevel.LogLevelNames {
+  private toOriginalLogLevelName(level: LogLevelNames): loglevel.LogLevelNames {
     if (level === 'softwarn') return 'warn';
     if (level === 'softerror') return 'error';
     return level;
-  }
-  private toLogLevelNumber(level: LogLevelNames): loglevel.LogLevelNumbers {
-    return this.levels[level.toUpperCase() as keyof LogLevel];
   }
 
   private shouldLog(level: LogLevelNames): boolean {
@@ -63,7 +55,7 @@ class CustomLog implements loglevel.Logger {
   private createLogMethod(level: LogLevelNames) {
     return (...msg: any[]) => {
       if (this.shouldLog(level)) {
-        loglevel[this.toLogLevelName(level)](...msg);
+        loglevel[this.toOriginalLogLevelName(level)](...msg);
       }
     };
   }
@@ -110,7 +102,7 @@ class CustomLog implements loglevel.Logger {
         message.length > 0 &&
         (message[0] === 'softwarn' || message[0] == 'softerror')
       ) {
-        lvl = this.toLogLevelName(message[0]);
+        lvl = this.toOriginalLogLevelName(message[0]);
         message.shift();
       }
 
@@ -129,6 +121,8 @@ class CustomLog implements loglevel.Logger {
     if (typeof level !== 'number')
       throw new TypeError('Invalid log level', level);
     await storage.local.set('loglevel', level);
+
+    // this.info('Log level set to', this.toLogLevelName(level));
   }
 
   public setDefaultLevel(level: LogLevelDesc): void {
@@ -136,7 +130,27 @@ class CustomLog implements loglevel.Logger {
   }
 
   //
-  // * Custom methods
+  // * Conversion methods
+  //
+
+  public toLogLevelDesc(level: LogLevelDesc): loglevel.LogLevelDesc {
+    if (typeof level === 'string')
+      level = this.levels[level.toUpperCase() as keyof LogLevel];
+    return level;
+  }
+
+  public toLogLevelName(level: LogLevelDesc): loglevel.LogLevelNames {
+    return Object.keys(this.levels).find(
+      (key) => this.levels[key as keyof LogLevel] === level
+    ) as loglevel.LogLevelNames;
+  }
+
+  public toLogLevelNumber(level: LogLevelNames): loglevel.LogLevelNumbers {
+    return this.levels[level.toUpperCase() as keyof LogLevel];
+  }
+
+  //
+  // * Custom log methods
   //
 
   // Add methods for console.time and console.group
