@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 import storage from '@/storage';
-import { getBalloonContainer, random, sendMessage } from '@utils';
+import { getBalloonContainer, random, sendMessage } from '@/utils';
 
 export const balloonResourceLocation = browser.runtime.getURL(
   'resources/balloons/'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import browser, { manifest, type Permissions } from 'webextension-polyfill';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Button } from '@components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormField,
@@ -10,9 +10,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@components/ui/form';
-import { Slider } from '@components/ui/slider';
-import InfoIcon from '@components/InfoIcon';
+} from '@/components/ui/form';
+import { Slider } from '@/components/ui/slider';
+import InfoIcon from '@/components/InfoIcon';
 import { Default as DefaultBalloon } from '@/balloons';
 import storage from '@/storage';
 import log from 'loglevel';

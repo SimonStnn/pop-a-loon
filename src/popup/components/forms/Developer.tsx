@@ -11,8 +11,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@components/ui/form';
-import { Checkbox } from '@components/ui/checkbox';
+} from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
 import { sendMessage } from '@/utils';
 import storage from '@/storage';
 

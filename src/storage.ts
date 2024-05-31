@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { type LocalStorageStructure, type SyncStorageStructure } from '@const';
+import { type LocalStorageStructure, type SyncStorageStructure } from '@/const';
 
 class StorageManager<StorageStructure extends Record<string, any>> {
   private _storage: browser.Storage.StorageArea;

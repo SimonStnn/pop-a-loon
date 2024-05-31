@@ -11,9 +11,7 @@
     "baseUrl": "./src",
     "paths": {
       "@/*": ["./*"],
-      "@components/*": ["./popup/components/*"],
-      "@const": ["./const"],
-      "@utils": ["./utils"]
+      "@/components/*": ["./popup/components/*"]
     }
   }
 }

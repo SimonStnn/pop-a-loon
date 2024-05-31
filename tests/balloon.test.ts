@@ -1,5 +1,5 @@
 import Balloon from '@/balloon';
-import { random } from '@utils';
+import { random } from '@/utils';
 
 // Create a concrete subclass of Balloon for testing
 class TestBalloon extends Balloon {

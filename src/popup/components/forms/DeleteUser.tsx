@@ -11,9 +11,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@components/ui/form';
-import { Input } from '@components/ui/input';
-import { Button } from '@components/ui/button';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import storage from '@/storage';
 import { User } from '@/const';
 import remote from '@/remote';
