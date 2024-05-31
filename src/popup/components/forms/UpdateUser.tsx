@@ -12,10 +12,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@components/ui/form';
-import { Input } from '@components/ui/input';
-import { Button } from '@components/ui/button';
-import storage from '@/storage';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import storage from '@/managers/storage';
 import { User } from '@/const';
 import remote from '@/remote';
 
@@ -45,7 +45,7 @@ export default () => {
 
   useEffect(() => {
     const loadUser = async () => {
-      const storedUser = await storage.get('user');
+      const storedUser = await storage.sync.get('user');
       setUser(storedUser);
       form.setValue('username', storedUser.username);
       form.setValue('email', storedUser.email || '');
@@ -58,7 +58,7 @@ export default () => {
     if (username === user?.username && email === user?.email) return;
     const newUser = await remote.putUser({ username, email });
     setUser(newUser);
-    await storage.set('user', newUser);
+    await storage.sync.set('user', newUser);
   };
 
   return (

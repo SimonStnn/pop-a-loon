@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import browser, { manifest, type Permissions } from 'webextension-polyfill';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Button } from '@components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormField,
@@ -10,11 +10,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@components/ui/form';
-import { Slider } from '@components/ui/slider';
-import InfoIcon from '@components/InfoIcon';
+} from '@/components/ui/form';
+import { Slider } from '@/components/ui/slider';
+import InfoIcon from '@/components/InfoIcon';
 import { Default as DefaultBalloon } from '@/balloons';
-import storage from '@/storage';
+import storage from '@/managers/storage';
+import log from '@/managers/log';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -43,16 +44,16 @@ export default () => {
 
   const onPopVolumeChange = async (popVolume: number) => {
     // Save volume to storage
-    const config = await storage.get('config');
-    await storage.set('config', {
+    const config = await storage.sync.get('config');
+    await storage.sync.set('config', {
       ...config,
       popVolume,
     });
 
     setPopVolume(popVolume);
-    console.log(
+    log.debug(
       'Pop volume changed to',
-      (await storage.get('config')).popVolume
+      (await storage.sync.get('config')).popVolume
     );
 
     // Play the pop sound
@@ -62,34 +63,34 @@ export default () => {
 
   const onSpawnRateChange = async (spawnRate: number) => {
     // Save volume to storage
-    const config = await storage.get('config');
-    await storage.set('config', {
+    const config = await storage.sync.get('config');
+    await storage.sync.set('config', {
       ...config,
       spawnRate,
     });
 
     setSpawnRate(spawnRate);
-    console.log(
+    log.debug(
       'Spawn rate changed to',
-      (await storage.get('config')).spawnRate
+      (await storage.sync.get('config')).spawnRate
     );
   };
 
   const onGrantOriginPermissionClick = async () => {
     const host_permissions =
       await browser.runtime.getManifest().host_permissions;
-    if (!host_permissions) return console.error('No host_permissions found');
+    if (!host_permissions) return log.error('No host_permissions found');
     const permissions = await browser.permissions.request({
       origins: host_permissions,
     });
-    console.log('Permissions granted for', permissions);
+    log.debug('Permissions granted for', permissions);
 
     setPermissions(await browser.permissions.getAll());
   };
 
   useEffect(() => {
     const loadVolume = async () => {
-      const config = await storage.get('config');
+      const config = await storage.sync.get('config');
       // Load volume from storage
       setPopVolume(config.popVolume);
       setSpawnRate(config.spawnRate);

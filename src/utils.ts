@@ -1,8 +1,9 @@
 import browser from 'webextension-polyfill';
-import { Message, BalloonContainerId } from '@const';
+import { Message, BalloonContainerId } from '@/const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import storage from '@/storage';
+import storage from '@/managers/storage';
+import log from '@/managers/log';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,7 +32,7 @@ export async function sendMessage(message: Message) {
   try {
     const res = await browser.runtime.sendMessage(message);
     if (browser.runtime.lastError) {
-      console.log(
+      log.error(
         'Error sending message:',
         message,
         '\nError message:',
@@ -90,7 +91,7 @@ export function weightedRandom<T, D = null>(
 }
 
 export async function calculateBalloonSpawnDelay() {
-  const config = await storage.get('config');
+  const config = await storage.sync.get('config');
   // Generate a random delay between the min and max spawn interval
   const randomDelay = random(
     config.spawnInterval.min,

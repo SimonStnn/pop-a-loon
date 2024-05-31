@@ -1,10 +1,15 @@
 import browser from 'webextension-polyfill';
 import * as balloons from '@/balloons';
 import { getBalloonContainer, importStylesheet, weightedRandom } from '@/utils';
+import log from '@/managers/log';
+import storage from '@/managers/storage';
 
-(() => {
+(async () => {
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
+  log.setLevel((await storage.local.get('loglevel')) || 'info');
+  log.groupCollapsed('debug', 'Pop-a-loon: Spawning balloon');
+  log.time('debug', 'Balloon spawn time');
 
   importStylesheet(
     'balloon-styles',
@@ -27,4 +32,9 @@ import { getBalloonContainer, importStylesheet, weightedRandom } from '@/utils';
 
   const balloon = new Balloon();
   balloon.rise();
+
+  log.debug('Balloon spawned:', balloon.name);
+
+  log.timeEnd('debug', 'Balloon spawn time');
+  log.groupEnd('debug');
 })();

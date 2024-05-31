@@ -73,7 +73,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new EnvironmentPlugin(['REMOTE']),
+    new EnvironmentPlugin(['REMOTE', 'npm_package_version']),
     new HtmlWebpackPlugin({
       template: './src/popup/index.html', // Specify the path to your HTML template
       filename: './popup.html', // Specify the output filename

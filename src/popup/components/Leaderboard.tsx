@@ -8,11 +8,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@components/ui/table';
-import { Skeleton } from '@components/ui/skeleton';
+} from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 import remote from '@/remote';
 import { RemoteResponse } from '@/const';
-import { cn } from '@utils';
+import { cn } from '@/utils';
 
 const limit = 10;
 

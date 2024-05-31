@@ -1,6 +1,6 @@
-import { StorageStructure, initalConfig, storageKey } from '@const';
+import { initalConfig, SyncStorageKey, SyncStorageStructure } from '@/const';
 
-const defaultStorage: StorageStructure = {
+const defaultStorage: SyncStorageStructure = {
   config: initalConfig,
   token: '',
   user: {
@@ -13,7 +13,7 @@ const defaultStorage: StorageStructure = {
   },
 };
 
-let mockStorage: StorageStructure = defaultStorage;
+let mockStorage: SyncStorageStructure = defaultStorage;
 
 export default {
   runtime: {
@@ -24,13 +24,13 @@ export default {
   },
   storage: {
     sync: {
-      get: jest.fn(async (key: storageKey) => {
+      get: jest.fn(async (key: SyncStorageKey) => {
         return mockStorage[key];
       }),
       set: jest.fn(async (data) => {
         mockStorage = { ...mockStorage, ...data };
       }),
-      remove: jest.fn(async (key: storageKey) => {
+      remove: jest.fn(async (key: SyncStorageKey) => {
         delete mockStorage[key];
       }),
       clear: jest.fn(async () => {

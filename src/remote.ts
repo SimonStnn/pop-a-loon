@@ -1,5 +1,6 @@
 import { RemoteResponse, devRemoteResponse, Prettify, Endpoint } from '@/const';
-import storage from '@/storage';
+import storage from '@/managers/storage';
+import log from '@/managers/log';
 
 interface RequestParams {
   [key: string]: string | number | undefined;
@@ -48,11 +49,11 @@ class BackendAPI {
     const response = await fetch(url.toString(), {
       method,
       headers: {
-        authorization: (await storage.get('token')) || '',
+        authorization: (await storage.sync.get('token')) || '',
       },
     });
     if (!response.ok) {
-      console.error(response, await response.json());
+      log.error(response, await response.json());
       throw new Error(`Failed to fetch ${url.toString()}`);
     }
     return response.json() as Promise<T>;
@@ -75,8 +76,8 @@ class BackendAPI {
       return this.available;
     } catch (e) {
       this.available = false;
-      console.warn('Remote is not available');
-      console.log(BackendAPI.BASE_URL, e);
+      log.warn('Remote is not available');
+      log.debug(BackendAPI.BASE_URL, e);
       return false;
     }
   }
@@ -113,13 +114,13 @@ class BackendAPI {
   }
 
   public async deleteUser(token: string) {
-    if ((await storage.get('token')) !== token)
+    if ((await storage.sync.get('token')) !== token)
       throw new Error('Cannot delete user without token');
     const response = await this.request<RemoteResponse['user']>(
       'DELETE',
       `/user`
     );
-    await storage.clear();
+    await storage.sync.clear();
     return response;
   }
 
