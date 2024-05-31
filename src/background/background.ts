@@ -38,6 +38,7 @@ const updateBadgeColors = () => {
   if (!isRunningInBackground()) return;
 
   if (process.env.NODE_ENV === 'development') log.setLevel('debug');
+  else log.setLevel('info');
 
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;

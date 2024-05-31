@@ -35,7 +35,6 @@ class CustomLog implements loglevel.Logger {
 
   constructor() {
     loglevel.methodFactory = this.methodFactory.bind(this);
-    storage.local.set('loglevel', this.getLevel());
   }
 
   private toOriginalLogLevelName(level: LogLevelNames): loglevel.LogLevelNames {
