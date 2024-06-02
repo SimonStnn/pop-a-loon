@@ -104,7 +104,7 @@ export default abstract class Balloon {
   }
 
   public isRising(): boolean {
-    return this.element.style.animationName === 'rise';
+    return this.topElement.style.animationName === 'rise';
   }
 
   public rise(): void {
@@ -131,7 +131,7 @@ export default abstract class Balloon {
   public remove(): void {
     // loop until the parent node has 'balloon' class
     this.topElement.remove();
-    this.element.style.animationName = 'none';
+    this.topElement.style.animationName = 'none';
   }
 
   private async _pop(event: MouseEvent): Promise<void> {
