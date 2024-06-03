@@ -2,6 +2,18 @@ import browser from 'webextension-polyfill';
 import storage from '@/managers/storage';
 import { getBalloonContainer, random, sendMessage } from '@/utils';
 
+export type BalloonOptions = {
+  name: string;
+  useDefaultImage?: boolean;
+  useDefaultSound?: boolean;
+};
+
+const defaultBalloonOptions: BalloonOptions = {
+  name: 'default',
+  useDefaultImage: true,
+  useDefaultSound: true,
+};
+
 export const balloonResourceLocation = browser.runtime.getURL(
   'resources/balloons/'
 );
@@ -49,6 +61,7 @@ const buildBalloonElement = (
 
 export default abstract class Balloon {
   public abstract readonly name: string;
+  public abstract readonly options: BalloonOptions;
 
   private readonly _popSound: HTMLAudioElement = new Audio();
 
@@ -67,11 +80,19 @@ export default abstract class Balloon {
   }
 
   public get balloonImageUrl(): string {
-    return balloonResourceLocation + this.name + '/icon.png';
+    return (
+      balloonResourceLocation +
+      (this.options.useDefaultImage ? 'default' : this.name) +
+      '/icon.png'
+    );
   }
 
   public get popSoundUrl(): string {
-    return balloonResourceLocation + this.name + '/pop.mp3';
+    return (
+      balloonResourceLocation +
+      (this.options.useDefaultSound ? 'default' : this.name) +
+      '/pop.mp3'
+    );
   }
 
   public get topElement(): HTMLDivElement {
