@@ -8,10 +8,17 @@ export type BalloonOptions = {
   popSoundUrl?: string;
 };
 
-export type DefaultBalloonOptions = Partial<BalloonOptions>;
+type OptionalKeys<T> = {
+  [K in keyof T]: T extends Record<K, T[K]> ? never : K;
+} extends { [_ in keyof T]: infer U }
+  ? U
+  : never;
+
+type PickOptional<T> = Pick<T, OptionalKeys<T>>;
+
+export type DefaultBalloonOptions = Required<PickOptional<BalloonOptions>>;
 
 const defaultBalloonOptions: DefaultBalloonOptions = {
-  name: 'default',
   imageUrl: 'icon.png',
   popSoundUrl: 'pop.mp3',
 };
@@ -88,7 +95,7 @@ export default abstract class Balloon {
     return (
       balloonResourceLocation +
       this.name +
-      (this.options.imageUrl ?? '/icon.png')
+      (this.options.imageUrl ?? defaultBalloonOptions.imageUrl)
     );
   }
 
@@ -96,7 +103,7 @@ export default abstract class Balloon {
     return (
       balloonResourceLocation +
       this.name +
-      (this.options.popSoundUrl ?? '/pop.mp3')
+      (this.options.popSoundUrl ?? defaultBalloonOptions.popSoundUrl)
     );
   }
 
