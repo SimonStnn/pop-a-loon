@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import { type PickOptional } from '@/types';
 import storage from '@/managers/storage';
 import { getBalloonContainer, random, sendMessage } from '@/utils';
 
@@ -7,14 +8,6 @@ export type BalloonOptions = {
   imageUrl?: string;
   popSoundUrl?: string;
 };
-
-type OptionalKeys<T> = {
-  [K in keyof T]: T extends Record<K, T[K]> ? never : K;
-} extends { [_ in keyof T]: infer U }
-  ? U
-  : never;
-
-type PickOptional<T> = Pick<T, OptionalKeys<T>>;
 
 export type DefaultBalloonOptions = Required<PickOptional<BalloonOptions>>;
 
