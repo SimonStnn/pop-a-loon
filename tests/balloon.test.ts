@@ -3,7 +3,7 @@ import { random } from '@/utils';
 
 // Create a concrete subclass of Balloon for testing
 class TestBalloon extends Balloon {
-  public readonly name = 'test';
+  public readonly options = { name: 'test' };
   getRandomDuration() {
     return random(10000, 15000);
   }
