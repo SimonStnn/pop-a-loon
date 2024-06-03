@@ -4,14 +4,16 @@ import { getBalloonContainer, random, sendMessage } from '@/utils';
 
 export type BalloonOptions = {
   name: string;
-  useDefaultImage?: boolean;
-  useDefaultSound?: boolean;
+  imageUrl?: string;
+  popSoundUrl?: string;
 };
 
-const defaultBalloonOptions: BalloonOptions = {
+export type DefaultBalloonOptions = Partial<BalloonOptions>;
+
+const defaultBalloonOptions: DefaultBalloonOptions = {
   name: 'default',
-  useDefaultImage: true,
-  useDefaultSound: true,
+  imageUrl: 'icon.png',
+  popSoundUrl: 'pop.mp3',
 };
 
 export const balloonResourceLocation = browser.runtime.getURL(
@@ -60,7 +62,6 @@ const buildBalloonElement = (
 };
 
 export default abstract class Balloon {
-  public abstract readonly name: string;
   public abstract readonly options: BalloonOptions;
 
   private readonly _popSound: HTMLAudioElement = new Audio();
@@ -72,6 +73,10 @@ export default abstract class Balloon {
   public readonly riseDurationThreshold: [number, number] = [10000, 15000];
   public readonly swingDurationThreshold: [number, number] = [2, 4];
 
+  public get name(): string {
+    return this.options.name;
+  }
+
   public get popSound(): HTMLAudioElement {
     if (!this._popSound.src) {
       this._popSound.src = this.popSoundUrl;
@@ -82,16 +87,16 @@ export default abstract class Balloon {
   public get balloonImageUrl(): string {
     return (
       balloonResourceLocation +
-      (this.options.useDefaultImage ? 'default' : this.name) +
-      '/icon.png'
+      this.name +
+      (this.options.imageUrl ?? '/icon.png')
     );
   }
 
   public get popSoundUrl(): string {
     return (
       balloonResourceLocation +
-      (this.options.useDefaultSound ? 'default' : this.name) +
-      '/pop.mp3'
+      this.name +
+      (this.options.popSoundUrl ?? '/pop.mp3')
     );
   }
 
