@@ -1,5 +1,4 @@
 import browser from 'webextension-polyfill';
-import { type PickOptional } from '@/types';
 import storage from '@/managers/storage';
 import { getBalloonContainer, random, sendMessage } from '@/utils';
 
@@ -9,11 +8,12 @@ export type BalloonOptions = {
   popSoundUrl?: string;
 };
 
-export type DefaultBalloonOptions = Required<PickOptional<BalloonOptions>>;
+export type DefaultBalloonOptions = Required<BalloonOptions>;
 
 const defaultBalloonOptions: DefaultBalloonOptions = {
-  imageUrl: 'icon.png',
-  popSoundUrl: 'pop.mp3',
+  name: 'default',
+  imageUrl: '/icon.png',
+  popSoundUrl: '/pop.mp3',
 };
 
 export const balloonResourceLocation = browser.runtime.getURL(
@@ -87,7 +87,7 @@ export default abstract class Balloon {
   public get balloonImageUrl(): string {
     return (
       balloonResourceLocation +
-      this.name +
+      (this.options.imageUrl ? this.options.name : defaultBalloonOptions.name) +
       (this.options.imageUrl ?? defaultBalloonOptions.imageUrl)
     );
   }
@@ -95,7 +95,9 @@ export default abstract class Balloon {
   public get popSoundUrl(): string {
     return (
       balloonResourceLocation +
-      this.name +
+      (this.options.popSoundUrl
+        ? this.options.name
+        : defaultBalloonOptions.name) +
       (this.options.popSoundUrl ?? defaultBalloonOptions.popSoundUrl)
     );
   }
@@ -123,10 +125,6 @@ export default abstract class Balloon {
 
     // Add an event listener to the balloon
     this.element.addEventListener('click', this._pop.bind(this));
-
-    this.balloonImage.addEventListener('error', (e) => {
-      this.balloonImage.src = defaultBalloonResourceLocation + 'icon.png';
-    });
   }
 
   public isRising(): boolean {
@@ -170,10 +168,7 @@ export default abstract class Balloon {
     // Set volume
     this.popSound.volume = (await storage.sync.get('config')).popVolume / 100;
     // Play the pop sound
-    this.popSound.play().catch((e) => {
-      this.popSound.src = defaultBalloonResourceLocation + 'pop.mp3';
-      this.popSound.play();
-    });
+    this.popSound.play();
 
     this.pop(event);
   }
