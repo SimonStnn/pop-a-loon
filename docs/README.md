@@ -23,6 +23,8 @@
     - [build:chrome:zip](#buildchromezip)
     - [build:firefox](#buildfirefox)
     - [build:firefox:zip](#buildfirefoxzip)
+    - [build:all:zip](#buildallzip)
+    - [zip:source](#zipsource)
 - [Architecture](#architecture)
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
@@ -234,6 +236,26 @@ This will build the extension in production mode for firefox. You can also inclu
 
 ```bash
 npm run build:firefox:zip
+```
+
+#### build:all:zip
+
+<!-- markdownlint-disable link-fragments -->
+
+This will build the extension in production for all browsers and include a [zip file of the source code](#zipsource).
+
+<!-- markdownlint-enable link-fragments -->
+
+```bash
+npm run build:all:zip
+```
+
+#### zip:source
+
+This will create a zip file of the source code. The zip file will be created in the `build/` directory with the name `source-v{version}.zip`.
+
+```bash
+npm run zip:source
 ```
 
 The zip file will be created in the `build/` directory.
