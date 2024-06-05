@@ -22,6 +22,7 @@
 - [Balloons](#balloons)
   - [Abstract balloon class](#abstract-balloon-class)
   - [Default balloon](#default-balloon)
+  - [Confetti balloon](#confetti-balloon)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -215,4 +216,23 @@ class Default {
   +options: BalloonOptions
 }
 Default --|> Balloon
+```
+
+### Confetti balloon
+
+The confetti balloon is a balloon that spawns confetti when popped.
+
+```mermaid
+classDiagram
+direction LR
+class Balloon { <<Abstract>> }
+click Balloon href "#abstract-balloon-class" "Abstract balloon class"
+
+class Confetti {
+  +spawn_chance: number$
+  +options: BalloonOptions
+  -mask: HTMLImageElement
+  +pop(event: MouseEvent) void
+}
+Confetti --|> Balloon
 ```
