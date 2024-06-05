@@ -21,6 +21,9 @@
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
   - [Abstract balloon class](#abstract-balloon-class)
+    - [Properties](#properties)
+      - [Options](#options)
+    - [Methods](#methods)
   - [Default balloon](#default-balloon)
   - [Confetti balloon](#confetti-balloon)
 
@@ -200,6 +203,39 @@ class BalloonOptions {
 
 Balloon <|-- BalloonOptions
 ```
+
+#### Properties
+
+- `options: BalloonOptions` - The [options](#options) for the balloon.
+  > This is an abstract property and should be implemented by the subclass.
+- `_popSound: HTMLAudioElement` - *private* - The HTML audio element without the src loaded by default.
+- `balloonImage: HTMLImageElement` - *protected* - The image of the balloon.
+- `element: HTMLDivElement` - The element that represents the balloon.
+- `riseDurationThreshold: [number, number]` - The range of the duration of the rise animation.
+- `swingDurationThreshold: [number, number]` - The range of the duration of the swing animation.
+- `name: string` - The name used to identify the balloon.
+  > This is the name from the balloon [options](#options).
+- `balloonImageUrl: string` - The URL of the image of the balloon.
+- `popSoundUrl: string` - The URL of the sound that plays when the balloon pops.
+- `popSound: HTMLAudioElement` - The sound that plays when the balloon pops.
+  > The sound is loaded when the balloon is created.
+- `topElement: HTMLDivElement` - The top element of the balloon.
+  > The direct child of the balloon container.
+
+##### Options
+
+- `name: string` - The name of the balloon.
+- `imageUrl: string | undefined` - The URL of the image of the balloon.
+- `popSoundUrl: string | undefined` - The URL of the sound that plays when the balloon pops.
+
+#### Methods
+
+- `constructor()` - Creates a new balloon.
+- `isRising(): boolean` - Returns whether the balloon is rising.
+- `rise(): void` - Makes the balloon rise.
+- `remove(): void` - Removes the balloon.
+- `pop(): void` - Pops the balloon.
+- `_pop(): void` - *private* - Pops the balloon.
 
 ### Default balloon
 
