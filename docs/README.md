@@ -212,8 +212,7 @@ click Balloon href "#abstract-balloon-class" "Abstract balloon class"
 
 class Default {
   +spawn_chance: number$
-  +name: string*
-  +getRandomDuration() number*
+  +options: BalloonOptions
 }
 Default --|> Balloon
 ```
