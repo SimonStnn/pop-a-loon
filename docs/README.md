@@ -171,19 +171,33 @@ classDiagram
 direction LR
 class Balloon {
   <<Abstract>>
-  -element: HTMLDivElement
+  +options: BalloonOptions*
+  -_popSound: HTMLAudioElement
   #balloonImage: HTMLImageElement
-  #<< get >>balloonImageUrl: string
-  #<< get >>popSoundUrl: string
-  #<< get >>popSound: HTMLAudioElement
-  +name: string*
+  +element: HTMLDivElement
+  +riseDurationThreshold: [number, number]
+  +swingDurationThreshold: [number, number]
+  +<< get >>name: string
+  +<< get >>balloonImageUrl: string
+  +<< get >>popSoundUrl: string
+  +<< get >>popSound: HTMLAudioElement
+  +<< get >>topElement: HTMLDivElement
   +constructor()
-  +getRandomDuration() number*
   +isRising() boolean
   +rise() void
   +remove() void
   +pop() void
+  -_pop() void
 }
+
+class BalloonOptions {
+  <<Type>>
+  name: string
+  imageUrl: string | undefined
+  popSoundUrl: string | undefined
+}
+
+Balloon <|-- BalloonOptions
 ```
 
 ### Default balloon
