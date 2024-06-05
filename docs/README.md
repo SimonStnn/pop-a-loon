@@ -88,7 +88,7 @@ npm run dev:chrome -- --watch
 
 #### dev:chrome:noremote
 
-To build for Chrome without a remote server:
+To build for Chrome without a remote server[^1]:
 
 ```bash
 npm run dev:chrome:noremote
@@ -134,7 +134,7 @@ npm run dev:firefox -- --watch
 
 #### dev:firefox:noremote
 
-To build for Firefox without a remote server:
+To build for Firefox without a remote server[^1]:
 
 ```bash
 npm run dev:firefox:noremote
@@ -162,6 +162,8 @@ This will build the extension in development mode for firefox with a remote serv
 ```bash
 npm run dev:firefox:remote -- --watch
 ```
+
+[^1]: The requests to the remote will be 'mocked' so the extension can be developed without the need for a running server.
 
 ### Load the extension to chrome
 
