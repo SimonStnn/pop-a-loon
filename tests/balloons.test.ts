@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import fetchMock from 'jest-fetch-mock';
 import Balloon from '@/balloon';
 import * as balloons from '@/balloons';
+
+fetchMock.enableMocks();
 
 const balloonName = (name: string): keyof typeof balloons =>
   (name[0].toUpperCase() + name.slice(1)) as keyof typeof balloons;
@@ -14,6 +17,8 @@ describe('Balloons', () => {
     balloonNames = files
       .map((file) => file.replace('.ts', ''))
       .filter((name) => name !== 'index');
+
+    fetchMock.resetMocks();
   });
 
   test('all balloonNames are lower case', () => {
@@ -68,26 +73,13 @@ describe('Balloons', () => {
     });
   });
 
-  test('each balloon has its resources under resources/balloons/{balloon.name}/...', () => {
+  test('all balloons should have valid resource paths', () => {
     balloonNames.forEach((name) => {
-      const balloonResourcePath = path.resolve(
-        __dirname,
-        `../resources/balloons/${name}`
-      );
-      expect(fs.existsSync(balloonResourcePath)).toBeTruthy();
-    });
-  });
+      fetchMock.mockResponse(() => Promise.resolve(''));
+      const balloon = new balloons[balloonName(name)]();
 
-  test('each balloon has an icon.png and pop.mp3 file', () => {
-    balloonNames.forEach((name) => {
-      const iconPath = path.resolve(
-        __dirname,
-        `../resources/balloons/${name}/icon.png`
-      );
-      const popPath = path.resolve(
-        __dirname,
-        `../resources/balloons/${name}/pop.mp3`
-      );
+      const iconPath = path.resolve(__dirname, balloon.balloonImageUrl);
+      const popPath = path.resolve(__dirname, balloon.popSoundUrl);
       expect(fs.existsSync(iconPath)).toBeTruthy();
       expect(fs.existsSync(popPath)).toBeTruthy();
     });

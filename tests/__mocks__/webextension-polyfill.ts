@@ -17,7 +17,9 @@ let mockStorage: SyncStorageStructure = defaultStorage;
 
 export default {
   runtime: {
-    getURL: jest.fn(),
+    getURL: jest.fn((path: string) => {
+      return '../' + path;
+    }),
     onInstalled: {
       addListener: jest.fn(),
     },
