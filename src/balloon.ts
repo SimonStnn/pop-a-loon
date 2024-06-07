@@ -212,6 +212,8 @@ export default abstract class Balloon {
    * This will create a new balloon element and add it to the balloon container.
    */
   public rise(): void {
+    // Load the pop sound
+    const _ = this.popSound;
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
