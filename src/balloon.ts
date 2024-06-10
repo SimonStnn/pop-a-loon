@@ -48,51 +48,12 @@ export const defaultBalloonFolderName = 'default';
 export const defaultBalloonResourceLocation =
   balloonResourceLocation + `${defaultBalloonFolderName}/`;
 
-/**
- * Build a balloon element.
- *
- * This function creates a new balloon element and adds it to the balloon container.
- *
- * @param element The element to add to the balloon.
- * @param props The properties for the balloon element.
- * @returns The balloon element.
- */
-const buildBalloonElement = (
-  element: HTMLDivElement,
-  props: {
-    size: number;
-    positionX: number;
-    riseDuration: number;
-    waveDuration: number;
-    onAnimationend: () => void;
-  }
-) => {
-  const balloon = document.createElement('div');
-  balloon.classList.add('balloon');
-
-  // Set the balloon's width and height
-  balloon.style.width = props.size + 'px';
-  balloon.style.height = balloon.style.width;
-  balloon.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
-  balloon.style.animationDuration = props.riseDuration.toString() + 'ms';
-  balloon.style.animationTimingFunction = 'linear';
-  balloon.style.animationFillMode = 'forwards';
-  balloon.style.animationName = 'rise';
-  balloon.addEventListener('animationend', props.onAnimationend);
-
-  // Create a second div and apply the swing animation to it
-  const swingElement = document.createElement('div');
-  swingElement.style.animation = `swing ${props.waveDuration}s infinite ease-in-out`;
-  const waveElement = document.createElement('div');
-  waveElement.style.animation = `wave ${props.waveDuration / 2}s infinite ease-in-out alternate`;
-  // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
-  waveElement.style.animationDelay = `-${(props.waveDuration * 3) / 4}s`;
-
-  balloon.appendChild(swingElement);
-  swingElement.appendChild(waveElement);
-  waveElement.appendChild(element);
-
-  return balloon;
+export type BuildProps = {
+  size: number;
+  positionX: number;
+  riseDuration: number;
+  waveDuration: number;
+  onAnimationend: () => void;
 };
 
 export default abstract class Balloon {
@@ -100,6 +61,17 @@ export default abstract class Balloon {
    * The options for the balloon.
    */
   public abstract readonly options: BalloonOptions;
+
+  /**
+   * Build a balloon element.
+   *
+   * This function creates a new balloon element and adds it to the balloon container.
+   *
+   * @param element The element to add to the balloon.
+   * @param props The properties for the balloon element.
+   * @returns The balloon element.
+   */
+  public abstract build(props: BuildProps): HTMLDivElement;
 
   /**
    * The sound element for the pop sound.
@@ -112,7 +84,7 @@ export default abstract class Balloon {
   protected readonly balloonImage: HTMLImageElement =
     document.createElement('img');
 
-  public readonly element: HTMLDivElement;
+  public readonly element: HTMLDivElement = document.createElement('div');
   /**
    * The duration thresholds for the rise animation.
    *
@@ -189,9 +161,6 @@ export default abstract class Balloon {
   }
 
   constructor() {
-    // Create the balloon element
-    this.element = document.createElement('div');
-
     // Add the balloon image to the balloon element
     this.element.appendChild(this.balloonImage);
 
@@ -217,7 +186,7 @@ export default abstract class Balloon {
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
-    const balloonElement = buildBalloonElement(this.element, {
+    const balloonElement = this.buildBalloonElement(this.element, {
       size: random(50, 75),
       positionX: random(5, 95),
       riseDuration: random(
