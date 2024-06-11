@@ -263,6 +263,9 @@ The zip file will be created in the `build/` directory.
 
 ## Architecture
 
+> [!NOTE]
+> Read the [Architecture](./Architecture.md) document for a more detailed explanation of the architecture.
+
 ## Balloon spawn chances
 
 ```mermaid
