@@ -28,6 +28,7 @@
 - [Architecture](#architecture)
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
+  - [Inheritance Tree](#inheritance-tree)
   - [Abstract balloon class](#abstract-balloon-class)
     - [Properties](#properties)
       - [Options](#options)
@@ -272,6 +273,17 @@ title Balloon spawn chances
 ```
 
 ## Balloons
+
+### Inheritance Tree
+
+```mermaid
+classDiagram
+direction BT
+class Balloon { <<Abstract>> }
+
+Default --|> Balloon
+Confetti --|> Balloon
+```
 
 ### Abstract balloon class
 
