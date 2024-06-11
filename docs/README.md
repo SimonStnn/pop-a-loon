@@ -28,13 +28,13 @@
 - [Architecture](#architecture)
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
-  - [Inheritance Tree](#inheritance-tree)
   - [Abstract balloon class](#abstract-balloon-class)
     - [Properties](#properties)
       - [Options](#options)
     - [Methods](#methods)
   - [Default balloon](#default-balloon)
   - [Confetti balloon](#confetti-balloon)
+- [Inheritance Tree](#inheritance-tree)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -274,17 +274,6 @@ title Balloon spawn chances
 
 ## Balloons
 
-### Inheritance Tree
-
-```mermaid
-classDiagram
-direction BT
-class Balloon { <<Abstract>> }
-
-Default --|> Balloon
-Confetti --|> Balloon
-```
-
 ### Abstract balloon class
 
 The abstract balloon class is the base class for all balloons.
@@ -389,5 +378,16 @@ class Confetti {
   -mask: HTMLImageElement
   +pop(event: MouseEvent) void
 }
+Confetti --|> Balloon
+```
+
+## Inheritance Tree
+
+```mermaid
+classDiagram
+direction BT
+class Balloon { <<Abstract>> }
+
+Default --|> Balloon
 Confetti --|> Balloon
 ```
