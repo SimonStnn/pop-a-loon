@@ -1,8 +1,9 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
 import { importStylesheet, random } from '@/utils';
+import Default from './default';
 
-export default class Confetti extends Balloon {
-  public static readonly spawn_chance = 0.1;
+export default class Confetti extends Default {
+  public static readonly spawn_chance: number = 0.1;
   public readonly options = { name: 'confetti' };
 
   private readonly mask = document.createElement('img');

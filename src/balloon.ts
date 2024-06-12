@@ -48,14 +48,6 @@ export const defaultBalloonFolderName = 'default';
 export const defaultBalloonResourceLocation =
   balloonResourceLocation + `${defaultBalloonFolderName}/`;
 
-export type BuildProps = {
-  size: number;
-  positionX: number;
-  riseDuration: number;
-  waveDuration: number;
-  onAnimationend: () => void;
-};
-
 export default abstract class Balloon {
   /**
    * The options for the balloon.
@@ -71,7 +63,7 @@ export default abstract class Balloon {
    * @param props The properties for the balloon element.
    * @returns The balloon element.
    */
-  public abstract build(props: BuildProps): HTMLDivElement;
+  public abstract build(): HTMLDivElement;
 
   /**
    * The sound element for the pop sound.
@@ -85,18 +77,6 @@ export default abstract class Balloon {
     document.createElement('img');
 
   public readonly element: HTMLDivElement = document.createElement('div');
-  /**
-   * The duration thresholds for the rise animation.
-   *
-   * The first value is the minimum duration and the second value is the maximum duration.
-   */
-  public readonly riseDurationThreshold: [number, number] = [10000, 15000];
-  /**
-   * The duration thresholds for the swing animation.
-   *
-   * The first value is the minimum duration and the second value is the maximum duration.
-   */
-  public readonly swingDurationThreshold: [number, number] = [2, 4];
 
   /**
    * The name of the balloon.
@@ -186,19 +166,7 @@ export default abstract class Balloon {
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
-    const balloonElement = this.buildBalloonElement(this.element, {
-      size: random(50, 75),
-      positionX: random(5, 95),
-      riseDuration: random(
-        this.riseDurationThreshold[0],
-        this.riseDurationThreshold[1]
-      ),
-      waveDuration: random(
-        this.swingDurationThreshold[0],
-        this.swingDurationThreshold[1]
-      ),
-      onAnimationend: this.remove.bind(this),
-    });
+    const balloonElement = this.build();
     // Add the balloon to the container
     getBalloonContainer().appendChild(balloonElement);
   }
