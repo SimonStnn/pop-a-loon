@@ -4,7 +4,7 @@ import Default from './default';
 
 export default class Confetti extends Default {
   public static readonly spawn_chance: number = 0.1;
-  public readonly options = { name: 'confetti' };
+  public readonly name = 'confetti';
 
   private readonly mask = document.createElement('img');
 
@@ -24,7 +24,8 @@ export default class Confetti extends Default {
     this.mask.style.transform = `rotate(${Math.random() * 360}deg)`;
   }
 
-  public pop(event?: MouseEvent) {
+  public async pop(event: MouseEvent) {
+    super.pop(event);
     // Get the click position
     const x = event?.clientX || window.innerWidth / 2;
     const y = event?.clientY || window.innerHeight / 2;
