@@ -3,7 +3,7 @@ import { random } from '@/utils';
 
 // Create a concrete subclass of Balloon for testing
 class TestBalloon extends Balloon {
-  public readonly options = { name: 'test' };
+  public readonly name = 'test';
   build() {
     return document.createElement('div');
   }
