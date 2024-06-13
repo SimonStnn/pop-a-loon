@@ -14,8 +14,11 @@ export default class Confetti extends Default {
       'confetti-styles',
       balloonResourceLocation + 'confetti/confetti.css'
     );
+  }
 
-    this.element.appendChild(this.mask);
+  public build(): void {
+    super.build();
+    this.element.firstChild?.firstChild?.appendChild(this.mask);
     this.mask.src = balloonResourceLocation + this.name + '/mask.png';
     this.mask.style.position = 'absolute';
     this.mask.style.top = '-10px';
