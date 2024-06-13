@@ -123,9 +123,9 @@ export default class Default extends Balloon {
     // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
     waveElement.style.animationDelay = `-${(waveDuration * 3) / 4}s`;
 
-    waveElement.appendChild(swingElement);
-    swingElement.appendChild(this.balloonImage);
-    this.element.appendChild(waveElement);
+    swingElement.appendChild(waveElement);
+    waveElement.appendChild(this.balloonImage);
+    this.element.appendChild(swingElement);
   }
 
   public async pop(event: MouseEvent) {
