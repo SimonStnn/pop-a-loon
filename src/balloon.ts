@@ -1,6 +1,5 @@
 import browser from 'webextension-polyfill';
-import storage from '@/managers/storage';
-import { getBalloonContainer, random, sendMessage } from '@/utils';
+import { getBalloonContainer, sendMessage } from '@/utils';
 
 /**
  * The location of the balloon resources. (`resources/balloons/`)

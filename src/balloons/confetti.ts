@@ -1,4 +1,4 @@
-import Balloon, { balloonResourceLocation } from '@/balloon';
+import { balloonResourceLocation } from '@/balloon';
 import { importStylesheet, random } from '@/utils';
 import Default from './default';
 
