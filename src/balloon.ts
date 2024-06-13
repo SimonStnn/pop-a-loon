@@ -3,39 +3,6 @@ import storage from '@/managers/storage';
 import { getBalloonContainer, random, sendMessage } from '@/utils';
 
 /**
- * The options for the balloon.
- */
-export type BalloonOptions = {
-  /**
-   * The name of the balloon. It should be the same as the name of the class in lower case.
-   *
-   * This is used to determine the folder name for the balloon resources.
-   */
-  name: string;
-  /**
-   * The URL of the image to display on the balloon.
-   * If not provided, the default image will be used.
-   */
-  imageUrl?: string;
-  /**
-   * The URL of the sound to play when the balloon is popped.
-   * If not provided, the default sound will be used.
-   */
-  popSoundUrl?: string;
-};
-
-export type DefaultBalloonOptions = Required<BalloonOptions>;
-
-/**
- * The default options for the balloon. These are used when the options are not provided.
- */
-const defaultBalloonOptions: DefaultBalloonOptions = {
-  name: 'default',
-  imageUrl: '/icon.png',
-  popSoundUrl: '/pop.mp3',
-};
-
-/**
  * The location of the balloon resources. (`resources/balloons/`)
  */
 export const balloonResourceLocation = browser.runtime.getURL(
@@ -49,10 +16,7 @@ export const defaultBalloonResourceLocation =
   balloonResourceLocation + `${defaultBalloonFolderName}/`;
 
 export default abstract class Balloon {
-  /**
-   * The options for the balloon.
-   */
-  public abstract readonly options: BalloonOptions;
+  public abstract readonly name: string;
 
   /**
    * Build a balloon element.
@@ -65,94 +29,18 @@ export default abstract class Balloon {
    */
   public abstract build(): HTMLDivElement;
 
-  /**
-   * The sound element for the pop sound.
-   */
-  private readonly _popSound: HTMLAudioElement = new Audio();
-
-  /**
-   * The image element for the balloon image.
-   */
-  protected readonly balloonImage: HTMLImageElement =
-    document.createElement('img');
-
   public readonly element: HTMLDivElement = document.createElement('div');
 
-  /**
-   * The name of the balloon.
-   *
-   * Should be the same as the name of the class in lower case.
-   *
-   * This is used to determine the folder name for the balloon resources.
-   */
-  public get name(): string {
-    return this.options.name;
-  }
-
-  /**
-   * The audio element for the pop sound.
-   */
-  public get popSound(): HTMLAudioElement {
-    if (!this._popSound.src) {
-      this._popSound.src = this.popSoundUrl;
-    }
-    return this._popSound;
-  }
-
-  /**
-   * The URL of the balloon image.
-   */
-  public get balloonImageUrl(): string {
-    return (
-      balloonResourceLocation +
-      (this.options.imageUrl ? this.options.name : defaultBalloonOptions.name) +
-      (this.options.imageUrl ?? defaultBalloonOptions.imageUrl)
-    );
-  }
-
-  /**
-   * The URL of the pop sound.
-   */
-  public get popSoundUrl(): string {
-    return (
-      balloonResourceLocation +
-      (this.options.popSoundUrl
-        ? this.options.name
-        : defaultBalloonOptions.name) +
-      (this.options.popSoundUrl ?? defaultBalloonOptions.popSoundUrl)
-    );
-  }
-
-  /**
-   * The top element of the balloon. Which is a direct child of the balloon container.
-   */
-  public get topElement(): HTMLDivElement {
-    let element = this.element;
-    while (!element.classList.contains('balloon')) {
-      if (
-        !element.parentElement ||
-        !(element.parentElement instanceof HTMLDivElement) ||
-        element.parentElement === getBalloonContainer()
-      )
-        return element;
-      element = element.parentElement;
-    }
-    return element;
-  }
-
   constructor() {
-    // Add the balloon image to the balloon element
-    this.element.appendChild(this.balloonImage);
-
     // Add an event listener to the balloon
-    this.element.addEventListener('click', this._pop.bind(this));
+    this.element.addEventListener('click', this.pop.bind(this));
   }
 
   /**
    * @returns Whether the balloon is rising.
    */
   public isRising(): boolean {
-    return this.topElement.style.animationName === 'rise';
+    return this.element.style.animationName === 'rise';
   }
 
   /**
@@ -161,10 +49,6 @@ export default abstract class Balloon {
    * This will create a new balloon element and add it to the balloon container.
    */
   public rise(): void {
-    // Load the pop sound
-    const _ = this.popSound;
-    // Load the balloon image
-    this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
     const balloonElement = this.build();
     // Add the balloon to the container
@@ -176,30 +60,8 @@ export default abstract class Balloon {
    */
   public remove(): void {
     // loop until the parent node has 'balloon' class
-    this.topElement.remove();
-    this.topElement.style.animationName = 'none';
-  }
-
-  /**
-   * Pop the balloon.
-   *
-   * This will remove the balloon, play the pop sound and send a message to increment the count.
-   *
-   * @param event The mouse event that triggered the pop.
-   */
-  private async _pop(event: MouseEvent): Promise<void> {
-    // Remove the balloon
-    this.remove();
-
-    // Send message with the new count
-    sendMessage({ action: 'incrementCount' });
-
-    // Set volume
-    this.popSound.volume = (await storage.sync.get('config')).popVolume / 100;
-    // Play the pop sound
-    this.popSound.play();
-
-    this.pop(event);
+    this.element.remove();
+    this.element.style.animationName = 'none';
   }
 
   /**
@@ -209,5 +71,11 @@ export default abstract class Balloon {
    *
    * @param event The mouse event that triggered the pop.
    */
-  public pop(event?: MouseEvent): void | Promise<void> {}
+  public pop(event?: MouseEvent): void | Promise<void> {
+    // Remove the balloon
+    this.remove();
+
+    // Send message with the new count
+    sendMessage({ action: 'incrementCount' });
+  }
 }

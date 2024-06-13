@@ -1,4 +1,5 @@
-import Balloon from '@/balloon';
+import Balloon, { balloonResourceLocation } from '@/balloon';
+import storage from '@/managers/storage';
 import { random } from '@/utils';
 
 export type BuildProps = {
@@ -18,33 +19,27 @@ export type BalloonOptions = {
    *
    * This is used to determine the folder name for the balloon resources.
    */
-  name: string;
+  dir_name: string;
   /**
    * The URL of the image to display on the balloon.
    * If not provided, the default image will be used.
    */
-  imageUrl?: string;
+  imageUrl: string;
   /**
    * The URL of the sound to play when the balloon is popped.
    * If not provided, the default sound will be used.
    */
-  popSoundUrl?: string;
-};
-
-export type DefaultBalloonOptions = Required<BalloonOptions>;
-
-/**
- * The default options for the balloon. These are used when the options are not provided.
- */
-const defaultBalloonOptions: DefaultBalloonOptions = {
-  name: 'default',
-  imageUrl: '/icon.png',
-  popSoundUrl: '/pop.mp3',
+  popSoundUrl: string;
 };
 
 export default class Default extends Balloon {
   public static readonly spawn_chance: number = 0.9;
-  public readonly options = { name: 'default' };
+  public readonly name: string = 'default';
+  public readonly options: BalloonOptions = {
+    dir_name: this.name,
+    imageUrl: '/icon.png',
+    popSoundUrl: '/pop.mp3',
+  };
 
   /**
    * The duration thresholds for the rise animation.
@@ -58,6 +53,46 @@ export default class Default extends Balloon {
    * The first value is the minimum duration and the second value is the maximum duration.
    */
   public readonly swingDurationThreshold: [number, number] = [2, 4];
+
+  /**
+   * The image element for the balloon image.
+   */
+  protected readonly balloonImage: HTMLImageElement =
+    document.createElement('img');
+
+  /**
+   * The sound element for the pop sound.
+   */
+  private readonly popSound: HTMLAudioElement = new Audio();
+
+  /**
+   * The URL of the balloon image.
+   */
+  public get balloonImageUrl(): string {
+    return (
+      balloonResourceLocation + this.options.dir_name + this.options.imageUrl
+    );
+  }
+
+  /**
+   * The URL of the pop sound.
+   */
+  public get popSoundUrl(): string {
+    return (
+      balloonResourceLocation + this.options.dir_name + this.options.popSoundUrl
+    );
+  }
+
+  constructor() {
+    super();
+    // Load the pop sound
+    this.popSound.src = this.popSoundUrl;
+    // Load the balloon image
+    this.balloonImage.src = this.balloonImageUrl;
+
+    // Add the balloon image to the balloon element
+    this.element.appendChild(this.balloonImage);
+  }
 
   public build() {
     const size = random(50, 75);
@@ -97,5 +132,13 @@ export default class Default extends Balloon {
     waveElement.appendChild(this.element);
 
     return balloon;
+  }
+
+  public async pop(event: MouseEvent) {
+    super.pop();
+    // Set volume
+    this.popSound.volume = (await storage.sync.get('config')).popVolume / 100;
+    // Play the pop sound
+    this.popSound.play();
   }
 }
