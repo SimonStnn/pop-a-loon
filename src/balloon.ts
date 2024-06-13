@@ -27,7 +27,7 @@ export default abstract class Balloon {
    * @param props The properties for the balloon element.
    * @returns The balloon element.
    */
-  public abstract build(): HTMLDivElement;
+  public abstract build(): void;
 
   public readonly element: HTMLDivElement = document.createElement('div');
 
@@ -50,9 +50,9 @@ export default abstract class Balloon {
    */
   public rise(): void {
     // Build the balloon element
-    const balloonElement = this.build();
+    this.build();
     // Add the balloon to the container
-    getBalloonContainer().appendChild(balloonElement);
+    getBalloonContainer().appendChild(this.element);
   }
 
   /**

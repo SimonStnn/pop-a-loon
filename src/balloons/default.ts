@@ -89,9 +89,6 @@ export default class Default extends Balloon {
     this.popSound.src = this.popSoundUrl;
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
-
-    // Add the balloon image to the balloon element
-    this.element.appendChild(this.balloonImage);
   }
 
   public build() {
@@ -106,18 +103,17 @@ export default class Default extends Balloon {
       this.swingDurationThreshold[1]
     );
 
-    const balloon = document.createElement('div');
-    balloon.classList.add('balloon');
+    this.element.classList.add('balloon');
 
     // Set the balloon's width and height
-    balloon.style.width = size + 'px';
-    balloon.style.height = balloon.style.width;
-    balloon.style.left = `calc(${positionX.toString() + 'vw'} - ${size / 2}px)`;
-    balloon.style.animationDuration = riseDuration.toString() + 'ms';
-    balloon.style.animationTimingFunction = 'linear';
-    balloon.style.animationFillMode = 'forwards';
-    balloon.style.animationName = 'rise';
-    balloon.addEventListener('animationend', this.remove.bind(this));
+    this.element.style.width = size + 'px';
+    this.element.style.height = this.element.style.width;
+    this.element.style.left = `calc(${positionX.toString() + 'vw'} - ${size / 2}px)`;
+    this.element.style.animationDuration = riseDuration.toString() + 'ms';
+    this.element.style.animationTimingFunction = 'linear';
+    this.element.style.animationFillMode = 'forwards';
+    this.element.style.animationName = 'rise';
+    this.element.addEventListener('animationend', this.remove.bind(this));
 
     // Create a second div and apply the swing animation to it
     const swingElement = document.createElement('div');
@@ -127,11 +123,9 @@ export default class Default extends Balloon {
     // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
     waveElement.style.animationDelay = `-${(waveDuration * 3) / 4}s`;
 
-    balloon.appendChild(swingElement);
-    swingElement.appendChild(waveElement);
-    waveElement.appendChild(this.element);
-
-    return balloon;
+    waveElement.appendChild(swingElement);
+    swingElement.appendChild(this.balloonImage);
+    this.element.appendChild(waveElement);
   }
 
   public async pop(event: MouseEvent) {
