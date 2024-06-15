@@ -29,9 +29,6 @@
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
   - [Abstract balloon class](#abstract-balloon-class)
-    - [Properties](#properties)
-      - [Options](#options)
-    - [Methods](#methods)
   - [Default balloon](#default-balloon)
   - [Confetti balloon](#confetti-balloon)
 - [Inheritance Tree](#inheritance-tree)
@@ -286,67 +283,17 @@ classDiagram
 direction LR
 class Balloon {
   <<Abstract>>
-  +options: BalloonOptions*
-  -_popSound: HTMLAudioElement
-  #balloonImage: HTMLImageElement
-  +element: HTMLDivElement
-  +riseDurationThreshold: [number, number]
-  +swingDurationThreshold: [number, number]
-  +<< get >>name: string
-  +<< get >>balloonImageUrl: string
-  +<< get >>popSoundUrl: string
-  +<< get >>popSound: HTMLAudioElement
-  +<< get >>topElement: HTMLDivElement
+
+  +name string*
+  +build() void*
+  +element HTMLDivElement
   +constructor()
   +isRising() boolean
   +rise() void
   +remove() void
   +pop() void
-  -_pop() void
 }
-
-class BalloonOptions {
-  <<Type>>
-  name: string
-  imageUrl: string | undefined
-  popSoundUrl: string | undefined
-}
-
-Balloon <|-- BalloonOptions
 ```
-
-#### Properties
-
-- `options: BalloonOptions` - The [options](#options) for the balloon.
-  > This is an abstract property and should be implemented by the subclass.
-- `_popSound: HTMLAudioElement` - _private_ - The HTML audio element without the src loaded by default.
-- `balloonImage: HTMLImageElement` - _protected_ - The image of the balloon.
-- `element: HTMLDivElement` - The element that represents the balloon.
-- `riseDurationThreshold: [number, number]` - The range of the duration of the rise animation.
-- `swingDurationThreshold: [number, number]` - The range of the duration of the swing animation.
-- `name: string` - The name used to identify the balloon.
-  > This is the name from the balloon [options](#options).
-- `balloonImageUrl: string` - The URL of the image of the balloon.
-- `popSoundUrl: string` - The URL of the sound that plays when the balloon pops.
-- `popSound: HTMLAudioElement` - The sound that plays when the balloon pops.
-  > The sound is loaded when the balloon is created.
-- `topElement: HTMLDivElement` - The top element of the balloon.
-  > The direct child of the balloon container.
-
-##### Options
-
-- `name: string` - The name of the balloon.
-- `imageUrl: string | undefined` - The URL of the image of the balloon.
-- `popSoundUrl: string | undefined` - The URL of the sound that plays when the balloon pops.
-
-#### Methods
-
-- `constructor()` - Creates a new balloon.
-- `isRising(): boolean` - Returns whether the balloon is rising.
-- `rise(): void` - Makes the balloon rise.
-- `remove(): void` - Removes the balloon.
-- `pop(): void` - Pops the balloon.
-- `_pop(): void` - _private_ - Pops the balloon.
 
 ### Default balloon
 
@@ -360,9 +307,28 @@ click Balloon href "#abstract-balloon-class" "Abstract balloon class"
 
 class Default {
   +spawn_chance: number$
+  +name: string
   +options: BalloonOptions
+  +riseDurationThreshold: [number, number]
+  +swingDurationThreshold: [number, number]
+  +balloonImageUrl: string
+  +popSoundUrl: string
+  +balloonImage: HTMLImageElement
+  +popSound: HTMLAudioElement
+  +constructor()
+  +build() void
+  +pop() Promise~void~
 }
 Default --|> Balloon
+
+class BalloonOptions {
+  <<Type>>
+  dir_name: string
+  imageUrl: string
+  popSoundUrl: string
+}
+
+Default <|-- BalloonOptions
 ```
 
 ### Confetti balloon
@@ -377,8 +343,10 @@ click Balloon href "#abstract-balloon-class" "Abstract balloon class"
 
 class Confetti {
   +spawn_chance: number$
-  +options: BalloonOptions
+  +name: string
   -mask: HTMLImageElement
+  +constructor()
+  +build() void
   +pop(event: MouseEvent) void
 }
 Confetti --|> Balloon
@@ -392,5 +360,5 @@ direction BT
 class Balloon { <<Abstract>> }
 
 Default --|> Balloon
-Confetti --|> Balloon
+Confetti --|> Default
 ```
