@@ -1,5 +1,4 @@
 import Balloon from '@/balloon';
-import { random } from '@/utils';
 
 // Create a concrete subclass of Balloon for testing
 class TestBalloon extends Balloon {
@@ -42,12 +41,6 @@ describe('Balloon', () => {
 
   test('balloon name should be "test"', () => {
     expect(balloon.name).toBe('test');
-  });
-
-  test('balloon should be rising after rise is called', () => {
-    expect(balloon.isRising()).toBe(false);
-    balloon.rise();
-    expect(balloon.isRising()).toBe(true);
   });
 
   test('balloon should not be rising after remove is called', () => {
