@@ -93,7 +93,7 @@ class BackendAPI {
     );
   }
 
-  public async NewUser(username: string, email?: string) {
+  public async NewUser(username?: string, email?: string) {
     return await this.request<
       Prettify<{ token: string } & RemoteResponse['user']>
     >('POST', '/user/new', {

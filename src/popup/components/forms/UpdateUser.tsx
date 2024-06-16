@@ -47,7 +47,7 @@ export default () => {
     const loadUser = async () => {
       const storedUser = await storage.sync.get('user');
       setUser(storedUser);
-      form.setValue('username', storedUser.username);
+      form.setValue('username', storedUser.username || '');
       form.setValue('email', storedUser.email || '');
     };
 
@@ -56,7 +56,10 @@ export default () => {
 
   const onSubmit = async ({ username, email }: z.infer<typeof formSchema>) => {
     if (username === user?.username && email === user?.email) return;
-    const newUser = await remote.putUser({ username, email });
+    const newUser = await remote.putUser({
+      username: username !== '' ? username : undefined,
+      email: email !== '' ? email : undefined,
+    });
     setUser(newUser);
     await storage.sync.set('user', newUser);
   };

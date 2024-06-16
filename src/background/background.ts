@@ -78,7 +78,7 @@ const updateBadgeColors = () => {
     let localUser = await storage.sync.get('user');
     // If the user is not in the local storage, get a new user from the remote
     if (!localUser) {
-      const usr = await remote.NewUser('Anonymous');
+      const usr = await remote.NewUser();
       await storage.sync.set('token', usr.token);
       localUser = usr;
     }

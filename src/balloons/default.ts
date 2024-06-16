@@ -57,13 +57,13 @@ export default class Default extends Balloon {
   /**
    * The image element for the balloon image.
    */
-  protected readonly balloonImage: HTMLImageElement =
+  public readonly balloonImage: HTMLImageElement =
     document.createElement('img');
 
   /**
    * The sound element for the pop sound.
    */
-  private readonly popSound: HTMLAudioElement = new Audio();
+  public readonly popSound: HTMLAudioElement = new Audio();
 
   /**
    * The URL of the balloon image.
