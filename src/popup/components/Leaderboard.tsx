@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { type ClassValue } from 'clsx';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -77,7 +77,7 @@ export default () => {
 
   const PageNavigation = () => {
     return (
-      <span className="flex items-center justify-between gap-5">
+      <span className="flex items-center justify-between">
         <Button
           variant={'ghost'}
           className="w-10 p-0"
@@ -86,15 +86,35 @@ export default () => {
         >
           <ChevronLeft className="pr-0.5" />
         </Button>
-        <Caption />
-        <Button
-          variant={'ghost'}
-          className="w-10 p-0"
-          disabled={page >= maxPages}
-          onClick={() => setPage(page + 1)}
-        >
-          <ChevronRight className="pl-0.5" />
-        </Button>
+        <span className="flex-grow">
+          <Caption />
+        </span>
+        <span className="flex">
+          {data.rank && (
+            <Button
+              variant={'ghost'}
+              className="w-10 p-0"
+              disabled={Math.floor((data.rank - 1) / 10) + 1 === page}
+              onClick={() =>
+                setPage(
+                  data.rank
+                    ? Math.min(maxPages, Math.ceil(data.rank / limit))
+                    : page
+                )
+              }
+            >
+              <ChevronDown />
+            </Button>
+          )}
+          <Button
+            variant={'ghost'}
+            className="w-10 p-0"
+            disabled={page >= maxPages}
+            onClick={() => setPage(page + 1)}
+          >
+            <ChevronRight className="pl-0.5" />
+          </Button>
+        </span>
       </span>
     );
   };
