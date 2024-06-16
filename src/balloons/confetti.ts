@@ -1,9 +1,10 @@
-import Balloon, { balloonResourceLocation } from '@/balloon';
+import { balloonResourceLocation } from '@/balloon';
 import { importStylesheet, random } from '@/utils';
+import Default from './default';
 
-export default class Confetti extends Balloon {
-  public static readonly spawn_chance = 0.1;
-  public readonly options = { name: 'confetti' };
+export default class Confetti extends Default {
+  public static readonly spawn_chance: number = 0.1;
+  public readonly name = 'confetti';
 
   private readonly mask = document.createElement('img');
 
@@ -13,8 +14,11 @@ export default class Confetti extends Balloon {
       'confetti-styles',
       balloonResourceLocation + 'confetti/confetti.css'
     );
+  }
 
-    this.element.appendChild(this.mask);
+  public build(): void {
+    super.build();
+    this.element.firstChild?.firstChild?.appendChild(this.mask);
     this.mask.src = balloonResourceLocation + this.name + '/mask.png';
     this.mask.style.position = 'absolute';
     this.mask.style.top = '-10px';
@@ -23,7 +27,8 @@ export default class Confetti extends Balloon {
     this.mask.style.transform = `rotate(${Math.random() * 360}deg)`;
   }
 
-  public pop(event?: MouseEvent) {
+  public async pop(event: MouseEvent) {
+    super.pop(event);
     // Get the click position
     const x = event?.clientX || window.innerWidth / 2;
     const y = event?.clientY || window.innerHeight / 2;

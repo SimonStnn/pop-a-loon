@@ -1,39 +1,5 @@
 import browser from 'webextension-polyfill';
-import storage from '@/managers/storage';
-import { getBalloonContainer, random, sendMessage } from '@/utils';
-
-/**
- * The options for the balloon.
- */
-export type BalloonOptions = {
-  /**
-   * The name of the balloon. It should be the same as the name of the class in lower case.
-   *
-   * This is used to determine the folder name for the balloon resources.
-   */
-  name: string;
-  /**
-   * The URL of the image to display on the balloon.
-   * If not provided, the default image will be used.
-   */
-  imageUrl?: string;
-  /**
-   * The URL of the sound to play when the balloon is popped.
-   * If not provided, the default sound will be used.
-   */
-  popSoundUrl?: string;
-};
-
-export type DefaultBalloonOptions = Required<BalloonOptions>;
-
-/**
- * The default options for the balloon. These are used when the options are not provided.
- */
-const defaultBalloonOptions: DefaultBalloonOptions = {
-  name: 'default',
-  imageUrl: '/icon.png',
-  popSoundUrl: '/pop.mp3',
-};
+import { getBalloonContainer, sendMessage } from '@/utils';
 
 /**
  * The location of the balloon resources. (`resources/balloons/`)
@@ -48,162 +14,32 @@ export const defaultBalloonFolderName = 'default';
 export const defaultBalloonResourceLocation =
   balloonResourceLocation + `${defaultBalloonFolderName}/`;
 
-/**
- * Build a balloon element.
- *
- * This function creates a new balloon element and adds it to the balloon container.
- *
- * @param element The element to add to the balloon.
- * @param props The properties for the balloon element.
- * @returns The balloon element.
- */
-const buildBalloonElement = (
-  element: HTMLDivElement,
-  props: {
-    size: number;
-    positionX: number;
-    riseDuration: number;
-    waveDuration: number;
-    onAnimationend: () => void;
-  }
-) => {
-  const balloon = document.createElement('div');
-  balloon.classList.add('balloon');
-
-  // Set the balloon's width and height
-  balloon.style.width = props.size + 'px';
-  balloon.style.height = balloon.style.width;
-  balloon.style.left = `calc(${props.positionX.toString() + 'vw'} - ${props.size / 2}px)`;
-  balloon.style.animationDuration = props.riseDuration.toString() + 'ms';
-  balloon.style.animationTimingFunction = 'linear';
-  balloon.style.animationFillMode = 'forwards';
-  balloon.style.animationName = 'rise';
-  balloon.addEventListener('animationend', props.onAnimationend);
-
-  // Create a second div and apply the swing animation to it
-  const swingElement = document.createElement('div');
-  swingElement.style.animation = `swing ${props.waveDuration}s infinite ease-in-out`;
-  const waveElement = document.createElement('div');
-  waveElement.style.animation = `wave ${props.waveDuration / 2}s infinite ease-in-out alternate`;
-  // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
-  waveElement.style.animationDelay = `-${(props.waveDuration * 3) / 4}s`;
-
-  balloon.appendChild(swingElement);
-  swingElement.appendChild(waveElement);
-  waveElement.appendChild(element);
-
-  return balloon;
-};
-
 export default abstract class Balloon {
-  /**
-   * The options for the balloon.
-   */
-  public abstract readonly options: BalloonOptions;
+  public abstract readonly name: string;
 
   /**
-   * The sound element for the pop sound.
-   */
-  private readonly _popSound: HTMLAudioElement = new Audio();
-
-  /**
-   * The image element for the balloon image.
-   */
-  protected readonly balloonImage: HTMLImageElement =
-    document.createElement('img');
-
-  public readonly element: HTMLDivElement;
-  /**
-   * The duration thresholds for the rise animation.
+   * Build a balloon element.
    *
-   * The first value is the minimum duration and the second value is the maximum duration.
-   */
-  public readonly riseDurationThreshold: [number, number] = [10000, 15000];
-  /**
-   * The duration thresholds for the swing animation.
+   * This function creates a new balloon element and adds it to the balloon container.
    *
-   * The first value is the minimum duration and the second value is the maximum duration.
+   * @param element The element to add to the balloon.
+   * @param props The properties for the balloon element.
+   * @returns The balloon element.
    */
-  public readonly swingDurationThreshold: [number, number] = [2, 4];
+  public abstract build(): void;
 
-  /**
-   * The name of the balloon.
-   *
-   * Should be the same as the name of the class in lower case.
-   *
-   * This is used to determine the folder name for the balloon resources.
-   */
-  public get name(): string {
-    return this.options.name;
-  }
-
-  /**
-   * The audio element for the pop sound.
-   */
-  public get popSound(): HTMLAudioElement {
-    if (!this._popSound.src) {
-      this._popSound.src = this.popSoundUrl;
-    }
-    return this._popSound;
-  }
-
-  /**
-   * The URL of the balloon image.
-   */
-  public get balloonImageUrl(): string {
-    return (
-      balloonResourceLocation +
-      (this.options.imageUrl ? this.options.name : defaultBalloonOptions.name) +
-      (this.options.imageUrl ?? defaultBalloonOptions.imageUrl)
-    );
-  }
-
-  /**
-   * The URL of the pop sound.
-   */
-  public get popSoundUrl(): string {
-    return (
-      balloonResourceLocation +
-      (this.options.popSoundUrl
-        ? this.options.name
-        : defaultBalloonOptions.name) +
-      (this.options.popSoundUrl ?? defaultBalloonOptions.popSoundUrl)
-    );
-  }
-
-  /**
-   * The top element of the balloon. Which is a direct child of the balloon container.
-   */
-  public get topElement(): HTMLDivElement {
-    let element = this.element;
-    while (!element.classList.contains('balloon')) {
-      if (
-        !element.parentElement ||
-        !(element.parentElement instanceof HTMLDivElement) ||
-        element.parentElement === getBalloonContainer()
-      )
-        return element;
-      element = element.parentElement;
-    }
-    return element;
-  }
+  public readonly element: HTMLDivElement = document.createElement('div');
 
   constructor() {
-    // Create the balloon element
-    this.element = document.createElement('div');
-
-    // Add the balloon image to the balloon element
-    this.element.appendChild(this.balloonImage);
-
     // Add an event listener to the balloon
-    this.element.addEventListener('click', this._pop.bind(this));
+    this.element.addEventListener('click', this.pop.bind(this));
   }
 
   /**
    * @returns Whether the balloon is rising.
    */
   public isRising(): boolean {
-    return this.topElement.style.animationName === 'rise';
+    return this.element.style.animationName === 'rise';
   }
 
   /**
@@ -212,26 +48,10 @@ export default abstract class Balloon {
    * This will create a new balloon element and add it to the balloon container.
    */
   public rise(): void {
-    // Load the pop sound
-    const _ = this.popSound;
-    // Load the balloon image
-    this.balloonImage.src = this.balloonImageUrl;
     // Build the balloon element
-    const balloonElement = buildBalloonElement(this.element, {
-      size: random(50, 75),
-      positionX: random(5, 95),
-      riseDuration: random(
-        this.riseDurationThreshold[0],
-        this.riseDurationThreshold[1]
-      ),
-      waveDuration: random(
-        this.swingDurationThreshold[0],
-        this.swingDurationThreshold[1]
-      ),
-      onAnimationend: this.remove.bind(this),
-    });
+    this.build();
     // Add the balloon to the container
-    getBalloonContainer().appendChild(balloonElement);
+    getBalloonContainer().appendChild(this.element);
   }
 
   /**
@@ -239,30 +59,8 @@ export default abstract class Balloon {
    */
   public remove(): void {
     // loop until the parent node has 'balloon' class
-    this.topElement.remove();
-    this.topElement.style.animationName = 'none';
-  }
-
-  /**
-   * Pop the balloon.
-   *
-   * This will remove the balloon, play the pop sound and send a message to increment the count.
-   *
-   * @param event The mouse event that triggered the pop.
-   */
-  private async _pop(event: MouseEvent): Promise<void> {
-    // Remove the balloon
-    this.remove();
-
-    // Send message with the new count
-    sendMessage({ action: 'incrementCount' });
-
-    // Set volume
-    this.popSound.volume = (await storage.sync.get('config')).popVolume / 100;
-    // Play the pop sound
-    this.popSound.play();
-
-    this.pop(event);
+    this.element.remove();
+    this.element.style.animationName = 'none';
   }
 
   /**
@@ -272,5 +70,11 @@ export default abstract class Balloon {
    *
    * @param event The mouse event that triggered the pop.
    */
-  public pop(event?: MouseEvent): void | Promise<void> {}
+  public pop(event?: MouseEvent): void | Promise<void> {
+    // Remove the balloon
+    this.remove();
+
+    // Send message with the new count
+    sendMessage({ action: 'incrementCount' });
+  }
 }
