@@ -71,7 +71,7 @@ export default () => {
     if (page < maxPages - 1) pages.push(page + 1);
 
     return (
-      <Pagination>
+      <Pagination className="text-muted-foreground">
         <PaginationContent>
           <PaginationItem>
             <Button variant={'ghost'} className="p-0" disabled={page === 1}>
@@ -172,7 +172,9 @@ export default () => {
             : data.topUsers &&
               data.topUsers.map((item, index) => (
                 <TableRow key={index}>
-                  <TableCell className="p-2 text-right">{index + 1}</TableCell>
+                  <TableCell className="p-2 text-right">
+                    {(page - 1) * 10 + index + 1}
+                  </TableCell>
                   <TableCell className="w-full p-2">{item.username}</TableCell>
                   <TableCell className="p-2">{item.count}</TableCell>
                 </TableRow>
