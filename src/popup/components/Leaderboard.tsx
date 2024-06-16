@@ -10,6 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import remote from '@/remote';
 import { RemoteResponse } from '@/const';
@@ -17,6 +26,7 @@ import { cn } from '@/utils';
 import { Button } from './ui/button';
 
 const limit = 10;
+const maxPages = 10;
 
 const TextSkeleton = ({ className }: { className: ClassValue }) => {
   return <Skeleton className={cn('mt-1 h-4', className)} />;
@@ -24,17 +34,90 @@ const TextSkeleton = ({ className }: { className: ClassValue }) => {
 
 export default () => {
   const [data, setData] = useState({} as RemoteResponse['leaderboard']);
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await remote.getLeaderboard(limit);
+      setIsLoading(true);
+      const result = await remote.getLeaderboard(limit, (page - 1) * limit);
       setData(result);
       setIsLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [page]);
+
+  const PageNaviation = () => {
+    const Item = (props: { page: number }) => {
+      return (
+        <PaginationItem>
+          <PaginationLink
+            to={''}
+            className="font-normal"
+            isActive={props.page === page}
+            onClick={() => setPage(props.page)}
+          >
+            {props.page}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    };
+
+    const pages: number[] = [];
+
+    if (page > 2) pages.push(page - 1);
+    if (page !== 1 && page !== maxPages) pages.push(page);
+    if (page < maxPages - 1) pages.push(page + 1);
+
+    return (
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <Button variant={'ghost'} className="p-0" disabled={page === 1}>
+              <PaginationPrevious
+                to={''}
+                text=""
+                className="w-10 p-0"
+                onClick={() => setPage(page - 1)}
+              />
+            </Button>
+          </PaginationItem>
+
+          <Item page={1} />
+          {page > 2 && (
+            <PaginationItem>
+              <PaginationEllipsis className="w-4" />
+            </PaginationItem>
+          )}
+          {pages.map((item, index) => (
+            <Item key={index} page={item} />
+          ))}
+          {page < maxPages - 2 && (
+            <PaginationItem>
+              <PaginationEllipsis className="w-4" />
+            </PaginationItem>
+          )}
+          <Item page={maxPages} />
+
+          <PaginationItem>
+            <Button
+              variant={'ghost'}
+              className="p-0"
+              disabled={page === maxPages}
+            >
+              <PaginationNext
+                to={''}
+                text=""
+                className="w-10 p-0"
+                onClick={() => setPage(page + 1)}
+              />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    );
+  };
 
   const loadingBody = new Array(limit).fill(0).map((item, index) => (
     <TableRow key={index} className="">
@@ -96,6 +179,7 @@ export default () => {
               ))}
         </TableBody>
       </Table>
+      <PageNaviation />
     </>
   );
 };
