@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { type ClassValue } from 'clsx';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -14,9 +15,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import remote from '@/remote';
 import { RemoteResponse } from '@/const';
 import { cn } from '@/utils';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const limit = 10;
+const maxPages = 10;
 
 const TextSkeleton = ({ className }: { className: ClassValue }) => {
   return <Skeleton className={cn('mt-1 h-4', className)} />;
@@ -24,17 +27,19 @@ const TextSkeleton = ({ className }: { className: ClassValue }) => {
 
 export default () => {
   const [data, setData] = useState({} as RemoteResponse['leaderboard']);
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await remote.getLeaderboard(limit);
+      setIsLoading(true);
+      const result = await remote.getLeaderboard(limit, (page - 1) * limit);
       setData(result);
       setIsLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [page]);
 
   const loadingBody = new Array(limit).fill(0).map((item, index) => (
     <TableRow key={index} className="">
@@ -70,11 +75,35 @@ export default () => {
     return <p>You are #{data.rank}!</p>;
   };
 
+  const PageNavigation = () => {
+    return (
+      <span className="flex items-center justify-between gap-5">
+        <Button
+          variant={'ghost'}
+          className="w-10 p-0"
+          disabled={page <= 1}
+          onClick={() => setPage(page - 1)}
+        >
+          <ChevronLeft className="pr-0.5" />
+        </Button>
+        <Caption />
+        <Button
+          variant={'ghost'}
+          className="w-10 p-0"
+          disabled={page >= maxPages}
+          onClick={() => setPage(page + 1)}
+        >
+          <ChevronRight className="pl-0.5" />
+        </Button>
+      </span>
+    );
+  };
+
   return (
     <>
       <Table>
         <TableCaption>
-          <Caption />
+          <PageNavigation />
         </TableCaption>
         <TableHeader>
           <TableRow>
