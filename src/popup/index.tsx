@@ -18,7 +18,7 @@ import storage from '@/managers/storage';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-  <div className="w-[398px]">
+  <div className="max-h-[600px] w-[398px] overflow-hidden">
     <Router>
       <Header />
       <Routes>

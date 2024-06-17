@@ -26,6 +26,7 @@ type BannerProps = {
 
 const routeTitles: { [key: string]: string } = {
   '/settings': 'Settings',
+  '/general': 'Leaderboard',
 };
 
 const HeaderIcon = (props: iconProps) => {
