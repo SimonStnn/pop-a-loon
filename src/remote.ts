@@ -131,12 +131,13 @@ class BackendAPI {
     );
   }
 
-  public async getLeaderboard(limit?: number) {
+  public async getLeaderboard(limit?: number, skip?: number) {
     return await this.request<RemoteResponse['leaderboard']>(
       'GET',
       '/leaderboard',
       {
-        limit: limit,
+        limit,
+        skip,
       }
     );
   }
