@@ -82,7 +82,7 @@ export default () => {
 
   const PageNavigation = () => {
     return (
-      <span className="flex items-center justify-between">
+      <span className="flex items-center">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -100,44 +100,42 @@ export default () => {
           <span className="flex-grow">
             <Caption />
           </span>
-          <span className="flex">
-            {data.rank && (
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    variant={'ghost'}
-                    className="w-10 p-0"
-                    disabled={
-                      isLoading || Math.floor((data.rank - 1) / 10) + 1 === page
-                    }
-                    onClick={() =>
-                      setPage(
-                        data.rank
-                          ? Math.min(maxPages, Math.ceil(data.rank / limit))
-                          : page
-                      )
-                    }
-                  >
-                    <Medal />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Go to my rank</TooltipContent>
-              </Tooltip>
-            )}
+          {data.rank && (
             <Tooltip>
               <TooltipTrigger>
                 <Button
                   variant={'ghost'}
                   className="w-10 p-0"
-                  disabled={isLoading || page >= maxPages}
-                  onClick={() => setPage(page + 1)}
+                  disabled={
+                    isLoading || Math.floor((data.rank - 1) / 10) + 1 === page
+                  }
+                  onClick={() =>
+                    setPage(
+                      data.rank
+                        ? Math.min(maxPages, Math.ceil(data.rank / limit))
+                        : page
+                    )
+                  }
                 >
-                  <ChevronRight className="pl-0.5" />
+                  <Medal />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Next page</TooltipContent>
+              <TooltipContent>Go to my rank</TooltipContent>
             </Tooltip>
-          </span>
+          )}
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant={'ghost'}
+                className="w-10 p-0"
+                disabled={isLoading || page >= maxPages}
+                onClick={() => setPage(page + 1)}
+              >
+                <ChevronRight className="pl-0.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Next page</TooltipContent>
+          </Tooltip>
         </TooltipProvider>
       </span>
     );
