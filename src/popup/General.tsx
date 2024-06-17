@@ -4,11 +4,8 @@ import Leaderboard from '@/components/Leaderboard';
 
 export default () => {
   return (
-    <>
-      <Main>
-        <h2 className="text-lg">Leaderboard</h2>
-        <Leaderboard />
-      </Main>
-    </>
+    <Main>
+      <Leaderboard />
+    </Main>
   );
 };
