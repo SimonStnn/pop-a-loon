@@ -16,6 +16,7 @@ import InfoIcon from '@/components/InfoIcon';
 import { Default as DefaultBalloon } from '@/balloons';
 import storage from '@/managers/storage';
 import log from '@/managers/log';
+import { askOriginPermissions } from '@/utils';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -77,14 +78,7 @@ export default () => {
   };
 
   const onGrantOriginPermissionClick = async () => {
-    const host_permissions =
-      await browser.runtime.getManifest().host_permissions;
-    if (!host_permissions) return log.error('No host_permissions found');
-    const permissions = await browser.permissions.request({
-      origins: host_permissions,
-    });
-    log.debug('Permissions granted for', permissions);
-
+    await askOriginPermissions();
     setPermissions(await browser.permissions.getAll());
   };
 
@@ -113,10 +107,10 @@ export default () => {
                 <span className="flex gap-2">
                   <span className="">{popVolume}</span>
                   <InfoIcon>
-                    <h4 className="font-medium leading-none mb-1">
+                    <h4 className="mb-1 font-medium leading-none">
                       Pop Volume
                     </h4>
-                    <p className="text-sm font-normal text-muted-foreground leading-tight">
+                    <p className="text-sm font-normal leading-tight text-muted-foreground">
                       The volume of the pop sound when a balloon is popped.
                     </p>
                   </InfoIcon>
@@ -148,10 +142,10 @@ export default () => {
                 <span className="flex gap-2">
                   <span className="">x{spawnRate}</span>
                   <InfoIcon>
-                    <h4 className="font-medium leading-none mb-1">
+                    <h4 className="mb-1 font-medium leading-none">
                       Spawn Rate
                     </h4>
-                    <p className="text-sm font-normal text-muted-foreground leading-tight">
+                    <p className="text-sm font-normal leading-tight text-muted-foreground">
                       The rate at which balloons spawn. A lower value means less
                       balloons will spawn.
                     </p>
@@ -184,11 +178,11 @@ export default () => {
                 <FormLabel className="flex justify-between gap-1">
                   <span>Host Permission</span>
                   <InfoIcon>
-                    <h4 className="font-medium leading-none mb-1">
+                    <h4 className="mb-1 font-medium leading-none">
                       Host Permission{' '}
-                      <span className="text-red-500 text-xs">*recommended</span>
+                      <span className="text-xs text-red-500">*recommended</span>
                     </h4>
-                    <p className="text-sm font-normal text-muted-foreground leading-tight">
+                    <p className="text-sm font-normal leading-tight text-muted-foreground">
                       Pop-a-loon requires host permissions to function properly.
                     </p>
                   </InfoIcon>
