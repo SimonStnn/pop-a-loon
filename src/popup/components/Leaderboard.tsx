@@ -62,7 +62,7 @@ export default () => {
 
   const Caption = () => {
     if (isLoading) {
-      return <TextSkeleton className="w-12" />;
+      return <TextSkeleton className="w-16" />;
     }
 
     if (data.rank === null && data.user.username === undefined) {
@@ -89,7 +89,7 @@ export default () => {
               <Button
                 variant={'ghost'}
                 className="w-10 p-0"
-                disabled={page <= 1}
+                disabled={isLoading || page <= 1}
                 onClick={() => setPage(page - 1)}
               >
                 <ChevronLeft className="pr-0.5" />
@@ -107,7 +107,9 @@ export default () => {
                   <Button
                     variant={'ghost'}
                     className="w-10 p-0"
-                    disabled={Math.floor((data.rank - 1) / 10) + 1 === page}
+                    disabled={
+                      isLoading || Math.floor((data.rank - 1) / 10) + 1 === page
+                    }
                     onClick={() =>
                       setPage(
                         data.rank
@@ -127,7 +129,7 @@ export default () => {
                 <Button
                   variant={'ghost'}
                   className="w-10 p-0"
-                  disabled={page >= maxPages}
+                  disabled={isLoading || page >= maxPages}
                   onClick={() => setPage(page + 1)}
                 >
                   <ChevronRight className="pl-0.5" />
