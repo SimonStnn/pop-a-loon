@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { type ClassValue } from 'clsx';
-import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Medal, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -16,7 +16,12 @@ import remote from '@/remote';
 import { RemoteResponse } from '@/const';
 import { cn } from '@/utils';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const limit = 10;
 const maxPages = 10;
@@ -78,43 +83,60 @@ export default () => {
   const PageNavigation = () => {
     return (
       <span className="flex items-center justify-between">
-        <Button
-          variant={'ghost'}
-          className="w-10 p-0"
-          disabled={page <= 1}
-          onClick={() => setPage(page - 1)}
-        >
-          <ChevronLeft className="pr-0.5" />
-        </Button>
-        <span className="flex-grow">
-          <Caption />
-        </span>
-        <span className="flex">
-          {data.rank && (
-            <Button
-              variant={'ghost'}
-              className="w-10 p-0"
-              disabled={Math.floor((data.rank - 1) / 10) + 1 === page}
-              onClick={() =>
-                setPage(
-                  data.rank
-                    ? Math.min(maxPages, Math.ceil(data.rank / limit))
-                    : page
-                )
-              }
-            >
-              <ChevronDown />
-            </Button>
-          )}
-          <Button
-            variant={'ghost'}
-            className="w-10 p-0"
-            disabled={page >= maxPages}
-            onClick={() => setPage(page + 1)}
-          >
-            <ChevronRight className="pl-0.5" />
-          </Button>
-        </span>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant={'ghost'}
+                className="w-10 p-0"
+                disabled={page <= 1}
+                onClick={() => setPage(page - 1)}
+              >
+                <ChevronLeft className="pr-0.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Previous page</TooltipContent>
+          </Tooltip>
+          <span className="flex-grow">
+            <Caption />
+          </span>
+          <span className="flex">
+            {data.rank && (
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    variant={'ghost'}
+                    className="w-10 p-0"
+                    disabled={Math.floor((data.rank - 1) / 10) + 1 === page}
+                    onClick={() =>
+                      setPage(
+                        data.rank
+                          ? Math.min(maxPages, Math.ceil(data.rank / limit))
+                          : page
+                      )
+                    }
+                  >
+                    <Medal />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Go to my rank</TooltipContent>
+              </Tooltip>
+            )}
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant={'ghost'}
+                  className="w-10 p-0"
+                  disabled={page >= maxPages}
+                  onClick={() => setPage(page + 1)}
+                >
+                  <ChevronRight className="pl-0.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Next page</TooltipContent>
+            </Tooltip>
+          </span>
+        </TooltipProvider>
       </span>
     );
   };
