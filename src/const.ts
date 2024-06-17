@@ -63,7 +63,7 @@ export type RemoteResponse = {
   configuration: RemoteConfig;
   leaderboard: {
     user: User;
-    rank: number;
+    rank: number | null;
     topUsers: User[];
   };
 };

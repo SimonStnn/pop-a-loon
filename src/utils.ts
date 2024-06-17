@@ -130,3 +130,12 @@ export async function importStylesheet(id: string, href: string) {
     document.head.appendChild(style);
   }
 }
+
+export async function askOriginPermissions() {
+  const host_permissions = await browser.runtime.getManifest().host_permissions;
+  if (!host_permissions) return log.error('No host_permissions found');
+  const permissions = await browser.permissions.request({
+    origins: host_permissions,
+  });
+  log.debug('Permissions granted for', permissions);
+}
