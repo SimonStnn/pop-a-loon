@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import browser from 'webextension-polyfill';
+import browser, { type Permissions } from 'webextension-polyfill';
 import { useLocation } from 'react-router-dom';
 import { ClassValue } from 'clsx';
 import { LucideIcon, RotateCcw } from 'lucide-react';
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, List, Settings } from 'lucide-react';
 import remote from '@/remote';
 import { Button } from './ui/button';
+import { askOriginPermissions } from '@/utils';
 
 type iconProps = {
   to: string;
@@ -41,24 +42,30 @@ const HeaderIcon = (props: iconProps) => {
 const Banner = (props: BannerProps) => {
   if (!props.remoteAvailable)
     return (
-      <div className="flex justify-center items-center bg-destructive text-destructive-foreground p-1">
+      <div className="flex items-center justify-center bg-destructive p-1 text-destructive-foreground">
         Remote not available
       </div>
     );
 
   const [alarms, setAlarms] = useState<browser.Alarms.Alarm[]>([]);
-
+  const [permissions, setPermissions] = useState<Permissions.AnyPermissions>(
+    {}
+  );
   useEffect(() => {
     const fetchAlarms = async () => {
       const alarms = await browser.alarms.getAll();
       setAlarms(alarms);
     };
+    const fetchPermissions = async () => {
+      setPermissions(await browser.permissions.getAll());
+    };
     fetchAlarms();
+    fetchPermissions();
   }, []);
 
   if (alarms.length === 0)
     return (
-      <div className="flex justify-center items-center bg-secondary text-secondary-foreground p-1 gap-2">
+      <div className="flex items-center justify-center gap-2 bg-secondary p-1 text-secondary-foreground">
         <span>Something went wrong, please restart the extension.</span>
         <Button
           className="size-3"
@@ -67,6 +74,23 @@ const Banner = (props: BannerProps) => {
           onClick={() => browser.runtime.reload()}
         >
           <RotateCcw className="hover:animate-spin" />
+        </Button>
+      </div>
+    );
+
+  if (permissions.origins && permissions.origins.length === 0)
+    return (
+      <div className="flex items-center justify-center gap-2 bg-secondary p-1 text-secondary-foreground">
+        <span>Pop-a-loon is missing recommended permissions.</span>
+        <Button
+          variant={'link'}
+          className="h-fit p-0 text-xs"
+          onClick={async () => {
+            await askOriginPermissions();
+            setPermissions(await browser.permissions.getAll());
+          }}
+        >
+          Allow
         </Button>
       </div>
     );
@@ -94,7 +118,7 @@ export default (props: HeaderProps) => {
 
   return (
     <>
-      <header className="flex items-center justify-center bg-primary p-2 text-primary-foreground select-none">
+      <header className="flex select-none items-center justify-center bg-primary p-2 text-primary-foreground">
         <div className="absolute left-1 flex items-center justify-center">
           {location.pathname !== '/' && <HeaderIcon to="/" icon={ArrowLeft} />}
         </div>
