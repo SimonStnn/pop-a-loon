@@ -85,7 +85,7 @@ export default () => {
       <span className="flex items-center">
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button
                 variant={'ghost'}
                 className="w-10 p-0"
@@ -102,7 +102,7 @@ export default () => {
           </span>
           {data.rank && (
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant={'ghost'}
                   className="w-10 p-0"
@@ -124,7 +124,7 @@ export default () => {
             </Tooltip>
           )}
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button
                 variant={'ghost'}
                 className="w-10 p-0"
