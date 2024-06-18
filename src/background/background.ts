@@ -109,10 +109,10 @@ const updateBadgeColors = () => {
 
   const spawnBalloon = async () => {
     log.groupCollapsed(
-      'info',
+      'debug',
       `(${new Date().toLocaleTimeString()}) Spawning Balloon...`
     );
-    log.time('info', 'Spawn Time');
+    log.time('debug', 'Spawn Time');
 
     const now = Date.now();
     const minSpawnInterval = (await storage.sync.get('config')).spawnInterval
@@ -165,8 +165,8 @@ const updateBadgeColors = () => {
       log.softerror(' - Error sending spawn balloon script to tab', tab.id, e);
     }
     lastSpawn = now;
-    log.timeEnd('info', 'Spawn Time');
-    log.groupEnd('info');
+    log.timeEnd('debug', 'Spawn Time');
+    log.groupEnd('debug');
   };
 
   const createSpawnAlarm = async (name: AlarmName) => {
