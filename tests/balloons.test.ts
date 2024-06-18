@@ -69,7 +69,9 @@ describe('Balloons', () => {
   test('all balloons have a corresponding test file', () => {
     balloonNames.forEach((name) => {
       const testName = `${name}.test.ts`;
-      expect(fs.existsSync(path.resolve(__dirname, `./balloons/${testName}`)));
+      expect(
+        fs.existsSync(path.resolve(__dirname, `./balloons/${testName}`))
+      ).toBeTruthy();
     });
   });
 
