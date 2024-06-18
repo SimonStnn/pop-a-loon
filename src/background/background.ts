@@ -119,8 +119,8 @@ const updateBadgeColors = () => {
       .min;
     const skipSpawnMessage = (note: any, level: LogLevelNames = 'softwarn') => {
       log[level](`Skipping spawnBalloon message: \r\n\t`, note);
-      log.timeEnd('info', 'Spawn Time');
-      log.groupEnd('info');
+      log.timeEnd('debug', 'Spawn Time');
+      log.groupEnd('debug');
     };
 
     // Check if there is a spawn timeout
