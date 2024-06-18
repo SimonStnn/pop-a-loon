@@ -127,7 +127,7 @@ export async function importStylesheet(id: string, href: string) {
     style.textContent = css;
 
     // Append the <style> element to the <head>
-    document.head.appendChild(style);
+    getBalloonContainer().appendChild(style);
   }
 }
 

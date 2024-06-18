@@ -100,7 +100,7 @@ export default () => {
           <span className="flex-grow">
             <Caption />
           </span>
-          {data.rank && (
+          {data.rank && data.rank <= limit * maxPages && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
