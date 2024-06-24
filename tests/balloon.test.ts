@@ -1,8 +1,9 @@
 import Balloon from '@/balloon';
+import { BalloonName } from '@/const';
 
 // Create a concrete subclass of Balloon for testing
 class TestBalloon extends Balloon {
-  public readonly name = 'test';
+  public readonly name = 'test' as BalloonName;
   build() {
     return document.createElement('div');
   }
