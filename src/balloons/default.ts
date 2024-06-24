@@ -34,7 +34,7 @@ export type BalloonOptions = {
 
 export default class Default extends Balloon {
   public static readonly spawn_chance: number = 0.9;
-  public readonly name: string = 'default';
+  public readonly name = 'default';
   public readonly options: BalloonOptions = {
     dir_name: this.name,
     imageUrl: '/icon.png',

@@ -1,4 +1,5 @@
 import { LogLevelNumbers } from '@/managers/log';
+import * as Balloons from '@/balloons';
 
 //
 // * Config types
@@ -185,6 +186,9 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
 //
 
 export const BalloonContainerId = 'balloon-container';
+
+type BalloonInstances = InstanceType<(typeof Balloons)[keyof typeof Balloons]>;
+export type BalloonName = BalloonInstances['name'];
 
 export type hexColor = string;
 
