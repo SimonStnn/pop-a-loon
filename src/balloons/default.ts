@@ -1,5 +1,6 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
 import storage from '@/managers/storage';
+import { BalloonName } from '@/const';
 import { random } from '@/utils';
 
 export type BuildProps = {
@@ -19,7 +20,7 @@ export type BalloonOptions = {
    *
    * This is used to determine the folder name for the balloon resources.
    */
-  dir_name: string;
+  dir_name: BalloonName;
   /**
    * The URL of the image to display on the balloon.
    * If not provided, the default image will be used.
