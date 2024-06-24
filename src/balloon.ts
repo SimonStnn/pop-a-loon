@@ -76,6 +76,6 @@ export default abstract class Balloon {
     this.remove();
 
     // Send message with the new count
-    sendMessage({ action: 'incrementCount' });
+    sendMessage({ action: 'incrementCount', type: this.name });
   }
 }

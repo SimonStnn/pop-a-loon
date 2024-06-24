@@ -107,6 +107,7 @@ type UpdateCounterMessage = {
 
 type IncrementCount = {
   action: 'incrementCount';
+  type: BalloonName;
 };
 
 type SpawnBalloonMessage = {
