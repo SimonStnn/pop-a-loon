@@ -1,6 +1,6 @@
 {
   "name": "pop-a-loon",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "description": "The new rising trend (literally) that changes the browser game completely.",
   "private": true,
   "scripts": {
@@ -38,6 +38,7 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-hover-card": "^1.0.7",
     "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slider": "^1.1.2",

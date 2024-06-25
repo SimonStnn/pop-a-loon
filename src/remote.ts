@@ -1,4 +1,10 @@
-import { RemoteResponse, devRemoteResponse, Prettify, Endpoint } from '@/const';
+import {
+  RemoteResponse,
+  devRemoteResponse,
+  Prettify,
+  Endpoint,
+  BalloonName,
+} from '@/const';
 import storage from '@/managers/storage';
 import log from '@/managers/log';
 
@@ -124,10 +130,13 @@ class BackendAPI {
     return response;
   }
 
-  public async incrementCount() {
+  public async incrementCount(type: BalloonName) {
     return await this.request<RemoteResponse['count']>(
       'POST',
-      '/user/count/increment'
+      '/user/count/increment',
+      {
+        type,
+      }
     );
   }
 

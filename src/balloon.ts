@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill';
 import { getBalloonContainer, sendMessage } from '@/utils';
+import { BalloonName } from './const';
 
 /**
  * The location of the balloon resources. (`resources/balloons/`)
@@ -15,7 +16,7 @@ export const defaultBalloonResourceLocation =
   balloonResourceLocation + `${defaultBalloonFolderName}/`;
 
 export default abstract class Balloon {
-  public abstract readonly name: string;
+  public abstract readonly name: BalloonName;
 
   /**
    * Build a balloon element.
@@ -75,6 +76,6 @@ export default abstract class Balloon {
     this.remove();
 
     // Send message with the new count
-    sendMessage({ action: 'incrementCount' });
+    sendMessage({ action: 'incrementCount', type: this.name });
   }
 }
