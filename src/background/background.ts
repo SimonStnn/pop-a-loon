@@ -223,7 +223,7 @@ const updateBadgeColors = () => {
         break;
       case 'incrementCount':
         // Increment the count and save it to the local storage
-        const newCount = await remote.incrementCount();
+        const newCount = await remote.incrementCount(message.type);
         storage.sync.set('user', {
           ...(await storage.sync.get('user')),
           count: newCount.count,
