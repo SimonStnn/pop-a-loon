@@ -1,0 +1,46 @@
+<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" version="1.1"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Balloon -->
+    <ellipse
+        cx="64"
+        cy="42"
+        rx="30"
+        ry="35"
+        fill="rgb(255, 208, 0)"
+        stroke="rgb(163, 128, 0)"
+        stroke-width="4px"
+        stroke-dasharray="4 10 4 12 200"
+        stroke-dashoffset="0"
+        stroke-linecap="round"
+    />
+    <!-- Balloon shine reflextion -->
+    <ellipse
+        cx="64"
+        cy="42"
+        rx="20"
+        ry="25"
+        fill="none"
+        stroke="rgb(255, 240, 240)"
+        stroke-width="4px"
+        stroke-dasharray="21 100"
+        stroke-dashoffset="41"
+        stroke-linecap="round"
+    />
+    <!-- Knot -->
+    <path
+        d="M 64 77 l -8 8 q 8 6 16 0 Z"
+        fill="rgb(255, 208, 0)"
+        stroke="rgb(163, 128, 0)"
+        stroke-width="4px"
+        stroke-linejoin="round"
+    />
+    <!-- String -->
+    <path
+        d="M 64 88.5 m 1 0 q -2 1.5 -1 5 q 3 7.5 1 15 q -3 5 -1 12"
+        stroke="rgb(163, 128, 0)"
+        fill="none"
+        stroke-width="4px"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+    />
+</svg>
