@@ -2,10 +2,10 @@ import React from 'react';
 import { CircleHelp } from 'lucide-react';
 import { ClassValue } from 'clsx';
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { cn } from '@/utils';
 
 type InfoIconProps = {
@@ -15,14 +15,14 @@ type InfoIconProps = {
 
 export default (props: InfoIconProps) => {
   return (
-    <HoverCard>
-      <HoverCardTrigger>
+    <Popover>
+      <PopoverTrigger>
         <CircleHelp
           size={14}
           className={cn('text-muted-foreground', props.className)}
         />
-      </HoverCardTrigger>
-      <HoverCardContent>{props.children}</HoverCardContent>
-    </HoverCard>
+      </PopoverTrigger>
+      <PopoverContent>{props.children}</PopoverContent>
+    </Popover>
   );
 };
