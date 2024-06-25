@@ -10,18 +10,28 @@
   - [Installation](#installation)
   - [Development](#development)
     - [dev:chrome](#devchrome)
+    - [dev:chrome:noremote](#devchromenoremote)
+    - [dev:chrome:remote](#devchromeremote)
     - [dev:firefox](#devfirefox)
+    - [dev:firefox:noremote](#devfirefoxnoremote)
+    - [dev:firefox:remote](#devfirefoxremote)
+  - [Load the extension to chrome](#load-the-extension-to-chrome)
+  - [Load the extension to firefox](#load-the-extension-to-firefox)
   - [Debugging in Visual Studio Code](#debugging-in-visual-studio-code)
   - [Deployment](#deployment)
     - [build:chrome](#buildchrome)
     - [build:chrome:zip](#buildchromezip)
     - [build:firefox](#buildfirefox)
     - [build:firefox:zip](#buildfirefoxzip)
+    - [build:all:zip](#buildallzip)
+    - [zip:source](#zipsource)
 - [Architecture](#architecture)
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
   - [Abstract balloon class](#abstract-balloon-class)
   - [Default balloon](#default-balloon)
+  - [Confetti balloon](#confetti-balloon)
+- [Inheritance Tree](#inheritance-tree)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -52,7 +62,17 @@ npm install
 
 Building for development can be done with the `dev:{browser}` script. Replace `{browser}` with the browser you want to build for. The available options are `chrome` and `firefox`.
 
+> [!TIP]
+> See the [Load the extension to chrome](#load-the-extension-to-chrome) and [Load the extension to firefox](#load-the-extension-to-firefox) sections for instructions on how to load the extension in the browser.
+
 #### dev:chrome
+
+<!-- markdownlint-disable link-fragments -->
+
+> [!IMPORTANT]
+> This will call the [dev:chrome:noremote](#devchromenoremote) script.
+
+<!-- markdownlint-enable link-fragments -->
 
 To build for Chrome:
 
@@ -66,17 +86,39 @@ This will build the extension in development mode for chrome. You can also inclu
 npm run dev:chrome -- --watch
 ```
 
-The extension can be loaded in the browser by following the steps below:
+#### dev:chrome:noremote
 
-1. Open the Extension Management page by navigating to [`chrome://extensions`](chrome://extensions).
+To build for Chrome without a remote server[^1]:
 
-   > Don't forget to enable Developer mode in the top right corner.
+```bash
+npm run dev:chrome:noremote
+```
 
-2. Click the `Load unpacked` button and select the `dist/` directory.
-3. The extension should now be loaded and you can see the icon in the browser toolbar.
-4. Pin the extension to the toolbar for easy access.
+This will build the extension in development mode for chrome without a remote server. You can also include the `--watch` flag to automatically rebuild the extension when files change.
+
+```bash
+npm run dev:chrome:noremote -- --watch
+```
+
+#### dev:chrome:remote
+
+> [!IMPORTANT]
+> This will connect to a [pop-a-loon-backend](https://github.com/SimonStnn/pop-a-loon-backend) server which is expected to be running on `http://localhost:3000`.
+
+To build for Chrome with a remote server:
+
+```bash
+npm run dev:chrome:remote
+```
 
 #### dev:firefox
+
+<!-- markdownlint-disable link-fragments -->
+
+> [!IMPORTANT]
+> This will call the [dev:firefox:noremote](#devfirefoxnoremote) script.
+
+<!-- markdownlint-enable link-fragments -->
 
 To build for Firefox:
 
@@ -89,6 +131,53 @@ This will build the extension in development mode for firefox. You can also incl
 ```bash
 npm run dev:firefox -- --watch
 ```
+
+#### dev:firefox:noremote
+
+To build for Firefox without a remote server[^1]:
+
+```bash
+npm run dev:firefox:noremote
+```
+
+This will build the extension in development mode for firefox without a remote server. You can also include the `--watch` flag to automatically rebuild the extension when files change.
+
+```bash
+npm run dev:firefox:noremote -- --watch
+```
+
+#### dev:firefox:remote
+
+> [!IMPORTANT]
+> This will connect to a [pop-a-loon-backend](https://github.com/SimonStnn/pop-a-loon-backend) server which is expected to be running on `http://localhost:3000`.
+
+To build for Firefox with a remote server:
+
+```bash
+npm run dev:firefox:remote
+```
+
+This will build the extension in development mode for firefox with a remote server. You can also include the `--watch` flag to automatically rebuild the extension when files change.
+
+```bash
+npm run dev:firefox:remote -- --watch
+```
+
+[^1]: The requests to the remote will be 'mocked' so the extension can be developed without the need for a running server.
+
+### Load the extension to chrome
+
+The extension can be loaded in the browser by following the steps below:
+
+1. Open the Extension Management page by navigating to [`chrome://extensions`](chrome://extensions).
+
+   > Don't forget to enable Developer mode in the top right corner.
+
+2. Click the `Load unpacked` button and select the `dist/` directory.
+3. The extension should now be loaded and you can see the icon in the browser toolbar.
+4. Pin the extension to the toolbar for easy access.
+
+### Load the extension to firefox
 
 The extension can be loaded in the browser by following the steps below:
 
@@ -147,9 +236,32 @@ This will build the extension in production mode for firefox. You can also inclu
 npm run build:firefox:zip
 ```
 
+#### build:all:zip
+
+<!-- markdownlint-disable link-fragments -->
+
+This will build the extension in production for all browsers and include a [zip file of the source code](#zipsource).
+
+<!-- markdownlint-enable link-fragments -->
+
+```bash
+npm run build:all:zip
+```
+
+#### zip:source
+
+This will create a zip file of the source code. The zip file will be created in the `build/` directory with the name `source-v{version}.zip`.
+
+```bash
+npm run zip:source
+```
+
 The zip file will be created in the `build/` directory.
 
 ## Architecture
+
+> [!NOTE]
+> Read the [Architecture](./Architecture.md) document for a more detailed explanation of the architecture.
 
 ## Balloon spawn chances
 
@@ -171,14 +283,11 @@ classDiagram
 direction LR
 class Balloon {
   <<Abstract>>
-  -element: HTMLDivElement
-  #balloonImage: HTMLImageElement
-  #<< get >>balloonImageUrl: string
-  #<< get >>popSoundUrl: string
-  #<< get >>popSound: HTMLAudioElement
-  +name: string*
+
+  +name string*
+  +build() void*
+  +element HTMLDivElement
   +constructor()
-  +getRandomDuration() number*
   +isRising() boolean
   +rise() void
   +remove() void
@@ -198,8 +307,58 @@ click Balloon href "#abstract-balloon-class" "Abstract balloon class"
 
 class Default {
   +spawn_chance: number$
-  +name: string*
-  +getRandomDuration() number*
+  +name: string
+  +options: BalloonOptions
+  +riseDurationThreshold: [number, number]
+  +swingDurationThreshold: [number, number]
+  +balloonImageUrl: string
+  +popSoundUrl: string
+  +balloonImage: HTMLImageElement
+  +popSound: HTMLAudioElement
+  +constructor()
+  +build() void
+  +pop() Promise~void~
 }
 Default --|> Balloon
+
+class BalloonOptions {
+  <<Type>>
+  dir_name: string
+  imageUrl: string
+  popSoundUrl: string
+}
+
+Default <|-- BalloonOptions
+```
+
+### Confetti balloon
+
+The confetti balloon is a balloon that spawns confetti when popped.
+
+```mermaid
+classDiagram
+direction LR
+class Balloon { <<Abstract>> }
+click Balloon href "#abstract-balloon-class" "Abstract balloon class"
+
+class Confetti {
+  +spawn_chance: number$
+  +name: string
+  -mask: HTMLImageElement
+  +constructor()
+  +build() void
+  +pop(event: MouseEvent) void
+}
+Confetti --|> Balloon
+```
+
+## Inheritance Tree
+
+```mermaid
+classDiagram
+direction BT
+class Balloon { <<Abstract>> }
+
+Default --|> Balloon
+Confetti --|> Default
 ```
