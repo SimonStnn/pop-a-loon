@@ -99,10 +99,6 @@ export default class Default extends Balloon {
   constructor() {
     super();
     importStylesheet('default-styles', this.resourceLocation + 'default.css');
-    // Load the pop sound
-    this.popSound.src = this.popSoundUrl;
-    // Load the balloon image
-    this.balloonImage.src = this.balloonImageUrl;
   }
 
   public build() {
@@ -116,6 +112,11 @@ export default class Default extends Balloon {
       this.swingDurationThreshold[0],
       this.swingDurationThreshold[1]
     );
+
+    // Load the pop sound
+    this.popSound.src = this.popSoundUrl;
+    // Load the balloon image
+    this.balloonImage.src = this.balloonImageUrl;
 
     this.element.classList.add('balloon');
 
