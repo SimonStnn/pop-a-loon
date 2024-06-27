@@ -1,7 +1,7 @@
 import Default, { BalloonOptions } from './default';
 
 export default class Confetti extends Default {
-  public static readonly spawn_chance: number = 10.1;
+  public static readonly spawn_chance: number = 0.05;
   // @ts-ignore
   public readonly name = 'gold';
 
