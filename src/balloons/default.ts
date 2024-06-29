@@ -84,14 +84,6 @@ export default class Default extends Balloon {
     );
   }
 
-  constructor() {
-    super();
-    // Load the pop sound
-    this.popSound.src = this.popSoundUrl;
-    // Load the balloon image
-    this.balloonImage.src = this.balloonImageUrl;
-  }
-
   public build() {
     const size = random(50, 75);
     const positionX = random(5, 95);
@@ -103,6 +95,11 @@ export default class Default extends Balloon {
       this.swingDurationThreshold[0],
       this.swingDurationThreshold[1]
     );
+
+    // Load the pop sound
+    this.popSound.src = this.popSoundUrl;
+    // Load the balloon image
+    this.balloonImage.src = this.balloonImageUrl;
 
     this.element.classList.add('balloon');
 
