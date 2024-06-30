@@ -5,10 +5,10 @@ export default class Confetti extends Default {
   // @ts-ignore
   public readonly name = 'gold';
 
-  public readonly riseDurationThreshold: [number, number] = [15000, 20000];
-
   constructor() {
     super();
     this.options.imageUrl = `/../${this.name}/balloon.svg`;
+    this.riseDurationThreshold[0] = 15000;
+    this.riseDurationThreshold[1] = 20000;
   }
 }
