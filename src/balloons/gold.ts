@@ -1,6 +1,6 @@
-import Default, { BalloonOptions } from './default';
+import Default from './default';
 
-export default class Confetti extends Default {
+export default class Gold extends Default {
   public static readonly spawn_chance: number = 0.05;
   // @ts-ignore
   public readonly name = 'gold';
