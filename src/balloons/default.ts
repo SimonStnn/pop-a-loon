@@ -32,6 +32,18 @@ export type BalloonOptions = {
    */
   popSoundUrl: string;
   /**
+   * The duration thresholds for the rise animation.
+   *
+   * The first value is the minimum duration and the second value is the maximum duration.
+   */
+  riseDurationThreshold: [number, number];
+  /**
+   * The duration thresholds for the swing animation.
+   *
+   * The first value is the minimum duration and the second value is the maximum duration.
+   */
+  swingDurationThreshold: [number, number];
+  /**
    * The amount of pixels the balloon should wave back and forth.
    *
    * First `waveDegrees` to the right, return back to the center, then `waveDegrees` to the left.
@@ -45,27 +57,20 @@ export type BalloonOptions = {
 
 export default class Default extends Balloon {
   public static readonly spawn_chance: number = 0.9;
-  public readonly name = 'default';
-  public readonly options: BalloonOptions = {
-    dir_name: this.name,
-    imageUrl: '/icon.png',
-    popSoundUrl: '/pop.mp3',
-    swingOffset: 15,
-    waveDegrees: 8,
-  };
-
-  /**
-   * The duration thresholds for the rise animation.
-   *
-   * The first value is the minimum duration and the second value is the maximum duration.
-   */
-  public readonly riseDurationThreshold: [number, number] = [10000, 15000];
-  /**
-   * The duration thresholds for the swing animation.
-   *
-   * The first value is the minimum duration and the second value is the maximum duration.
-   */
-  public readonly swingDurationThreshold: [number, number] = [2, 4];
+  public get name(): 'default' {
+    return 'default';
+  }
+  public get options(): BalloonOptions {
+    return {
+      dir_name: this.name,
+      imageUrl: '/icon.png',
+      popSoundUrl: '/pop.mp3',
+      riseDurationThreshold: [10000, 15000],
+      swingDurationThreshold: [2, 4],
+      swingOffset: 15,
+      waveDegrees: 8,
+    };
+  }
 
   /**
    * The image element for the balloon image.
@@ -105,12 +110,12 @@ export default class Default extends Balloon {
     const size = random(50, 75);
     const positionX = random(5, 95);
     const riseDuration = random(
-      this.riseDurationThreshold[0],
-      this.riseDurationThreshold[1]
+      this.options.riseDurationThreshold[0],
+      this.options.riseDurationThreshold[1]
     );
     const waveDuration = random(
-      this.swingDurationThreshold[0],
-      this.swingDurationThreshold[1]
+      this.options.swingDurationThreshold[0],
+      this.options.swingDurationThreshold[1]
     );
 
     // Load the pop sound
