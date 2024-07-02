@@ -10,6 +10,7 @@ export default class Gold extends Default {
   public get options(): BalloonOptions {
     return {
       ...super.options,
+      imageUrl: '/balloon.svg',
       riseDurationThreshold: [15000, 20000],
       swingDurationThreshold: [3, 4],
     };

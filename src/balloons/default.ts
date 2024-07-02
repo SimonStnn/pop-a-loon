@@ -57,14 +57,16 @@ export type BalloonOptions = {
 
 export default class Default extends Balloon {
   public static readonly spawn_chance: number = 0.9;
+
   public get name(): 'default' {
     return 'default';
   }
+
   public get options(): BalloonOptions {
     return {
       dir_name: this.name,
-      imageUrl: '/icon.png',
-      popSoundUrl: '/pop.mp3',
+      imageUrl: this.originalPath('/icon.png'),
+      popSoundUrl: this.originalPath('/pop.mp3'),
       riseDurationThreshold: [10000, 15000],
       swingDurationThreshold: [2, 4],
       swingOffset: 15,
@@ -104,6 +106,18 @@ export default class Default extends Balloon {
   constructor() {
     super();
     importStylesheet('default-styles', this.resourceLocation + 'default.css');
+  }
+
+  /**
+   * Get the path for the resources of the default balloon.
+   *
+   * This should only be used in the balloon.options.
+   *
+   * @param path The path of the resource.
+   * @returns The original path of the resource.
+   */
+  protected originalPath(path: string): string {
+    return '/../default' + path;
   }
 
   public build() {
