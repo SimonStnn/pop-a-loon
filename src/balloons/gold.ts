@@ -1,7 +1,7 @@
 import Default from './default';
 
 export default class Gold extends Default {
-  public static readonly spawn_chance: number = 1.05;
+  public static readonly spawn_chance: number = 0.05;
   // @ts-ignore
   public readonly name = 'gold';
 
