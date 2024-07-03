@@ -28,10 +28,10 @@
 - [Architecture](#architecture)
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Balloons](#balloons)
+- [Inheritance Tree](#inheritance-tree)
   - [Abstract balloon class](#abstract-balloon-class)
   - [Default balloon](#default-balloon)
   - [Confetti balloon](#confetti-balloon)
-- [Inheritance Tree](#inheritance-tree)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -274,6 +274,17 @@ title Balloon spawn chances
 
 ## Balloons
 
+## Inheritance Tree
+
+```mermaid
+classDiagram
+direction BT
+class Balloon { <<Abstract>> }
+
+Default --|> Balloon
+Confetti --|> Default
+```
+
 ### Abstract balloon class
 
 The abstract balloon class is the base class for all balloons.
@@ -298,15 +309,14 @@ class Balloon {
 The class serves as a base class for each balloon in pop-a-loon, providing essential functionality that must operate from this class.
 
 > [!IMPORTANT]
->The class has the following abstract properties and methods:
+> The class has the following abstract properties and methods:
 >
 > - `name`: The name of the balloon. Should be the same as the name of the class, but in lowercase.
 > - `build()`: Is called when the balloon should be built. In this method the class should for example add the styling and balloon image to the balloon element.
 
 These properties and methods **must** be implemented in the child classes.
 
-> [!IMPORTANT]
-> `element` is the html element that will be added to the DOM after the balloon is built.
+> [!IMPORTANT] > `element` is the html element that will be added to the DOM after the balloon is built.
 
 ### Default balloon
 
@@ -314,32 +324,4 @@ See [Default balloon documentation](./balloons/default.md) for more information.
 
 ### Confetti balloon
 
-The confetti balloon is a balloon that spawns confetti when popped.
-
-```mermaid
-classDiagram
-direction LR
-class Balloon { <<Abstract>> }
-click Balloon href "#abstract-balloon-class" "Abstract balloon class"
-
-class Confetti {
-  +spawn_chance: number$
-  +name: string
-  -mask: HTMLImageElement
-  +constructor()
-  +build() void
-  +pop(event: MouseEvent) void
-}
-Confetti --|> Balloon
-```
-
-## Inheritance Tree
-
-```mermaid
-classDiagram
-direction BT
-class Balloon { <<Abstract>> }
-
-Default --|> Balloon
-Confetti --|> Default
-```
+See [Confetti balloon documentation](./balloons/confetti.md) for more information.
