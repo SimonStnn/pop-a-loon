@@ -307,15 +307,14 @@ click Balloon href "#abstract-balloon-class" "Abstract balloon class"
 
 class Default {
   +spawn_chance: number$
-  +name: string
-  +options: BalloonOptions
-  +riseDurationThreshold: [number, number]
-  +swingDurationThreshold: [number, number]
-  +balloonImageUrl: string
-  +popSoundUrl: string
+  +<< get >>name: string
+  +<< get >>options: BalloonOptions
+  +<< get >>balloonImageUrl: string
+  +<< get >>popSoundUrl: string
   +balloonImage: HTMLImageElement
   +popSound: HTMLAudioElement
   +constructor()
+  #originalPath(path: string) string
   +build() void
   +pop() Promise~void~
 }
@@ -326,6 +325,8 @@ class BalloonOptions {
   dir_name: string
   imageUrl: string
   popSoundUrl: string
+  riseDurationThreshold: [number, number]
+  swingDurationThreshold: [number, number]
 }
 
 Default <|-- BalloonOptions
