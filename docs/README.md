@@ -310,40 +310,7 @@ These properties and methods **must** be implemented in the child classes.
 
 ### Default balloon
 
-The default balloon is a simple balloon that rises and pops when clicked.
-
-```mermaid
-classDiagram
-direction LR
-class Balloon { <<Abstract>> }
-click Balloon href "#abstract-balloon-class" "Abstract balloon class"
-
-class Default {
-  +spawn_chance: number$
-  +<< get >>name: string
-  +<< get >>options: BalloonOptions
-  +<< get >>balloonImageUrl: string
-  +<< get >>popSoundUrl: string
-  +balloonImage: HTMLImageElement
-  +popSound: HTMLAudioElement
-  +constructor()
-  #originalPath(path: string) string
-  +build() void
-  +pop() Promise~void~
-}
-Default --|> Balloon
-
-class BalloonOptions {
-  <<Type>>
-  dir_name: string
-  imageUrl: string
-  popSoundUrl: string
-  riseDurationThreshold: [number, number]
-  swingDurationThreshold: [number, number]
-}
-
-Default <|-- BalloonOptions
-```
+See [Default balloon documentation](./balloons/default.md) for more information.
 
 ### Confetti balloon
 
