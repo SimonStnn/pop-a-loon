@@ -31,15 +31,21 @@
 
 ### Background
 
-The background scripts handle events and perform tasks that require access to browser APIs. They can listen for events such as page loads, tab changes, and user interactions. These scripts are implemented in the `src/background/` directory.
+The background scripts handle events and perform tasks that require access to browser APIs.
+
+Read the [background scripts documentation](./architecture/background.md) for more information.
 
 ### Content Scripts
 
-Content scripts are injected into web pages and have access to the DOM. They can modify the appearance and behavior of web pages, interact with page elements, and communicate with the background scripts.
+Content scripts are injected into web pages and have access to the DOM. This is used to make the balloons appear on web pages.
+
+Read the [content scripts documentation](./architecture/content-scripts.md) for more information.
 
 ### Popup
 
-The popup UI provides a user-friendly interface for accessing the extension's features. It can display information, receive user input, and trigger actions. The code for the popup UI is located in the `src/popup/` directory.
+The popup UI provides a user-friendly interface for accessing the extension's features. It can display information, receive user input. It acts as a bridge between the user and the extension and is internally just a web page.
+
+Read the [popup documentation](./architecture/popup.md) for more information.
 
 ## Testing
 
