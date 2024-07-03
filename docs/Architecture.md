@@ -1,5 +1,7 @@
 <h1 align="center">Architecture</h1>
 
+The pop-a-loon architecture is designed to be modular and extensible. This document provides an overview of the architecture of the extension.
+
 ## Table of Contents
 
 <!-- markdownlint-disable link-fragments -->
