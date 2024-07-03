@@ -27,9 +27,9 @@
     - [zip:source](#zipsource)
 - [Architecture](#architecture)
 - [Balloon spawn chances](#balloon-spawn-chances)
-- [Balloons](#balloons)
 - [Inheritance Tree](#inheritance-tree)
-  - [Abstract balloon class](#abstract-balloon-class)
+- [Abstract balloon class](#abstract-balloon-class)
+- [Balloons](#balloons)
   - [Default balloon](#default-balloon)
   - [Confetti balloon](#confetti-balloon)
 
@@ -272,8 +272,6 @@ title Balloon spawn chances
    "Confetti" : 0.10
 ```
 
-## Balloons
-
 ## Inheritance Tree
 
 ```mermaid
@@ -285,7 +283,7 @@ Default --|> Balloon
 Confetti --|> Default
 ```
 
-### Abstract balloon class
+## Abstract balloon class
 
 The abstract balloon class is the base class for all balloons.
 
@@ -317,6 +315,8 @@ The class serves as a base class for each balloon in pop-a-loon, providing essen
 These properties and methods **must** be implemented in the child classes.
 
 > [!IMPORTANT] > `element` is the html element that will be added to the DOM after the balloon is built.
+
+## Balloons
 
 ### Default balloon
 
