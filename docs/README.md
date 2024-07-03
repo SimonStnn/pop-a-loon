@@ -284,9 +284,9 @@ direction LR
 class Balloon {
   <<Abstract>>
 
-  +name string*
+  +name: string*
   +build() void*
-  +element HTMLDivElement
+  +element: HTMLDivElement
   +constructor()
   +isRising() boolean
   +rise() void
@@ -294,6 +294,19 @@ class Balloon {
   +pop() void
 }
 ```
+
+The class serves as a base class for each balloon in pop-a-loon, providing essential functionality that must operate from this class.
+
+> [!IMPORTANT]
+>The class has the following abstract properties and methods:
+>
+> - `name`: The name of the balloon. Should be the same as the name of the class, but in lowercase.
+> - `build()`: Is called when the balloon should be built. In this method the class should for example add the styling and balloon image to the balloon element.
+
+These properties and methods **must** be implemented in the child classes.
+
+> [!IMPORTANT]
+> `element` is the html element that will be added to the DOM after the balloon is built.
 
 ### Default balloon
 
