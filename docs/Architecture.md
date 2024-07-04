@@ -9,6 +9,7 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 - [Table of Contents](#table-of-contents)
 - [Directory Structure](#directory-structure)
 - [Workflow](#workflow)
+  - [Polyfilling](#polyfilling)
   - [Background](#background)
   - [Content Scripts](#content-scripts)
   - [Popup](#popup)
@@ -30,6 +31,23 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 - `manifest.json`: The manifest file of the extension, which provides important metadata for the extension.
 
 ## Workflow
+
+### Polyfilling
+
+To ensure compatibility with multiple browsers, the pop-a-loon extension uses the [webextension polyfill](https://github.com/mozilla/webextension-polyfill) library. This polyfill provides a consistent API for browser extensions across different browsers, allowing the extension to work seamlessly on Chrome, Firefox, and other supported browsers.
+
+By including the webextension polyfill in the background scripts and content scripts, the extension can make use of browser APIs and features without worrying about browser-specific implementations. This greatly simplifies the development process and ensures a consistent experience for users on different browsers.
+
+This means when you want to access browser API's you don't use the `chrome` or `browser` namespaces directly. You first import the polyfill and then use the `browser` namespace.
+
+```ts
+import browser from 'webextension-polyfill';
+
+// For example query some tabs
+const tabs = await browser.tabs.query({ active: true });
+```
+
+Now, after compiling the extension, the polyfill will be included and make the code access the correct browser API's.
 
 ### Background
 
