@@ -10,6 +10,9 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 - [Directory Structure](#directory-structure)
 - [Workflow](#workflow)
   - [Polyfilling](#polyfilling)
+  - [Managers](#managers)
+    - [Log](#log)
+    - [Storage](#storage)
   - [Background](#background)
   - [Content Scripts](#content-scripts)
   - [Popup](#popup)
@@ -48,6 +51,43 @@ const tabs = await browser.tabs.query({ active: true });
 ```
 
 Now, after compiling the extension, the polyfill will be included and make the code access the correct browser API's.
+
+### Managers
+
+Pop-a-loon has a few custom managers that handle different aspects of the extension.
+
+#### Log
+
+The `log` manager is used to log messages to the console. It provides a simple interface for logging messages with different levels of severity, such as `info`, `warn`, and `error`.
+
+```ts
+import log from '@/managers/log';
+
+log.debug('This is a debug message');
+log.info('This is an info message');
+log.warn('This is a warning message');
+log.error('This is an error message');
+log.softwarn('Like the warning message but doesn\'t throw an actual warning in the console');
+log.softerror('Like the error message but doesn\'t throw an actual error in the console');
+```
+
+This manager also includes log functionallity from the console namespace. Like `log.time`, `log.timeEnd`, `log.group`, `log.groupEnd`, ….
+
+#### Storage
+
+The `storage` managers provides a type-safe way to interact with the browser storage via the browser API's.
+
+```ts
+import storage from '@/managers/storage';
+
+const config = await storage.sync.get('config')
+await storage.sync.set('config', {
+  ...config,
+  popVolume: 0.5,
+})
+```
+
+In this example we update the `popVolume` property of the `config` object in the `sync` storage.
 
 ### Background
 
