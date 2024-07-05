@@ -18,13 +18,13 @@
 
 @keyframes swing {
   0% {
-    transform: translateX(15px);
+    transform: translateX(var(--swing, 15px));
   }
   50% {
-    transform: translateX(-15px);
+    transform: translateX(calc(-1 * var(--swing, 15px)));
   }
   100% {
-    transform: translateX(15px);
+    transform: translateX(var(--swing, 15px));
   }
 }
 
