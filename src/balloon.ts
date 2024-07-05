@@ -31,6 +31,10 @@ export default abstract class Balloon {
 
   public readonly element: HTMLDivElement = document.createElement('div');
 
+  public get resourceLocation(): string {
+    return balloonResourceLocation + this.name + '/';
+  }
+
   constructor() {
     // Add an event listener to the balloon
     this.element.addEventListener('click', this.pop.bind(this));
