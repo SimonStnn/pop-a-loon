@@ -32,6 +32,12 @@ export type BalloonOptions = {
    */
   popSoundUrl: string;
   /**
+   * The size of the balloon.
+   *
+   * The first value is the minimum size and the second value is the maximum size.
+   */
+  size: [number, number];
+  /**
    * The duration thresholds for the rise animation.
    *
    * The first value is the minimum duration and the second value is the maximum duration.
@@ -67,6 +73,7 @@ export default class Default extends Balloon {
       dir_name: this.name,
       imageUrl: this.originalPath('/icon.png'),
       popSoundUrl: this.originalPath('/pop.mp3'),
+      size: [50, 75],
       riseDurationThreshold: [10000, 15000],
       swingDurationThreshold: [2, 4],
       swingOffset: 15,
@@ -121,8 +128,8 @@ export default class Default extends Balloon {
   }
 
   public build() {
-    const size = random(50, 75);
     const positionX = random(5, 95);
+    const size = random(this.options.size[0], this.options.size[1]);
     const riseDuration = random(
       this.options.riseDurationThreshold[0],
       this.options.riseDurationThreshold[1]
