@@ -12,7 +12,7 @@
     transform: translateY(100vh);
   }
   100% {
-    transform: translateY(-10vh);
+    transform: translateY(var(--rise-to, -10vh));
   }
 }
 

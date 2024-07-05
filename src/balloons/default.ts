@@ -107,6 +107,9 @@ export default class Default extends Balloon {
 
     this.element.classList.add('balloon');
 
+    // Set css variables
+    this.element.style.setProperty('--rise-to', -size + 'px');
+
     // Set the balloon's width and height
     this.element.style.width = size + 'px';
     this.element.style.height = this.element.style.width;
