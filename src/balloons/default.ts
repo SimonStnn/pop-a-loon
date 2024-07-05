@@ -1,7 +1,7 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
 import storage from '@/managers/storage';
 import { BalloonName } from '@/const';
-import { random } from '@/utils';
+import { importStylesheet, random } from '@/utils';
 
 export type BuildProps = {
   size: number;
@@ -86,6 +86,7 @@ export default class Default extends Balloon {
 
   constructor() {
     super();
+    importStylesheet('default-styles', this.resourceLocation + 'default.css');
     // Load the pop sound
     this.popSound.src = this.popSoundUrl;
     // Load the balloon image
