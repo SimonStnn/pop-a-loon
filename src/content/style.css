@@ -33,33 +33,3 @@
 
   pointer-events: none;
 }
-
-@keyframes rise {
-  0% {
-    transform: translateY(100vh);
-  }
-  100% {
-    transform: translateY(-10vh);
-  }
-}
-
-@keyframes swing {
-  0% {
-    transform: translateX(15px);
-  }
-  50% {
-    transform: translateX(-15px);
-  }
-  100% {
-    transform: translateX(15px);
-  }
-}
-
-@keyframes wave {
-  0% {
-    transform: rotate(-8deg);
-  }
-  100% {
-    transform: rotate(8deg);
-  }
-}
