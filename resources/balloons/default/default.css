@@ -18,21 +18,21 @@
 
 @keyframes swing {
   0% {
-    transform: translateX(var(--swing, 15px));
+    transform: translateX(var(--swing-offset, 15px));
   }
   50% {
-    transform: translateX(calc(-1 * var(--swing, 15px)));
+    transform: translateX(calc(-1 * var(--swing-offset, 15px)));
   }
   100% {
-    transform: translateX(var(--swing, 15px));
+    transform: translateX(var(--swing-offset, 15px));
   }
 }
 
 @keyframes wave {
   0% {
-    transform: rotate(-8deg);
+    transform: rotate(calc(-1 * var(--wave-deg, 8deg)));
   }
   100% {
-    transform: rotate(8deg);
+    transform: rotate(var(--wave-deg, 8deg));
   }
 }
