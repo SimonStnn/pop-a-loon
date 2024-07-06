@@ -6,6 +6,17 @@
             <stop offset="0%" style="stop-color: rgb(250, 220, 71); stop-opacity: 1" />
             <stop offset="100%" style="stop-color: rgb(250,172,0); stop-opacity: 1" />
         </linearGradient>
+        <!-- Shadow filter -->
+        <filter id="balloonShadow" x="-40%" y="-20%" width="180%" height="180%">
+            <feGaussianBlur in="SourceAlp5a" stdDeviation="8"/>
+            <feOffset dx="0" dy="15" result="offsetblur"/>
+            <feFlood flood-color="rgba(180,132,0,0.4)"/>
+            <feComposite in2="offsetblur" operator="in"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
     </defs>
     <ellipse
         cx="64"
@@ -18,6 +29,7 @@
         stroke-dasharray="4 10 4 12 200"
         stroke-dashoffset="0"
         stroke-linecap="round"
+        filter="url(#balloonShadow)"
     />
     <!-- Balloon shine reflextion -->
     <ellipse
