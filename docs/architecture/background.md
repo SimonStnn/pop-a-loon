@@ -20,3 +20,7 @@ The background script creates and listens to alarms. There are currently two ala
 2. `restart`: When this alarm goes off, [runtime.reload](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/reload) is called. This restarts the extension.
 
    A `restart` alarm is created when the remote server is not available or when any unexpected error occurs during setup. These alarms are created with a delay of one minute. This way, the extension will try to restart itself after a minute. Why a minute? Because the extension is not supposed to be restarted too often. If the remote server is not available, it probably also isn't available the next second, but maybe it is in one minute.
+
+### Types
+
+There is an `AlarmName` type in [const.ts](/src/const.ts) that defines the alarm names. This way, there is type safety and the alarm names are consistent throughout the extension.
