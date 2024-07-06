@@ -21,6 +21,20 @@ The background script creates and listens to alarms. There are currently two ala
 
    A `restart` alarm is created when the remote server is not available or when any unexpected error occurs during setup. These alarms are created with a delay of one minute. This way, the extension will try to restart itself after a minute. Why a minute? Because the extension is not supposed to be restarted too often. If the remote server is not available, it probably also isn't available the next second, but maybe it is in one minute.
 
-### Types
+### Alarm Types
 
 There is an `AlarmName` type in [const.ts](/src/const.ts) that defines the alarm names. This way, there is type safety and the alarm names are consistent throughout the extension.
+
+## Messages
+
+Pop-a-loon uses the [browser messaging API](https://developer.chrome.com/docs/extensions/develop/concepts/messaging) to communicate between different scripts.
+
+These are the actions for the messages (see [message types](#message-types)):
+
+1. `updateCounter`: When this message is received, the background script will update the counter in the browser action badge.
+2. `incrementCount`: When this message is received, the background will send a request to the remote server with the popped balloo.
+3. `setLogLevel`: When this message is received, the background script will set the log level specified in the message.
+
+### Message Types
+
+There are a few types defined in [const.ts](/src/const.ts) and exported under the `Message` type. They can be distinguished using the `Message.action` property.
