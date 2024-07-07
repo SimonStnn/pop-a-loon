@@ -1,10 +1,15 @@
 import { Default } from '@/balloons';
+import fetchMock from 'jest-fetch-mock';
+
+fetchMock.enableMocks();
 
 describe('Default Balloon', () => {
   let balloon: Default;
 
   beforeEach(() => {
     balloon = new Default();
+
+    fetchMock.resetMocks();
   });
 
   test('name should be "default"', () => {
