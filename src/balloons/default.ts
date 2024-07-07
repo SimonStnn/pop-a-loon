@@ -1,7 +1,7 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
 import storage from '@/managers/storage';
 import { BalloonName } from '@/const';
-import { random } from '@/utils';
+import { importStylesheet, random } from '@/utils';
 
 export type BuildProps = {
   size: number;
@@ -31,6 +31,16 @@ export type BalloonOptions = {
    * If not provided, the default sound will be used.
    */
   popSoundUrl: string;
+  /**
+   * The amount of pixels the balloon should wave back and forth.
+   *
+   * First `waveDegrees` to the right, return back to the center, then `waveDegrees` to the left.
+   */
+  swingOffset: number;
+  /**
+   * The degrees the balloon will tilt when back ant forth.
+   */
+  waveDegrees: number;
 };
 
 export default class Default extends Balloon {
@@ -40,6 +50,8 @@ export default class Default extends Balloon {
     dir_name: this.name,
     imageUrl: '/icon.png',
     popSoundUrl: '/pop.mp3',
+    swingOffset: 15,
+    waveDegrees: 8,
   };
 
   /**
@@ -86,6 +98,7 @@ export default class Default extends Balloon {
 
   constructor() {
     super();
+    importStylesheet('default-styles', this.resourceLocation + 'default.css');
     // Load the pop sound
     this.popSound.src = this.popSoundUrl;
     // Load the balloon image
@@ -105,6 +118,17 @@ export default class Default extends Balloon {
     );
 
     this.element.classList.add('balloon');
+
+    // Set css variables
+    this.element.style.setProperty('--rise-to', -size + 'px');
+    this.element.style.setProperty(
+      '--swing-offset',
+      this.options.swingOffset + 'px'
+    );
+    this.element.style.setProperty(
+      '--wave-deg',
+      this.options.waveDegrees + 'deg'
+    );
 
     // Set the balloon's width and height
     this.element.style.width = size + 'px';
