@@ -71,7 +71,7 @@ export default class Default extends Balloon {
   public get options(): BalloonOptions {
     return {
       dir_name: this.name,
-      imageUrl: this.originalPath('/icon.png'),
+      imageUrl: this.originalPath('/balloon.svg'),
       popSoundUrl: this.originalPath('/pop.mp3'),
       size: [50, 75],
       riseDurationThreshold: [10000, 15000],
