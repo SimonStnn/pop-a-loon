@@ -5,7 +5,9 @@ import Default from './default';
 export default class Confetti extends Default {
   public static readonly spawn_chance: number = 0.1;
   // @ts-ignore
-  public readonly name = 'confetti';
+  public get name(): 'confetti' {
+    return 'confetti';
+  }
 
   private readonly mask = document.createElement('img');
 

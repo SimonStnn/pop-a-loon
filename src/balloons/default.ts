@@ -32,6 +32,24 @@ export type BalloonOptions = {
    */
   popSoundUrl: string;
   /**
+   * The size of the balloon.
+   *
+   * The first value is the minimum size and the second value is the maximum size.
+   */
+  size: [number, number];
+  /**
+   * The duration thresholds for the rise animation.
+   *
+   * The first value is the minimum duration and the second value is the maximum duration.
+   */
+  riseDurationThreshold: [number, number];
+  /**
+   * The duration thresholds for the swing animation.
+   *
+   * The first value is the minimum duration and the second value is the maximum duration.
+   */
+  swingDurationThreshold: [number, number];
+  /**
    * The amount of pixels the balloon should wave back and forth.
    *
    * First `waveDegrees` to the right, return back to the center, then `waveDegrees` to the left.
@@ -45,27 +63,23 @@ export type BalloonOptions = {
 
 export default class Default extends Balloon {
   public static readonly spawn_chance: number = 0.9;
-  public readonly name = 'default';
-  public readonly options: BalloonOptions = {
-    dir_name: this.name,
-    imageUrl: '/icon.png',
-    popSoundUrl: '/pop.mp3',
-    swingOffset: 15,
-    waveDegrees: 8,
-  };
 
-  /**
-   * The duration thresholds for the rise animation.
-   *
-   * The first value is the minimum duration and the second value is the maximum duration.
-   */
-  public readonly riseDurationThreshold: [number, number] = [10000, 15000];
-  /**
-   * The duration thresholds for the swing animation.
-   *
-   * The first value is the minimum duration and the second value is the maximum duration.
-   */
-  public readonly swingDurationThreshold: [number, number] = [2, 4];
+  public get name(): 'default' {
+    return 'default';
+  }
+
+  public get options(): BalloonOptions {
+    return {
+      dir_name: this.name,
+      imageUrl: this.originalPath('/icon.png'),
+      popSoundUrl: this.originalPath('/pop.mp3'),
+      size: [50, 75],
+      riseDurationThreshold: [10000, 15000],
+      swingDurationThreshold: [2, 4],
+      swingOffset: 15,
+      waveDegrees: 8,
+    };
+  }
 
   /**
    * The image element for the balloon image.
@@ -99,23 +113,36 @@ export default class Default extends Balloon {
   constructor() {
     super();
     importStylesheet('default-styles', this.resourceLocation + 'default.css');
+  }
+
+  /**
+   * Get the path for the resources of the default balloon.
+   *
+   * This should only be used in the balloon.options.
+   *
+   * @param path The path of the resource.
+   * @returns The original path of the resource.
+   */
+  protected originalPath(path: string): string {
+    return '/../default' + path;
+  }
+
+  public build() {
+    const positionX = random(5, 95);
+    const size = random(this.options.size[0], this.options.size[1]);
+    const riseDuration = random(
+      this.options.riseDurationThreshold[0],
+      this.options.riseDurationThreshold[1]
+    );
+    const waveDuration = random(
+      this.options.swingDurationThreshold[0],
+      this.options.swingDurationThreshold[1]
+    );
+
     // Load the pop sound
     this.popSound.src = this.popSoundUrl;
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
-  }
-
-  public build() {
-    const size = random(50, 75);
-    const positionX = random(5, 95);
-    const riseDuration = random(
-      this.riseDurationThreshold[0],
-      this.riseDurationThreshold[1]
-    );
-    const waveDuration = random(
-      this.swingDurationThreshold[0],
-      this.swingDurationThreshold[1]
-    );
 
     this.element.classList.add('balloon');
 
