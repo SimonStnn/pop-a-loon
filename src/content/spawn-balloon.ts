@@ -13,8 +13,10 @@ import storage from '@/managers/storage';
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
 
+  const config = await storage.sync.get('config');
+
   // Run checks to see if the balloon should spawn
-  if (isFullScreenVideoPlaying()) {
+  if (!config.fullScreenVideoSpawn && isFullScreenVideoPlaying()) {
     log.debug('Full screen video playing, not spawning balloon');
     return;
   }
