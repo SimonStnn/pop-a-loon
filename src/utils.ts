@@ -146,16 +146,11 @@ export const isFullScreenVideoPlaying = () => {
     if (fullscreenElement.tagName.toLowerCase() === 'video') {
       return true;
     }
-    const videos = fullscreenElement.getElementsByTagName('video');
+    const videos = [
+      ...fullscreenElement.getElementsByTagName('video'),
+      ...document.getElementsByTagName('video'),
+    ];
     if (videos.length > 0) {
-      return true;
-    }
-  }
-
-  const videos = document.getElementsByTagName('video');
-  for (let video of videos) {
-    const rect = video.getBoundingClientRect();
-    if (rect.width === window.innerWidth) {
       return true;
     }
   }
