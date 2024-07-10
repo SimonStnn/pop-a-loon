@@ -1,12 +1,24 @@
 import browser from 'webextension-polyfill';
 import * as balloons from '@/balloons';
-import { getBalloonContainer, importStylesheet, weightedRandom } from '@/utils';
+import {
+  getBalloonContainer,
+  importStylesheet,
+  isFullScreenVideoPlaying,
+  weightedRandom,
+} from '@/utils';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
 
 (async () => {
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
+
+  // Run checks to see if the balloon should spawn
+  if (isFullScreenVideoPlaying()) {
+    log.debug('Full screen video playing, not spawning balloon');
+    return;
+  }
+
   log.setLevel((await storage.local.get('loglevel')) || 'info');
   log.groupCollapsed('debug', 'Pop-a-loon: Spawning balloon');
   log.time('debug', 'Balloon spawn time');

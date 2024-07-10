@@ -159,4 +159,5 @@ export const isFullScreenVideoPlaying = () => {
       return true;
     }
   }
+  return false;
 };
