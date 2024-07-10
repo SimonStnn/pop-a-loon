@@ -139,3 +139,24 @@ export async function askOriginPermissions() {
   });
   log.debug('Permissions granted for', permissions);
 }
+
+export const isFullScreenVideoPlaying = () => {
+  const fullscreenElement = document.fullscreenElement;
+  if (fullscreenElement) {
+    if (fullscreenElement.tagName.toLowerCase() === 'video') {
+      return true;
+    }
+    const videos = fullscreenElement.getElementsByTagName('video');
+    if (videos.length > 0) {
+      return true;
+    }
+  }
+
+  const videos = document.getElementsByTagName('video');
+  for (let video of videos) {
+    const rect = video.getBoundingClientRect();
+    if (rect.width === window.innerWidth) {
+      return true;
+    }
+  }
+};
