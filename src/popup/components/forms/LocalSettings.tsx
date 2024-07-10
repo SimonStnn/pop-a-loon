@@ -18,6 +18,7 @@ import { Default as DefaultBalloon } from '@/balloons';
 import storage from '@/managers/storage';
 import log from '@/managers/log';
 import { askOriginPermissions } from '@/utils';
+import { initalConfig } from '@/const';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -37,9 +38,11 @@ const formSchema = z.object({
 });
 
 export default () => {
-  const [popVolume, setPopVolume] = useState(0);
-  const [spawnRate, setSpawnRate] = useState(0);
-  const [fullScreenVideoSpawn, setFullScreenVideoSpawn] = useState(false);
+  const [popVolume, setPopVolume] = useState(initalConfig.popVolume);
+  const [spawnRate, setSpawnRate] = useState(initalConfig.spawnRate);
+  const [fullScreenVideoSpawn, setFullScreenVideoSpawn] = useState(
+    initalConfig.fullScreenVideoSpawn
+  );
   const [permissions, setPermissions] = useState<Permissions.AnyPermissions>(
     {}
   );
