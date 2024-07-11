@@ -25,6 +25,7 @@
     - [build:firefox:zip](#buildfirefoxzip)
     - [build:all:zip](#buildallzip)
     - [zip:source](#zipsource)
+  - [Adding a balloon](#adding-a-balloon)
 - [Architecture](#architecture)
 - [Balloon spawn chances](#balloon-spawn-chances)
 - [Inheritance Tree](#inheritance-tree)
@@ -258,6 +259,10 @@ npm run zip:source
 
 The zip file will be created in the `build/` directory.
 
+### Adding a balloon
+
+Refer to [adding a balloon](./adding-balloon.md) for instructions on how to add a new balloon to the extension.
+
 ## Architecture
 
 > [!NOTE]
@@ -315,7 +320,7 @@ The class serves as a base class for each balloon in pop-a-loon, providing essen
 These properties and methods **must** be implemented in the child classes.
 
 > [!IMPORTANT]
-> `element` is the html element that will be added to the DOM after the balloon is built.
+> The `element` is the html element that will be added to the DOM after the balloon is built.
 
 ## Balloons
 
