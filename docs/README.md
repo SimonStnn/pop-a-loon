@@ -275,6 +275,7 @@ pie showdata
 title Balloon spawn chances
    "Default" : 0.90
    "Confetti" : 0.10
+   "Gold": 0.05
 ```
 
 ## Inheritance Tree
@@ -286,6 +287,7 @@ class Balloon { <<Abstract>> }
 
 Default --|> Balloon
 Confetti --|> Default
+Gold --|> Default
 ```
 
 ## Abstract balloon class
