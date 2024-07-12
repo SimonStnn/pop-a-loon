@@ -38,3 +38,14 @@ These are the actions for the messages (see [message types](#message-types)):
 ### Message Types
 
 There are a few types defined in [const.ts](/src/const.ts) and exported under the `Message` type. They can be distinguished using the `Message.action` property.
+
+## Important methods
+
+The background script has a few important methods initalized:
+
+- `setup()`: The setup function where all setups happen.
+- `spawnBalloon()`: A balloon is sent to a tab.
+- `createSpawnAlarm(name)`: Creates a balloon spawn alarm. Is triggered after `spawnBalloon()` was called.
+- `backgroundScript()`: This is the 'main' function. This is the function that is initially called and calls the `setup()` function.
+
+These include most of the functionallity of the background.
