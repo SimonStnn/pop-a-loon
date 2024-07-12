@@ -217,6 +217,13 @@ export default () => {
                       Weither or not to spawn balloons in fullscreen video
                       players, like youtube.
                     </p>
+                    <p className="pt-1 text-sm font-medium leading-tight text-muted-foreground">
+                      {fullScreenVideoSpawn ? (
+                        <>Balloons can spawn!</>
+                      ) : (
+                        <>Balloons will not spawn.</>
+                      )}
+                    </p>
                   </InfoIcon>
                 </span>
               </FormLabel>
