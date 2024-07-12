@@ -49,3 +49,12 @@ The background script has a few important methods initalized:
 - `backgroundScript()`: This is the 'main' function. This is the function that is initially called and calls the `setup()` function.
 
 These include most of the functionallity of the background.
+
+## Event listeners
+
+The background also listens to some events.
+
+- Alarms with [`onAlarm`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/alarms/onAlarm). See [alarms](#alarms).
+- Messages with [`onMessage`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage). See [messages](#messages).
+- [`onStartup`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onStartup)
+- [`onInstalled`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onInstalled)
