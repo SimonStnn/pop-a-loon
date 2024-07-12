@@ -11,7 +11,7 @@ Adding a new balloon to the extension is a simple process. In this document we w
 - [Implementation](#implementation)
   - [Extending the abstract balloon class](#extending-the-abstract-balloon-class)
   - [Extending the Default balloon class](#extending-the-default-balloon-class)
-  - [Making the balloon available](#making-the-balloon-available)
+- [Making the balloon available](#making-the-balloon-available)
 - [Tests](#tests)
 - [Documentation](#documentation)
 
@@ -78,7 +78,7 @@ You can find what other options you can override in the [default balloon documen
 
 Now you build your class you can [make your balloon available](#making-the-balloon-available) to pop-a-loon and see it on screen.
 
-### Making the balloon available
+## Making the balloon available
 
 Now we need to export it from the [`/src/balloons/`](/src/balloons/) module. So we include it in [`/src/balloons/index.ts`](/src/balloons/index.ts)
 
