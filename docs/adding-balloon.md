@@ -11,6 +11,7 @@ Adding a new balloon to the extension is a simple process. In this document we w
 - [Implementation](#implementation)
   - [Extending the abstract balloon class](#extending-the-abstract-balloon-class)
   - [Extending the Default balloon class](#extending-the-default-balloon-class)
+  - [Custom balloon styles](#custom-balloon-styles)
 - [Making the balloon available](#making-the-balloon-available)
 - [Tests](#tests)
 - [Documentation](#documentation)
@@ -79,6 +80,23 @@ In this example the `Example` class extends the `Default` class and overrides th
 You can find what other options you can override in the [default balloon documentation](./balloons/default.md). Further implementation is up to you.
 
 Now you build your class you can [make your balloon available](#making-the-balloon-available) to pop-a-loon and see it on screen.
+
+### Custom balloon styles
+
+Implementing a custom balloon may require custom styles. To do this you can add a new css file to your resources folder. To import the css file you can use the `importStylesheet` function from [utils](/src/utils.ts).
+
+```ts
+import { importStylesheet } from '@/utils';
+
+class Example extends Default {
+  public build() {
+    super.build();
+    importStylesheet('example-styles', this.resourceLocation + 'style.css');
+  }
+}
+```
+
+In this example the `importStylesheet` function is used to import the `style.css` file from the `resources/balloons/example` directory. The `resourceLocation` property is provided by the `Default` class and is the path to the balloon resources.
 
 ## Making the balloon available
 
