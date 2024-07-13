@@ -1,5 +1,5 @@
 import { balloonResourceLocation } from '@/balloon';
-import { importStylesheet, random } from '@/utils';
+import { random } from '@/utils';
 import Default from './default';
 
 export default class Confetti extends Default {

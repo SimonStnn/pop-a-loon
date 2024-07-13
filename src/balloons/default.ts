@@ -1,7 +1,7 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
 import storage from '@/managers/storage';
 import { BalloonName } from '@/const';
-import { importStylesheet, random } from '@/utils';
+import { random } from '@/utils';
 
 export type BuildProps = {
   size: number;
