@@ -67,6 +67,11 @@ export default abstract class Balloon {
    * This will create a new balloon element and add it to the balloon container.
    */
   public rise(): void {
+    // Import base styles
+    importStylesheet(
+      'balloon-styles',
+      browser.runtime.getURL('resources/stylesheets/style.css')
+    );
     // Build the balloon element
     this.build();
     // Add the balloon to the container
