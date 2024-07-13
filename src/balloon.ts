@@ -70,7 +70,7 @@ export default abstract class Balloon {
     // Import base styles
     importStylesheet(
       'balloon-styles',
-      browser.runtime.getURL('resources/stylesheets/style.css')
+      joinPaths('resources', 'balloons', 'base-styles.css')
     );
     // Build the balloon element
     this.build();
