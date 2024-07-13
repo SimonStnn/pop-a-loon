@@ -11,16 +11,10 @@ export default class Confetti extends Default {
 
   private readonly mask = document.createElement('img');
 
-  constructor() {
-    super();
-    importStylesheet(
-      'confetti-styles',
-      balloonResourceLocation + 'confetti/confetti.css'
-    );
-  }
-
   public build(): void {
     super.build();
+    this.importStylesheet('confetti.css');
+
     this.element.firstChild?.firstChild?.appendChild(this.mask);
     this.mask.src = balloonResourceLocation + this.name + '/mask.png';
     this.mask.style.position = 'absolute';
