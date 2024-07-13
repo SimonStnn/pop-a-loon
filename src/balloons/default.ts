@@ -1,7 +1,7 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
 import storage from '@/managers/storage';
 import { BalloonName } from '@/const';
-import { random } from '@/utils';
+import { joinPaths, random } from '@/utils';
 
 export type BuildProps = {
   size: number;
@@ -96,8 +96,10 @@ export default class Default extends Balloon {
    * The URL of the balloon image.
    */
   public get balloonImageUrl(): string {
-    return (
-      balloonResourceLocation + this.options.dir_name + this.options.imageUrl
+    return joinPaths(
+      balloonResourceLocation,
+      this.options.dir_name,
+      this.options.imageUrl
     );
   }
 
@@ -105,8 +107,10 @@ export default class Default extends Balloon {
    * The URL of the pop sound.
    */
   public get popSoundUrl(): string {
-    return (
-      balloonResourceLocation + this.options.dir_name + this.options.popSoundUrl
+    return joinPaths(
+      balloonResourceLocation,
+      this.options.dir_name,
+      this.options.popSoundUrl
     );
   }
 
@@ -118,8 +122,8 @@ export default class Default extends Balloon {
    * @param path The path of the resource.
    * @returns The original path of the resource.
    */
-  protected originalPath(path: string): string {
-    return '/../default' + path;
+  protected originalPath(name: string): string {
+    return joinPaths('..', 'default', name);
   }
 
   public build() {

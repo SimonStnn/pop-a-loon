@@ -1,19 +1,26 @@
 import browser from 'webextension-polyfill';
-import { getBalloonContainer, importStylesheet, sendMessage } from '@/utils';
+import {
+  getBalloonContainer,
+  importStylesheet,
+  joinPaths,
+  sendMessage,
+} from '@/utils';
 import { BalloonName } from './const';
 
 /**
  * The location of the balloon resources. (`resources/balloons/`)
  */
 export const balloonResourceLocation = browser.runtime.getURL(
-  'resources/balloons/'
+  joinPaths('resources', 'balloons')
 );
 export const defaultBalloonFolderName = 'default';
 /**
  * The location of the default balloon resources. (`resources/balloons/default/`)
  */
-export const defaultBalloonResourceLocation =
-  balloonResourceLocation + `${defaultBalloonFolderName}/`;
+export const defaultBalloonResourceLocation = joinPaths(
+  balloonResourceLocation,
+  defaultBalloonFolderName
+);
 
 export default abstract class Balloon {
   public abstract readonly name: BalloonName;
@@ -32,7 +39,7 @@ export default abstract class Balloon {
   public readonly element: HTMLDivElement = document.createElement('div');
 
   public get resourceLocation(): string {
-    return balloonResourceLocation + this.name + '/';
+    return joinPaths(balloonResourceLocation, this.name);
   }
 
   constructor() {
@@ -41,7 +48,10 @@ export default abstract class Balloon {
   }
 
   protected async importStylesheet(name: string): Promise<void> {
-    await importStylesheet(`${this.name}-styles`, this.resourceLocation + name);
+    await importStylesheet(
+      `${this.name}-styles`,
+      joinPaths(this.resourceLocation, name)
+    );
   }
 
   /**
