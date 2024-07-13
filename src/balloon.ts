@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { getBalloonContainer, sendMessage } from '@/utils';
+import { getBalloonContainer, importStylesheet, sendMessage } from '@/utils';
 import { BalloonName } from './const';
 
 /**
@@ -38,6 +38,10 @@ export default abstract class Balloon {
   constructor() {
     // Add an event listener to the balloon
     this.element.addEventListener('click', this.pop.bind(this));
+  }
+
+  protected async importStylesheet(name: string): Promise<void> {
+    await importStylesheet(`${this.name}-styles`, this.resourceLocation + name);
   }
 
   /**
