@@ -7,20 +7,3 @@
   left: 0;
   pointer-events: none;
 }
-
-.balloon {
-  position: fixed;
-  z-index: 9999;
-  cursor: pointer;
-  top: 0;
-
-  /* Make image not dragable and not selectable */
-  user-drag: none;
-  -webkit-user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-
-  pointer-events: auto;
-}
