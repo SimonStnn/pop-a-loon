@@ -25,11 +25,6 @@ import storage from '@/managers/storage';
   log.groupCollapsed('debug', 'Pop-a-loon: Spawning balloon');
   log.time('debug', 'Balloon spawn time');
 
-  importStylesheet(
-    'balloon-styles',
-    browser.runtime.getURL('resources/stylesheets/style.css')
-  );
-
   // Add the balloon container to the document
   const _ = getBalloonContainer();
 

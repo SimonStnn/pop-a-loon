@@ -1,19 +1,31 @@
 import browser from 'webextension-polyfill';
-import { getBalloonContainer, sendMessage } from '@/utils';
+import {
+  getBalloonContainer,
+  importStylesheet,
+  joinPaths,
+  sendMessage,
+} from '@/utils';
 import { BalloonName } from './const';
 
 /**
  * The location of the balloon resources. (`resources/balloons/`)
  */
 export const balloonResourceLocation = browser.runtime.getURL(
-  'resources/balloons/'
+  joinPaths('resources', 'balloons')
 );
 export const defaultBalloonFolderName = 'default';
 /**
  * The location of the default balloon resources. (`resources/balloons/default/`)
  */
-export const defaultBalloonResourceLocation =
-  balloonResourceLocation + `${defaultBalloonFolderName}/`;
+export const defaultBalloonResourceLocation = joinPaths(
+  balloonResourceLocation,
+  defaultBalloonFolderName
+);
+
+type StyleSheetProps = {
+  id?: string;
+  name?: string;
+};
 
 export default abstract class Balloon {
   public abstract readonly name: BalloonName;
@@ -32,12 +44,28 @@ export default abstract class Balloon {
   public readonly element: HTMLDivElement = document.createElement('div');
 
   public get resourceLocation(): string {
-    return balloonResourceLocation + this.name + '/';
+    return joinPaths(balloonResourceLocation, this.name);
   }
 
   constructor() {
     // Add an event listener to the balloon
     this.element.addEventListener('click', this.pop.bind(this));
+  }
+
+  protected async importStylesheet(name?: string): Promise<void>;
+  protected async importStylesheet({
+    id,
+    name,
+  }: StyleSheetProps): Promise<void>;
+  protected async importStylesheet(
+    args?: string | StyleSheetProps
+  ): Promise<void> {
+    const { id, name } =
+      typeof args === 'string' ? { id: undefined, name: args } : (args ?? {});
+    await importStylesheet(
+      `${id ?? this.name}-styles`,
+      joinPaths(this.resourceLocation, name ?? 'styles.css')
+    );
   }
 
   /**
@@ -53,6 +81,13 @@ export default abstract class Balloon {
    * This will create a new balloon element and add it to the balloon container.
    */
   public rise(): void {
+    // Import base styles
+    importStylesheet(
+      'balloon-styles',
+      browser.runtime.getURL(
+        joinPaths('resources', 'balloons', 'base-styles.css')
+      )
+    );
     // Build the balloon element
     this.build();
     // Add the balloon to the container

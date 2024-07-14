@@ -1,5 +1,8 @@
 import Balloon from '@/balloon';
 import { BalloonName } from '@/const';
+import fetchMock from 'jest-fetch-mock';
+
+fetchMock.enableMocks();
 
 // Create a concrete subclass of Balloon for testing
 class TestBalloon extends Balloon {
@@ -14,6 +17,8 @@ describe('Balloon', () => {
 
   beforeEach(() => {
     balloon = new TestBalloon();
+
+    fetchMock.resetMocks();
   });
 
   test('isRising should return a boolean', () => {
