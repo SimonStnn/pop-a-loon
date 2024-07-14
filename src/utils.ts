@@ -115,7 +115,6 @@ export function getBalloonContainer() {
 }
 
 export async function importStylesheet(id: string, href: string) {
-  id = `pop-a-loon-${id}`;
   if (!document.getElementById(id)) {
     // Fetch the CSS file content
     const response = await fetch(href);
