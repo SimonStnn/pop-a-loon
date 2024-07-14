@@ -47,7 +47,7 @@ export default abstract class Balloon {
     this.element.addEventListener('click', this.pop.bind(this));
   }
 
-  protected async importStylesheet(name: string): Promise<void> {
+  protected async importStylesheet(name: string = 'style.css'): Promise<void> {
     await importStylesheet(
       `${this.name}-styles`,
       joinPaths(this.resourceLocation, name)
