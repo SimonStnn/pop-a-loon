@@ -22,6 +22,11 @@ export const defaultBalloonResourceLocation = joinPaths(
   defaultBalloonFolderName
 );
 
+type StyleSheetProps = {
+  id?: string;
+  name?: string;
+};
+
 export default abstract class Balloon {
   public abstract readonly name: BalloonName;
 
@@ -47,10 +52,19 @@ export default abstract class Balloon {
     this.element.addEventListener('click', this.pop.bind(this));
   }
 
-  protected async importStylesheet(name: string = 'style.css'): Promise<void> {
+  protected async importStylesheet(name?: string): Promise<void>;
+  protected async importStylesheet({
+    id,
+    name,
+  }: StyleSheetProps): Promise<void>;
+  protected async importStylesheet(
+    args?: string | StyleSheetProps
+  ): Promise<void> {
+    const { id, name } =
+      typeof args === 'string' ? { id: undefined, name: args } : (args ?? {});
     await importStylesheet(
-      `${this.name}-styles`,
-      joinPaths(this.resourceLocation, name)
+      `${id ?? this.name}-styles`,
+      joinPaths(this.resourceLocation, name ?? 'styles.css')
     );
   }
 
