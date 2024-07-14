@@ -91,12 +91,14 @@ import { importStylesheet } from '@/utils';
 class Example extends Default {
   public build() {
     super.build();
-    importStylesheet('example-styles', this.resourceLocation + 'style.css');
+    this.importStylesheet('style.css');
   }
 }
 ```
 
 In this example the `importStylesheet` function is used to import the `style.css` file from the `resources/balloons/example` directory. The `resourceLocation` property is provided by the `Default` class and is the path to the balloon resources.
+
+> The default value for the file name is `'style.css'`. So in this example it can even be excluded.
 
 ## Making the balloon available
 
