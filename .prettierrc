@@ -10,5 +10,5 @@
   "sortingMethod": "alphabetical",
   "stripNewlines": true,
   "newlineBetweenTypes": false,
-  "importTypeOrder": ["NPMPackages", "localImportsType", "localImportsValue"]
+  "importTypeOrder": ["NPMPackages", "localImportsValue", "localImportsType"]
 }
