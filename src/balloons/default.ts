@@ -127,7 +127,10 @@ export default class Default extends Balloon {
   }
 
   public build() {
-    this.importStylesheet(this.originalPath('default.css'));
+    this.importStylesheet({
+      id: 'default',
+      name: this.originalPath('default.css'),
+    });
 
     const positionX = random(5, 95);
     const size = random(this.options.size[0], this.options.size[1]);
