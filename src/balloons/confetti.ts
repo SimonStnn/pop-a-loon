@@ -1,26 +1,22 @@
 import { balloonResourceLocation } from '@/balloon';
-import { importStylesheet, random } from '@/utils';
+import { joinPaths, random } from '@/utils';
 import Default from './default';
 
 export default class Confetti extends Default {
   public static readonly spawn_chance: number = 0.1;
   // @ts-ignore
-  public readonly name = 'confetti';
+  public get name(): 'confetti' {
+    return 'confetti';
+  }
 
   private readonly mask = document.createElement('img');
 
-  constructor() {
-    super();
-    importStylesheet(
-      'confetti-styles',
-      balloonResourceLocation + 'confetti/confetti.css'
-    );
-  }
-
   public build(): void {
     super.build();
+    this.importStylesheet('confetti.css');
+
     this.element.firstChild?.firstChild?.appendChild(this.mask);
-    this.mask.src = balloonResourceLocation + this.name + '/mask.png';
+    this.mask.src = joinPaths(balloonResourceLocation, this.name, 'mask.png');
     this.mask.style.position = 'absolute';
     this.mask.style.top = '-10px';
     this.mask.style.left = '0';

@@ -3,6 +3,7 @@ import browser, { manifest, type Permissions } from 'webextension-polyfill';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormField,
@@ -17,6 +18,7 @@ import { Default as DefaultBalloon } from '@/balloons';
 import storage from '@/managers/storage';
 import log from '@/managers/log';
 import { askOriginPermissions } from '@/utils';
+import { initalConfig } from '@/const';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -28,6 +30,7 @@ const SPAWN_RATE_STEP = 0.1;
 const formSchema = z.object({
   popVolume: z.number().int().min(MIN_POP_VOLUME).max(MAX_POP_VOLUME),
   spawnRate: z.number().int().min(MIN_SPAWN_RATE).max(MAX_SPAWN_RATE),
+  fullScreenVideoSpawn: z.boolean(),
   permissions: z.object({
     origins: z.array(z.string()),
     permissions: z.array(z.string()),
@@ -35,8 +38,11 @@ const formSchema = z.object({
 });
 
 export default () => {
-  const [popVolume, setPopVolume] = useState(0);
-  const [spawnRate, setSpawnRate] = useState(0);
+  const [popVolume, setPopVolume] = useState(initalConfig.popVolume);
+  const [spawnRate, setSpawnRate] = useState(initalConfig.spawnRate);
+  const [fullScreenVideoSpawn, setFullScreenVideoSpawn] = useState(
+    initalConfig.fullScreenVideoSpawn
+  );
   const [permissions, setPermissions] = useState<Permissions.AnyPermissions>(
     {}
   );
@@ -77,6 +83,23 @@ export default () => {
     );
   };
 
+  const onFullScreenVideoSpawnChange = async (
+    fullScreenVideoSpawn: boolean
+  ) => {
+    // Save volume to storage
+    const config = await storage.sync.get('config');
+    await storage.sync.set('config', {
+      ...config,
+      fullScreenVideoSpawn,
+    });
+
+    setFullScreenVideoSpawn(fullScreenVideoSpawn);
+    log.debug(
+      'Spawning in full screen video players:',
+      (await storage.sync.get('config')).fullScreenVideoSpawn
+    );
+  };
+
   const onGrantOriginPermissionClick = async () => {
     await askOriginPermissions();
     setPermissions(await browser.permissions.getAll());
@@ -88,6 +111,7 @@ export default () => {
       // Load volume from storage
       setPopVolume(config.popVolume);
       setSpawnRate(config.spawnRate);
+      setFullScreenVideoSpawn(config.fullScreenVideoSpawn);
       setPermissions(await browser.permissions.getAll());
     };
 
@@ -164,6 +188,45 @@ export default () => {
                   }}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fullScreenVideoSpawn"
+          render={({ field: { onChange } }) => (
+            <FormItem>
+              <FormLabel className="flex justify-between gap-1">
+                <span>Fullscreen video spawn</span>
+                <span className="flex gap-2">
+                  <FormControl>
+                    <Checkbox
+                      checked={fullScreenVideoSpawn}
+                      onCheckedChange={(val) => {
+                        onChange(val);
+                        onFullScreenVideoSpawnChange(!!val);
+                      }}
+                    />
+                  </FormControl>
+                  <InfoIcon>
+                    <h4 className="mb-1 font-medium leading-none">
+                      Fullscreen video spawn
+                    </h4>
+                    <p className="text-sm font-normal leading-tight text-muted-foreground">
+                      Weither or not to spawn balloons in fullscreen video
+                      players, like youtube.
+                    </p>
+                    <p className="pt-1 text-sm font-medium leading-tight text-muted-foreground">
+                      {fullScreenVideoSpawn ? (
+                        <>Balloons can spawn!</>
+                      ) : (
+                        <>Balloons will not spawn.</>
+                      )}
+                    </p>
+                  </InfoIcon>
+                </span>
+              </FormLabel>
               <FormMessage />
             </FormItem>
           )}

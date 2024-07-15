@@ -8,12 +8,14 @@ import * as Balloons from '@/balloons';
 type _initialConfig = {
   popVolume: number;
   spawnRate: number;
+  fullScreenVideoSpawn: boolean;
 } & RemoteConfig;
 
 export const initalConfig: _initialConfig = {
   // Local config
   popVolume: 70,
   spawnRate: 1,
+  fullScreenVideoSpawn: false,
 
   // Remote config -> can be overriden by the remote
   badge: {

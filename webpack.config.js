@@ -82,14 +82,6 @@ module.exports = {
       patterns: [
         // Copy resource files to dist
         { from: 'resources/', to: 'resources/' },
-        // Copy sylesheets to dist but exclude stylesheets from popup folder
-        {
-          from: 'src/**/*.css',
-          globOptions: {
-            ignore: ['**/popup/**'],
-          },
-          to: 'resources/stylesheets/[name][ext]',
-        },
         // Copy manifest.json to dist
         {
           from: `manifest.json`,

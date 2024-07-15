@@ -115,7 +115,6 @@ export function getBalloonContainer() {
 }
 
 export async function importStylesheet(id: string, href: string) {
-  id = `pop-a-loon-${id}`;
   if (!document.getElementById(id)) {
     // Fetch the CSS file content
     const response = await fetch(href);
@@ -139,3 +138,33 @@ export async function askOriginPermissions() {
   });
   log.debug('Permissions granted for', permissions);
 }
+
+export const isFullScreenVideoPlaying = () => {
+  const fullscreenElement = document.fullscreenElement;
+  if (fullscreenElement) {
+    if (fullscreenElement.tagName.toLowerCase() === 'video') {
+      return true;
+    }
+    const videos = [
+      ...fullscreenElement.getElementsByTagName('video'),
+      ...document.getElementsByTagName('video'),
+    ];
+    if (videos.length > 0) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const joinPaths = (...paths: string[]): string => {
+  return paths
+    .map((part, index) => {
+      if (index === 0) {
+        return part.trim().replace(/[/]*$/g, '');
+      } else {
+        return part.trim().replace(/(^[/]*|[/]*$)/g, '');
+      }
+    })
+    .filter((part) => part.length)
+    .join('/');
+};

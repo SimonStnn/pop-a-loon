@@ -1,13 +1,3 @@
-#balloon-container {
-  position: fixed;
-  z-index: 9999;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
-
 .balloon {
   position: fixed;
   z-index: 9999;
@@ -39,27 +29,27 @@
     transform: translateY(100vh);
   }
   100% {
-    transform: translateY(-10vh);
+    transform: translateY(var(--rise-to, -10vh));
   }
 }
 
 @keyframes swing {
   0% {
-    transform: translateX(15px);
+    transform: translateX(var(--swing-offset, 15px));
   }
   50% {
-    transform: translateX(-15px);
+    transform: translateX(calc(-1 * var(--swing-offset, 15px)));
   }
   100% {
-    transform: translateX(15px);
+    transform: translateX(var(--swing-offset, 15px));
   }
 }
 
 @keyframes wave {
   0% {
-    transform: rotate(-8deg);
+    transform: rotate(calc(-1 * var(--wave-deg, 8deg)));
   }
   100% {
-    transform: rotate(8deg);
+    transform: rotate(var(--wave-deg, 8deg));
   }
 }
