@@ -12,6 +12,7 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 - [Webpack](#webpack)
   - [Environment Variables](#environment-variables)
   - [Resources folder](#resources-folder)
+  - [Compiling the manifests](#compiling-the-manifests)
 - [Managers](#managers)
   - [Log](#log)
   - [Storage](#storage)
@@ -70,6 +71,10 @@ Webpack also sets some environment variables for the extension. In the source co
 
 The `resources` folder contains all the resources used in the extension. This includes images, icons, and other assets that are used in the extension. These resources are copied to the build directory during the compilation process and are available when the extension is running.
 
+### Compiling the manifests
+
+Webpack is used to compile the manifests. More information can be found [here](#manifest)
+
 ## Managers
 
 Pop-a-loon has a few custom managers that handle different aspects of the extension.
@@ -117,7 +122,7 @@ The [`manifest.json`](/manifest.json) file is the metadata file for the extensio
 
 There are also browser specific manifest files. These are used to specify browser specific settings. For example, the [`manifest.firefox.json`](/manifest.firefox.json) file is used to specify a `browser_specific_settings` key that is only available in Firefox.
 
-The browser specific manifest files are merged with the base manifest file during the build process. This allows for browser-specific settings to be applied when the extension is compiled. The browser specific manifest file keys can override the options defined in the base manifest file.
+The browser specific manifest files are merged with the base manifest file during the [build process](#webpack). This allows for browser-specific settings to be applied when the extension is compiled. The browser specific manifest file keys can override the options defined in the base manifest file.
 
 ## Background
 
