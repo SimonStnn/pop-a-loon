@@ -15,6 +15,7 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 - [Managers](#managers)
   - [Log](#log)
   - [Storage](#storage)
+- [Manifest](#manifest)
 - [Background](#background)
 - [Content Scripts](#content-scripts)
 - [Popup](#popup)
@@ -109,6 +110,14 @@ await storage.sync.set('config', {
 ```
 
 In this example we update the `popVolume` property of the `config` object in the `sync` storage.
+
+## Manifest
+
+The [`manifest.json`](/manifest.json) file is the metadata file for the extension. It contains information about the extension, such as its name, version, description, and permissions. The manifest file also specifies the background scripts, content scripts, and popup UI of the extension.
+
+There are also browser specific manifest files. These are used to specify browser specific settings. For example, the [`manifest.firefox.json`](/manifest.firefox.json) file is used to specify a `browser_specific_settings` key that is only available in Firefox.
+
+The browser specific manifest files are merged with the base manifest file during the build process. This allows for browser-specific settings to be applied when the extension is compiled. The browser specific manifest file keys can override the options defined in the base manifest file.
 
 ## Background
 
