@@ -8,17 +8,16 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 
 - [Table of Contents](#table-of-contents)
 - [Directory Structure](#directory-structure)
-- [Workflow](#workflow)
-  - [Polyfilling](#polyfilling)
-  - [Webpack](#webpack)
-    - [Environment Variables](#environment-variables)
-    - [Resources folder](#resources-folder)
-  - [Managers](#managers)
-    - [Log](#log)
-    - [Storage](#storage)
-  - [Background](#background)
-  - [Content Scripts](#content-scripts)
-  - [Popup](#popup)
+- [Polyfilling](#polyfilling)
+- [Webpack](#webpack)
+  - [Environment Variables](#environment-variables)
+  - [Resources folder](#resources-folder)
+- [Managers](#managers)
+  - [Log](#log)
+  - [Storage](#storage)
+- [Background](#background)
+- [Content Scripts](#content-scripts)
+- [Popup](#popup)
 - [Testing](#testing)
 - [Building and Deployment](#building-and-deployment)
 
@@ -36,9 +35,7 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 - `tests/`: Contains test files for the extension.
 - `manifest.json`: The manifest file of the extension, which provides important metadata for the extension.
 
-## Workflow
-
-### Polyfilling
+## Polyfilling
 
 To ensure compatibility with multiple browsers, the pop-a-loon extension uses the [webextension polyfill](https://github.com/mozilla/webextension-polyfill) library. This polyfill provides a consistent API for browser extensions across different browsers, allowing the extension to work seamlessly on Chrome, Firefox, and other supported browsers.
 
@@ -55,11 +52,11 @@ const tabs = await browser.tabs.query({ active: true });
 
 Now, after compiling the extension, the polyfill will be included and make the code access the correct browser API's.
 
-### Webpack
+## Webpack
 
 The pop-a-loon extension uses [Webpack](https://webpack.js.org/) to compile its JavaScript code. The webpack configuration is set up to compile the background scripts, popup UI and an entry for each content script into separate bundles. This allows for better organization of the code and ensures that each part of the extension is compiled correctly. Configuration can be found in the [webpack.config.js](/webpack.config.js) file.
 
-#### Environment Variables
+### Environment Variables
 
 The webpack configuration uses environment variables to determine the build mode. The `NODE_ENV` environment variable is used to determine whether the extension is being built for development or production. This allows for different optimizations and settings to be applied based on the build mode.
 
@@ -68,15 +65,15 @@ Webpack also sets some environment variables for the extension. In the source co
 > [!WARNING]
 > The `process` namespace is not available in the browser. This is a Node.js specific feature. Webpack replaces the `process` object with the correct values during compilation. (e.g. `process.env.NODE_ENV` is replaced with `production`).
 
-#### Resources folder
+### Resources folder
 
 The `resources` folder contains all the resources used in the extension. This includes images, icons, and other assets that are used in the extension. These resources are copied to the build directory during the compilation process and are available when the extension is running.
 
-### Managers
+## Managers
 
 Pop-a-loon has a few custom managers that handle different aspects of the extension.
 
-#### Log
+### Log
 
 The `log` manager is used to log messages to the console. It provides a simple interface for logging messages with different levels of severity, such as `info`, `warn`, and `error`.
 
@@ -97,7 +94,7 @@ log.softerror(
 
 This manager also includes log functionallity from the console namespace. Like `log.time`, `log.timeEnd`, `log.group`, `log.groupEnd`, ….
 
-#### Storage
+### Storage
 
 The `storage` managers provides a type-safe way to interact with the browser storage via the browser API's.
 
@@ -113,19 +110,19 @@ await storage.sync.set('config', {
 
 In this example we update the `popVolume` property of the `config` object in the `sync` storage.
 
-### Background
+## Background
 
 The background scripts handle events and perform tasks that require access to browser APIs.
 
 Read the [background scripts documentation](./architecture/background.md) for more information.
 
-### Content Scripts
+## Content Scripts
 
 Content scripts are injected into web pages and have access to the DOM. This is used to make the balloons appear on web pages.
 
 Read the [content scripts documentation](./architecture/content-scripts.md) for more information.
 
-### Popup
+## Popup
 
 The popup UI provides a user-friendly interface for accessing the extension's features. It can display information, receive user input. It acts as a bridge between the user and the extension and is internally just a web page.
 
