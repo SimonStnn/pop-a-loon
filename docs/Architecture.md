@@ -10,6 +10,9 @@ The pop-a-loon architecture is designed to be modular and extensible. This docum
 - [Directory Structure](#directory-structure)
 - [Workflow](#workflow)
   - [Polyfilling](#polyfilling)
+  - [Webpack](#webpack)
+    - [Environment Variables](#environment-variables)
+    - [Resources folder](#resources-folder)
   - [Managers](#managers)
     - [Log](#log)
     - [Storage](#storage)
@@ -52,6 +55,23 @@ const tabs = await browser.tabs.query({ active: true });
 
 Now, after compiling the extension, the polyfill will be included and make the code access the correct browser API's.
 
+### Webpack
+
+The pop-a-loon extension uses [Webpack](https://webpack.js.org/) to compile its JavaScript code. The webpack configuration is set up to compile the background scripts, popup UI and an entry for each content script into separate bundles. This allows for better organization of the code and ensures that each part of the extension is compiled correctly. Configuration can be found in the [webpack.config.js](/webpack.config.js) file.
+
+#### Environment Variables
+
+The webpack configuration uses environment variables to determine the build mode. The `NODE_ENV` environment variable is used to determine whether the extension is being built for development or production. This allows for different optimizations and settings to be applied based on the build mode.
+
+Webpack also sets some environment variables for the extension. In the source code they are accessed via the `process.env` object. For example, the `process.env.NODE_ENV` variable is used to determine the build mode.
+
+> [!WARNING]
+> The `process` namespace is not available in the browser. This is a Node.js specific feature. Webpack replaces the `process` object with the correct values during compilation. (e.g. `process.env.NODE_ENV` is replaced with `production`).
+
+#### Resources folder
+
+The `resources` folder contains all the resources used in the extension. This includes images, icons, and other assets that are used in the extension. These resources are copied to the build directory during the compilation process and are available when the extension is running.
+
 ### Managers
 
 Pop-a-loon has a few custom managers that handle different aspects of the extension.
@@ -67,8 +87,12 @@ log.debug('This is a debug message');
 log.info('This is an info message');
 log.warn('This is a warning message');
 log.error('This is an error message');
-log.softwarn('Like the warning message but doesn\'t throw an actual warning in the console');
-log.softerror('Like the error message but doesn\'t throw an actual error in the console');
+log.softwarn(
+  "Like the warning message but doesn't throw an actual warning in the console"
+);
+log.softerror(
+  "Like the error message but doesn't throw an actual error in the console"
+);
 ```
 
 This manager also includes log functionallity from the console namespace. Like `log.time`, `log.timeEnd`, `log.group`, `log.groupEnd`, ….
@@ -80,11 +104,11 @@ The `storage` managers provides a type-safe way to interact with the browser sto
 ```ts
 import storage from '@/managers/storage';
 
-const config = await storage.sync.get('config')
+const config = await storage.sync.get('config');
 await storage.sync.set('config', {
   ...config,
   popVolume: 0.5,
-})
+});
 ```
 
 In this example we update the `popVolume` property of the `config` object in the `sync` storage.
