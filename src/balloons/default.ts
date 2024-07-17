@@ -36,19 +36,19 @@ export type BalloonOptions = {
    *
    * The first value is the minimum size and the second value is the maximum size.
    */
-  size: [number, number];
+  size: number | [number, number];
   /**
    * The duration thresholds for the rise animation.
    *
    * The first value is the minimum duration and the second value is the maximum duration.
    */
-  riseDurationThreshold: [number, number];
+  riseDuration: number | [number, number];
   /**
    * The duration thresholds for the swing animation.
    *
    * The first value is the minimum duration and the second value is the maximum duration.
    */
-  swingDurationThreshold: [number, number];
+  swingDuration: number | [number, number];
   /**
    * The amount of pixels the balloon should wave back and forth.
    *
@@ -74,8 +74,8 @@ export default class Default extends Balloon {
       imageUrl: this.originalPath('/balloon.svg'),
       popSoundUrl: this.originalPath('/pop.mp3'),
       size: [50, 75],
-      riseDurationThreshold: [10000, 15000],
-      swingDurationThreshold: [2, 4],
+      riseDuration: [10000, 15000],
+      swingDuration: [2, 4],
       swingOffset: 15,
       waveDegrees: 8,
     };
@@ -133,15 +133,18 @@ export default class Default extends Balloon {
     });
 
     const positionX = random(5, 95);
-    const size = random(this.options.size[0], this.options.size[1]);
-    const riseDuration = random(
-      this.options.riseDurationThreshold[0],
-      this.options.riseDurationThreshold[1]
-    );
-    const waveDuration = random(
-      this.options.swingDurationThreshold[0],
-      this.options.swingDurationThreshold[1]
-    );
+    const size =
+      typeof this.options.size === 'number'
+        ? this.options.size
+        : random(this.options.size[0], this.options.size[1]);
+    const riseDuration =
+      typeof this.options.riseDuration === 'number'
+        ? this.options.riseDuration
+        : random(this.options.riseDuration[0], this.options.riseDuration[1]);
+    const waveDuration =
+      typeof this.options.swingDuration === 'number'
+        ? this.options.swingDuration
+        : random(this.options.swingDuration[0], this.options.swingDuration[1]);
 
     // Load the pop sound
     this.popSound.src = this.popSoundUrl;
