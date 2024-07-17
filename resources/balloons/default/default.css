@@ -26,7 +26,7 @@
 
 @keyframes rise {
   0% {
-    transform: translateY(var(--rise-from, 0));
+    transform: translateY(calc(-1 * var(--rise-from, 0)));
   }
   100% {
     transform: translateY(calc(-1 * var(--rise-to, 100vh)));
