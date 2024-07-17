@@ -1,6 +1,6 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
-import storage from '@/managers/storage';
 import { BalloonName } from '@/const';
+import storage from '@/managers/storage';
 import { joinPaths, random } from '@/utils';
 
 export type BuildProps = {
@@ -151,7 +151,7 @@ export default class Default extends Balloon {
     this.element.classList.add('balloon');
 
     // Set css variables
-    this.element.style.setProperty('--rise-to', -size + 'px');
+    this.element.style.setProperty('--rise-to', `100vh`);
     this.element.style.setProperty(
       '--swing-offset',
       this.options.swingOffset + 'px'
