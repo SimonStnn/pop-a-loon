@@ -114,6 +114,30 @@ export default class Default extends Balloon {
     );
   }
 
+  public get size(): number {
+    return this.element.clientWidth;
+  }
+
+  protected set size(size: number | [number, number]) {
+    if (typeof size !== 'number') {
+      size = random(size[0], size[1]);
+    }
+    this.element.style.width = size + 'px';
+    this.element.style.height = this.element.style.width;
+  }
+
+  public get riseDuration(): number {
+    return parseFloat(
+      getComputedStyle(this.element).getPropertyValue('--rise-duration')
+    );
+  }
+
+  public get swingDuration(): number {
+    return parseFloat(
+      getComputedStyle(this.element).getPropertyValue('--swing-duration')
+    );
+  }
+
   /**
    * Get the path for the resources of the default balloon.
    *
@@ -165,8 +189,7 @@ export default class Default extends Balloon {
     );
 
     // Set the balloon's width and height
-    this.element.style.width = size + 'px';
-    this.element.style.height = this.element.style.width;
+    this.size = size;
     this.element.style.left = `calc(${positionX.toString() + 'vw'} - ${size / 2}px)`;
     this.element.style.animationDuration = riseDuration.toString() + 'ms';
     this.element.style.animationTimingFunction = 'linear';
