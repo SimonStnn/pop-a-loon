@@ -1,4 +1,5 @@
 import Default, { BalloonOptions } from '@/balloons/default';
+import { getBalloonContainer } from '@/utils';
 
 export default class Splitter extends Default {
   public static readonly spawn_chance: number = 0.2;
@@ -33,13 +34,23 @@ export default class Splitter extends Default {
     this.parent = parent || null;
     this.pos = pos || null;
     this.element.setAttribute('data-depth', this.depth.toString());
+    if (this.parent) {
+      this.size = this.parent.size * 0.8;
+    }
   }
 
   protected split(event: MouseEvent) {
-    console.log('splitting', event);
+    const container = getBalloonContainer();
+    const rect = this.element.getBoundingClientRect();
     const children = [
-      new Splitter(this, [event.clientX - 50, event.clientY]),
-      new Splitter(this, [event.clientX + 50, event.clientY]),
+      new Splitter(this, [
+        event.clientX - rect.width / 2 - 50,
+        container.clientHeight - rect.top - rect.height,
+      ]),
+      new Splitter(this, [
+        event.clientX - rect.width / 2 + 50,
+        container.clientHeight - rect.top - rect.height,
+      ]),
     ];
     this.children.push(...children);
     this.children.forEach((child) => {
@@ -49,11 +60,12 @@ export default class Splitter extends Default {
 
   public build() {
     super.build();
+    this.importStylesheet();
 
-    if (this.pos) {
-      this.element.setAttribute('data-pos', this.pos.join(','));
-      this.element.style.left = `${this.pos[0] - this.element.clientWidth / 2}px`;
-      this.element.style.translate = `0 -${this.pos[1]}`;
+    if (this.parent && this.pos) {
+      this.element.style.left = `calc(${this.pos[0]}px)`;
+      const riseFrom = this.pos[1];
+      this.element.style.setProperty('--rise-from', `${riseFrom}px`);
     }
   }
 
@@ -63,7 +75,7 @@ export default class Splitter extends Default {
       return;
     }
     this.popSound.play();
-    this.element.hidden = true;
     this.split(event);
+    this.remove();
   }
 }
