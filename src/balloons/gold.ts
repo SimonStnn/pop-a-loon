@@ -11,8 +11,8 @@ export default class Gold extends Default {
     return {
       ...super.options,
       imageUrl: '/balloon.svg',
-      riseDurationThreshold: [15000, 20000],
-      swingDurationThreshold: [3, 4],
+      riseDuration: [15000, 20000],
+      swingDuration: [3, 4],
       size: [100, 125],
     };
   }
