@@ -163,9 +163,11 @@ export default class Default extends Balloon {
 
   protected swingDirection(direction: 'left' | 'right') {
     if (direction === 'left') {
-      this.swingElement.style.animationFillMode = 'alternate';
+      this.swingElement.style.animationDirection = 'alternate';
+      this.waveElement.style.animationDirection = 'alternate';
     } else {
-      this.swingElement.style.animationFillMode = 'alternate-reverse';
+      this.swingElement.style.animationDirection = 'alternate-reverse';
+      this.waveElement.style.animationDirection = 'alternate-reverse';
     }
   }
 
@@ -218,15 +220,16 @@ export default class Default extends Balloon {
 
     // Create a second div and apply the swing animation to it
     const swingElement = document.createElement('div');
-    swingElement.style.animation = `swing ${waveDuration / 2}s infinite ease-in-out alternate`;
+    swingElement.style.animation = `swing ${waveDuration / 2}s infinite ease-in-out`;
     this.element.appendChild(swingElement);
-    this.swingDirection(random('left', 'right'));
 
     const waveElement = document.createElement('div');
-    waveElement.style.animation = `wave ${waveDuration / 2}s infinite ease-in-out alternate`;
+    waveElement.style.animation = `wave ${waveDuration / 2}s infinite ease-in-out`;
     swingElement.appendChild(waveElement);
     // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
     waveElement.style.animationDelay = `-${(waveDuration * 3) / 4}s`;
+
+    this.swingDirection(random('left', 'right'));
 
     waveElement.appendChild(this.balloonImage);
   }
