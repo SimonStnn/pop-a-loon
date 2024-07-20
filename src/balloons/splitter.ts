@@ -25,6 +25,14 @@ export default class Splitter extends Default {
     return this.parent ? this.parent.depth + 1 : 0;
   }
 
+  protected get root(): Splitter {
+    let cur: Splitter = this;
+    while (cur.parent) {
+      cur = cur.parent;
+    }
+    return cur;
+  }
+
   protected get siblings(): Splitter[] {
     return this.parent?.children.filter((child) => child !== this) || [];
   }
