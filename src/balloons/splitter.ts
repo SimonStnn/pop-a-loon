@@ -19,6 +19,7 @@ export default class Splitter extends Default {
   protected readonly children: Splitter[] = [];
   protected readonly pos: [number, number] | null;
   protected readonly maxSplits = 2;
+  public readonly offset: number;
 
   public get depth(): number {
     return this.parent ? this.parent.depth + 1 : 0;
@@ -28,12 +29,20 @@ export default class Splitter extends Default {
     return this.parent?.children.filter((child) => child !== this) || [];
   }
 
+  public get offsetElement(): HTMLDivElement | null {
+    if (!this.parent) return null;
+    const element = this.element.querySelector('[data-element="offset"]');
+    if (!element) throw new Error('Balloon is not built yet');
+    return element as HTMLDivElement;
+  }
+
   constructor();
-  constructor(parent: Splitter, pos: [number, number]);
-  constructor(parent?: Splitter, pos?: [number, number]) {
+  constructor(parent: Splitter, pos: [number, number], offset: number);
+  constructor(parent?: Splitter, pos?: [number, number], offset = 0) {
     super();
     this.parent = parent || null;
     this.pos = pos || null;
+    this.offset = offset;
     this.element.setAttribute('data-depth', this.depth.toString());
   }
 
@@ -41,14 +50,22 @@ export default class Splitter extends Default {
     const container = getBalloonContainer();
     const rect = this.element.getBoundingClientRect();
     const children = [
-      new Splitter(this, [
-        event.clientX - rect.width / 2 - 50,
-        container.clientHeight - rect.top - rect.height,
-      ]),
-      new Splitter(this, [
-        event.clientX - rect.width / 2 + 50,
-        container.clientHeight - rect.top - rect.height,
-      ]),
+      new Splitter(
+        this,
+        [
+          event.clientX - rect.width / 2,
+          container.clientHeight - rect.top - rect.height,
+        ],
+        -50
+      ),
+      new Splitter(
+        this,
+        [
+          event.clientX - rect.width / 2,
+          container.clientHeight - rect.top - rect.height,
+        ],
+        50
+      ),
     ];
     this.children.push(...children);
     this.children.forEach((child) => {
@@ -69,6 +86,21 @@ export default class Splitter extends Default {
       );
 
       this.size = this.parent.size * (1 - this.depth * 0.1);
+
+      const offsetElement = document.createElement('div');
+      offsetElement.setAttribute('data-element', 'offset');
+      this.element.appendChild(offsetElement);
+      offsetElement.appendChild(this.swingElement);
+
+      offsetElement.style.setProperty('--offset', `${this.offset}px`);
+      offsetElement.style.animationName = `offset`;
+      offsetElement.style.animationFillMode = 'forwards';
+      offsetElement.style.animationDuration = '1500ms';
+      offsetElement.style.animationTimingFunction = 'ease-in-out';
+
+      if (this.parent.children[0] === this) this.swingDirection('left');
+      else if (this.parent.children[this.parent.children.length - 1] === this)
+        this.swingDirection('right');
     }
   }
 
