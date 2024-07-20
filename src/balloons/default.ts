@@ -219,14 +219,16 @@ export default class Default extends Balloon {
     // Create a second div and apply the swing animation to it
     const swingElement = document.createElement('div');
     swingElement.style.animation = `swing ${waveDuration / 2}s infinite ease-in-out alternate`;
+    this.element.appendChild(swingElement);
+    this.swingDirection(random('left', 'right'));
+
     const waveElement = document.createElement('div');
     waveElement.style.animation = `wave ${waveDuration / 2}s infinite ease-in-out alternate`;
+    swingElement.appendChild(waveElement);
     // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
     waveElement.style.animationDelay = `-${(waveDuration * 3) / 4}s`;
 
-    swingElement.appendChild(waveElement);
     waveElement.appendChild(this.balloonImage);
-    this.element.appendChild(swingElement);
   }
 
   public async pop(event: MouseEvent) {
