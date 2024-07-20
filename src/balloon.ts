@@ -75,6 +75,10 @@ export default abstract class Balloon {
     return this.element.style.animationName === 'rise';
   }
 
+  public isRemoved(): boolean {
+    return !getBalloonContainer().contains(this.element);
+  }
+
   /**
    * Make the balloon rise.
    *
