@@ -161,6 +161,14 @@ export default class Default extends Balloon {
     return joinPaths('..', 'default', name);
   }
 
+  protected swingDirection(direction: 'left' | 'right') {
+    if (direction === 'left') {
+      this.swingElement.style.animationFillMode = 'alternate';
+    } else {
+      this.swingElement.style.animationFillMode = 'alternate-reverse';
+    }
+  }
+
   public build() {
     this.importStylesheet({
       id: 'default',
