@@ -199,7 +199,7 @@ export default class Default extends Balloon {
 
     // Create a second div and apply the swing animation to it
     const swingElement = document.createElement('div');
-    swingElement.style.animation = `swing ${waveDuration}s infinite ease-in-out`;
+    swingElement.style.animation = `swing ${waveDuration / 2}s infinite ease-in-out alternate`;
     const waveElement = document.createElement('div');
     waveElement.style.animation = `wave ${waveDuration / 2}s infinite ease-in-out alternate`;
     // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
