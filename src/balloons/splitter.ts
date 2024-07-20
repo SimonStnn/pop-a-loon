@@ -18,6 +18,7 @@ export default class Splitter extends Default {
   protected readonly parent: Splitter | null;
   protected readonly children: Splitter[] = [];
   protected readonly pos: [number, number] | null;
+  protected readonly maxSplits = 2;
 
   public get depth(): number {
     return this.parent ? this.parent.depth + 1 : 0;
@@ -67,12 +68,12 @@ export default class Splitter extends Default {
         `calc(100vh + ${this.pos[1]}px)`
       );
 
-      this.size = this.parent.size * 0.8;
+      this.size = this.parent.size * (1 - this.depth * 0.1);
     }
   }
 
   public async pop(event: MouseEvent) {
-    if (this.depth > 1) {
+    if (this.depth >= this.maxSplits) {
       super.pop(event);
       return;
     }
