@@ -1,9 +1,9 @@
-import browser from 'webextension-polyfill';
-import { Message, BalloonContainerId } from '@/const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import storage from '@/managers/storage';
+import browser from 'webextension-polyfill';
+import { Message, BalloonContainerId } from '@/const';
 import log from '@/managers/log';
+import storage from '@/managers/storage';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,9 +19,23 @@ export function minutesToMilliseconds(minutes: number) {
 
 export function random(max: number): number;
 export function random(min: number, max: number): number;
-export function random(minOrMax: number, max?: number): number {
-  if (max === undefined) return Math.random() * (minOrMax - 0) + 0;
-  return Math.random() * (max - minOrMax) + minOrMax;
+export function random<T>(items: T[]): T;
+export function random<T>(...args: T[]): T;
+export function random<T>(
+  minOrMaxOrItems: number | T[],
+  max?: number
+): number | T {
+  if (Array.isArray(minOrMaxOrItems)) {
+    // If the first argument is an array, pick a random item from it
+    const items = minOrMaxOrItems;
+    return items[Math.floor(Math.random() * items.length)];
+  } else if (max === undefined) {
+    // If only one number argument is provided, treat it as the max value
+    return Math.random() * (minOrMaxOrItems - 0) + 0;
+  } else {
+    // If two number arguments are provided, treat them as min and max values
+    return Math.random() * (max - minOrMaxOrItems) + minOrMaxOrItems;
+  }
 }
 
 export function sleep(ms: number) {
