@@ -2,7 +2,7 @@ import Default, { BalloonOptions } from '@/balloons/default';
 import { getBalloonContainer } from '@/utils';
 
 export default class Splitter extends Default {
-  public static readonly spawn_chance: number = 0.2;
+  public static readonly spawn_chance: number = 5.2;
   // @ts-ignore
   public get name(): 'splitter' {
     return 'splitter';
@@ -63,9 +63,12 @@ export default class Splitter extends Default {
     this.importStylesheet();
 
     if (this.parent && this.pos) {
-      this.element.style.left = `calc(${this.pos[0]}px)`;
-      const riseFrom = this.pos[1];
-      this.element.style.setProperty('--rise-from', `${riseFrom}px`);
+      this.element.style.left = `${this.pos[0]}px`;
+      this.element.style.setProperty('--rise-from', `${this.pos[1]}px`);
+      this.element.style.setProperty(
+        '--rise-to',
+        `calc(100vh + ${this.pos[1]}px)`
+      );
     }
   }
 
