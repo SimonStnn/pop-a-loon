@@ -22,20 +22,26 @@ export function random(min: number, max: number): number;
 export function random<T>(items: T[]): T;
 export function random<T>(...args: T[]): T;
 export function random<T>(
-  minOrMaxOrItems: number | T[],
-  max?: number
+  ...args: [number] | [number, number] | T[] | [T[]]
 ): number | T {
-  if (Array.isArray(minOrMaxOrItems)) {
-    // If the first argument is an array, pick a random item from it
-    const items = minOrMaxOrItems;
-    return items[Math.floor(Math.random() * items.length)];
-  } else if (max === undefined) {
-    // If only one number argument is provided, treat it as the max value
-    return Math.random() * (minOrMaxOrItems - 0) + 0;
-  } else {
-    // If two number arguments are provided, treat them as min and max values
-    return Math.random() * (max - minOrMaxOrItems) + minOrMaxOrItems;
+  // Handle `max: number`
+  if (args.length === 1 && typeof args[0] === 'number')
+    return Math.random() * args[0];
+  // Handle `items: T[]`
+  else if (args.length === 1 && Array.isArray(args[0]))
+    return args[0][Math.floor(random(args[0].length))];
+  // Handle `min: number, max: number`
+  else if (
+    args.length === 2 &&
+    typeof args[0] === 'number' &&
+    typeof args[1] === 'number'
+  ) {
+    const [min, max] = args;
+    return Math.random() * (max - min) + min;
   }
+  // Handle `...args: T[]`
+  const items = args as T[];
+  return items[Math.floor(random(items.length))];
 }
 
 export function sleep(ms: number) {
