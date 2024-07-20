@@ -138,6 +138,17 @@ export default class Default extends Balloon {
     );
   }
 
+  public get swingElement(): HTMLDivElement {
+    if (!this.element.firstChild) throw new Error('Balloon is not built yet');
+    return this.element.firstChild as HTMLDivElement;
+  }
+
+  public get waveElement(): HTMLDivElement {
+    if (!this.swingElement.firstChild)
+      throw new Error('Balloon is not built yet');
+    return this.swingElement.firstChild as HTMLDivElement;
+  }
+
   /**
    * Get the path for the resources of the default balloon.
    *
