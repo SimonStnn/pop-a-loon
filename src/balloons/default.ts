@@ -139,14 +139,15 @@ export default class Default extends Balloon {
   }
 
   public get swingElement(): HTMLDivElement {
-    if (!this.element.firstChild) throw new Error('Balloon is not built yet');
-    return this.element.firstChild as HTMLDivElement;
+    const element = this.element.querySelector('[data-element="swing"]');
+    if (!element) throw new Error('Balloon is not built yet');
+    return element as HTMLDivElement;
   }
 
   public get waveElement(): HTMLDivElement {
-    if (!this.swingElement.firstChild)
-      throw new Error('Balloon is not built yet');
-    return this.swingElement.firstChild as HTMLDivElement;
+    const element = this.element.querySelector('[data-element="wave"]');
+    if (!element) throw new Error('Balloon is not built yet');
+    return element as HTMLDivElement;
   }
 
   /**
@@ -220,10 +221,12 @@ export default class Default extends Balloon {
 
     // Create a second div and apply the swing animation to it
     const swingElement = document.createElement('div');
+    swingElement.setAttribute('data-element', 'swing');
     swingElement.style.animation = `swing ${waveDuration / 2}s infinite ease-in-out`;
     this.element.appendChild(swingElement);
 
     const waveElement = document.createElement('div');
+    waveElement.setAttribute('data-element', 'wave');
     waveElement.style.animation = `wave ${waveDuration / 2}s infinite ease-in-out`;
     swingElement.appendChild(waveElement);
     // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
