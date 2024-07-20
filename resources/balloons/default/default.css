@@ -37,11 +37,8 @@
   0% {
     transform: translateX(var(--swing-offset, 15px));
   }
-  50% {
-    transform: translateX(calc(-1 * var(--swing-offset, 15px)));
-  }
   100% {
-    transform: translateX(var(--swing-offset, 15px));
+    transform: translateX(calc(-1 * var(--swing-offset, 15px)));
   }
 }
 
