@@ -81,6 +81,18 @@ export default class Splitter extends Default {
     });
   }
 
+  public isLastChild(): boolean {
+    const check = (splitter: Splitter): boolean => {
+      for (const child of splitter.children) {
+        if (!child.isRemoved()) return true;
+        return check(child);
+      }
+      return false;
+    };
+    if (!check(this.root)) return false;
+    return true;
+  }
+
   public build() {
     super.build();
     this.importStylesheet();
