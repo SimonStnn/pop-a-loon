@@ -34,9 +34,6 @@ export default class Splitter extends Default {
     this.parent = parent || null;
     this.pos = pos || null;
     this.element.setAttribute('data-depth', this.depth.toString());
-    if (this.parent) {
-      this.size = this.parent.size * 0.8;
-    }
   }
 
   protected split(event: MouseEvent) {
@@ -69,6 +66,8 @@ export default class Splitter extends Default {
         '--rise-to',
         `calc(100vh + ${this.pos[1]}px)`
       );
+
+      this.size = this.parent.size * 0.8;
     }
   }
 
