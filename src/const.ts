@@ -43,9 +43,7 @@ export type User = {
 
 export type HistoryNode = {
   date: Date;
-  pops: {
-    [key: string]: number;
-  };
+  pops: Record<BalloonName, number>;
 };
 
 export type RemoteConfig = {
