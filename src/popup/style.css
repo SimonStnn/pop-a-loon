@@ -23,4 +23,9 @@
   --input: hsl(240 5.9% 90%);
   --ring: hsl(346.8 77.2% 49.8%);
   --radius: 0.5rem;
+  --chart-1: var(--primary);
+  --chart-2: var(--secondary);
+  --chart-3: var(--muted);
+  --chart-4: var(--accent);
+  --chart-5: var(--destructive);
 }
