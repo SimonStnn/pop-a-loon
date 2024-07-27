@@ -1,6 +1,6 @@
 import React from 'react';
-import Main from '@/components/Main';
 import Leaderboard from '@/components/Leaderboard';
+import Main from '@/components/Main';
 
 export default () => {
   return (

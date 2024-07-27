@@ -1,8 +1,8 @@
-import browser from 'webextension-polyfill';
 import React, { useState, useEffect } from 'react';
-import storage from '@/managers/storage';
-import { Message } from '@/const';
+import browser from 'webextension-polyfill';
 import Main from '@/components/Main';
+import { Message } from '@/const';
+import storage from '@/managers/storage';
 
 const App: React.FC = () => {
   const [balloonCount, setBalloonCount] = useState(0);
