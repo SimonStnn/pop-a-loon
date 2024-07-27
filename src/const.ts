@@ -184,6 +184,17 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
         count: (10 - i) * 10,
       })),
     },
+    '/statistics': { totalPopped: 100 },
+    '/statistics/history': {
+      history: Array.from({ length: 30 }, (_, i) => ({
+        date: new Date(2021, 10, i + 1),
+        pops: {
+          default: Math.floor(Math.random() * 100),
+          confetti: Math.floor(Math.random() * 100),
+          gold: Math.floor(Math.random() * 100),
+        },
+      })),
+    },
   },
   {
     get: function (target, prop, receiver) {
