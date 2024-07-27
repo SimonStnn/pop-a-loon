@@ -1,5 +1,5 @@
-import { LogLevelNumbers } from '@/managers/log';
 import * as Balloons from '@/balloons';
+import { LogLevelNumbers } from '@/managers/log';
 
 //
 // * Config types
@@ -41,6 +41,13 @@ export type User = {
   createdAt: string;
 };
 
+export type HistoryNode = {
+  date: Date;
+  pops: {
+    [key: string]: number;
+  };
+};
+
 export type RemoteConfig = {
   badge: {
     color: hexColor;
@@ -69,6 +76,12 @@ export type RemoteResponse = {
     rank: number | null;
     topUsers: User[];
   };
+  statistics: {
+    totalPopped: number;
+  };
+  popHistory: {
+    history: HistoryNode[];
+  };
 };
 
 export type Endpoint =
@@ -78,7 +91,9 @@ export type Endpoint =
   | '/user/:id'
   | '/user'
   | '/user/count/increment'
-  | '/leaderboard';
+  | '/leaderboard'
+  | '/statistics'
+  | '/statistics/history';
 
 //
 // * Storage types
