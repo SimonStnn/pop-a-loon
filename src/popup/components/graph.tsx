@@ -66,7 +66,10 @@ export default () => {
 
   return (
     <>
-      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+      <ChartContainer
+        config={chartConfig}
+        className="min-h-[200px] w-full select-none"
+      >
         <BarChart accessibilityLayer data={data}>
           <XAxis
             dataKey="date"
