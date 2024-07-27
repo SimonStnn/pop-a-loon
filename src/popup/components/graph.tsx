@@ -45,6 +45,13 @@ export default () => {
       const chartData = response.history.map((node) => {
         return {
           ...node,
+          pops: allBalloonNames.reduce(
+            (acc, key) => {
+              acc[key] = node.pops[key] || 0;
+              return acc;
+            },
+            {} as Record<BalloonName, number>
+          ),
           total: Object.keys(node.pops).reduce((acc, key) => {
             acc += node.pops[key as BalloonName];
             return acc;
