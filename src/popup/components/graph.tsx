@@ -22,7 +22,6 @@ export default (props: { startDate: Date; endDate: Date }) => {
         props.startDate,
         props.endDate
       );
-      console.log(props);
 
       const allBalloonNames = [
         ...new Set(
@@ -78,9 +77,10 @@ export default (props: { startDate: Date; endDate: Date }) => {
             tickLine={true}
             tickMargin={8}
             tickFormatter={(value: Date) =>
-              value.getDate().toString().padStart(2, '0') +
-              '-' +
-              (value.getMonth() + 1).toString().padStart(2, '0')
+              value.toLocaleDateString('en-US', {
+                month: 'short',
+                day: '2-digit',
+              })
             }
           />
           <ChartTooltip
