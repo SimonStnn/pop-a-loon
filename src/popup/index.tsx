@@ -1,16 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from '@/components/Header';
-import App from './App';
-import General from './General';
-import Settings from './Settings';
-import Footer from '@/components/Footer';
-
 // Import stylesheet
 import './style.css';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
+import App from '@/popup/pages/App';
+import General from '@/popup/pages/General';
+import Settings from '@/popup/pages/Settings';
 
 (async () => {
   log.setLevel((await storage.local.get('loglevel')) ?? log.getLevel());

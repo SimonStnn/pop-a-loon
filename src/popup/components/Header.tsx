@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import browser, { type Permissions } from 'webextension-polyfill';
-import { useLocation } from 'react-router-dom';
 import { ClassValue } from 'clsx';
 import { LucideIcon, RotateCcw } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { ArrowLeft, List, Settings } from 'lucide-react';
-import remote from '@/remote';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import browser, { type Permissions } from 'webextension-polyfill';
 import { Button } from './ui/button';
+import remote from '@/remote';
 import { askOriginPermissions } from '@/utils';
 
 type iconProps = {
@@ -119,15 +119,22 @@ export default (props: HeaderProps) => {
 
   return (
     <>
-      <header className="flex select-none items-center justify-center bg-primary p-2 text-primary-foreground">
-        <div className="absolute left-1 flex items-center justify-center">
-          {location.pathname !== '/' && <HeaderIcon to="/" icon={ArrowLeft} />}
-        </div>
-        <h1 className="text-xl font-bold">{title}</h1>
-        <div className="absolute right-1 flex items-center justify-center">
-          {navIcons.map((Icon, index) => (
-            <HeaderIcon key={index} {...Icon} />
-          ))}
+      <header className="select-none bg-primary text-primary-foreground h-11">
+        <h1 className="absolute w-full flex justify-center items-center text-xl font-bold h-11">
+          {title}
+        </h1>
+        <div className="absolute flex w-full px-1">
+          <div className="flex items-center justify-center">
+            {location.pathname !== '/' && (
+              <HeaderIcon to="/" icon={ArrowLeft} />
+            )}
+          </div>
+          <div className="flex-grow"></div>
+          <div className="flex items-center justify-center">
+            {navIcons.map((Icon, index) => (
+              <HeaderIcon key={index} {...Icon} />
+            ))}
+          </div>
         </div>
       </header>
       <Banner remoteAvailable={isAvailable} />
