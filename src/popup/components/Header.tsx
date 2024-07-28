@@ -44,7 +44,7 @@ const HeaderIcon = (props: iconProps) => {
   return (
     <Link
       to={props.to}
-      className="p-3 text-primary-foreground opacity-80 hover:opacity-100"
+      className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100"
     >
       <props.icon size={20} />
     </Link>
@@ -152,8 +152,8 @@ export default (props: HeaderProps) => {
           {title}
         </h1>
         <NavigationMenu>
-          <NavigationMenuList className="h-11 max-h-11 px-1">
-            <NavigationMenuItem className="h-11 max-h-11">
+          <NavigationMenuList className="h-11 px-1 space-x-0">
+            <NavigationMenuItem>
               <NavigationMenuTrigger
                 hideCheveron
                 className="bg-transparent hover:bg-transparent focus:bg-transparent p-0 h-11 max-h-11"
@@ -171,6 +171,9 @@ export default (props: HeaderProps) => {
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <HeaderIcon to="/general" icon={Settings} />
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
