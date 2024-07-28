@@ -1,6 +1,6 @@
 // tests/fetchMock.ts
-import { initalConfig, RemoteResponse, User } from '@/const';
 import fetchMock from 'jest-fetch-mock';
+import { initalConfig, RemoteResponse, User } from '@/const';
 
 fetchMock.enableMocks();
 
@@ -37,6 +37,12 @@ const response: RemoteResponse = {
     user: user,
     rank: 1,
     topUsers: [user],
+  },
+  popHistory: {
+    history: [],
+  },
+  statistics: {
+    totalPopped: 0,
   },
 };
 

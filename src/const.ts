@@ -1,5 +1,5 @@
-import { LogLevelNumbers } from '@/managers/log';
 import * as Balloons from '@/balloons';
+import { LogLevelNumbers } from '@/managers/log';
 
 //
 // * Config types
@@ -41,6 +41,11 @@ export type User = {
   createdAt: string;
 };
 
+export type HistoryNode = {
+  date: Date;
+  pops: Record<BalloonName, number>;
+};
+
 export type RemoteConfig = {
   badge: {
     color: hexColor;
@@ -69,6 +74,12 @@ export type RemoteResponse = {
     rank: number | null;
     topUsers: User[];
   };
+  statistics: {
+    totalPopped: number;
+  };
+  popHistory: {
+    history: HistoryNode[];
+  };
 };
 
 export type Endpoint =
@@ -78,7 +89,9 @@ export type Endpoint =
   | '/user/:id'
   | '/user'
   | '/user/count/increment'
-  | '/leaderboard';
+  | '/leaderboard'
+  | '/statistics'
+  | '/statistics/history';
 
 //
 // * Storage types
@@ -167,6 +180,17 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
         ...dev_user,
         username: `User_${i}`,
         count: (10 - i) * 10,
+      })),
+    },
+    '/statistics': { totalPopped: 100 },
+    '/statistics/history': {
+      history: Array.from({ length: 30 }, (_, i) => ({
+        date: new Date(2021, 10, i + 1),
+        pops: {
+          default: Math.floor(Math.random() * 100),
+          confetti: Math.floor(Math.random() * 100),
+          gold: Math.floor(Math.random() * 100),
+        },
       })),
     },
   },
