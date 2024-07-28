@@ -179,7 +179,7 @@ export default (props: HeaderProps) => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <HeaderIcon to="/general" icon={Settings} />
+              <HeaderIcon to="/settings" icon={Settings} />
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
