@@ -10,6 +10,7 @@ import storage from '@/managers/storage';
 import App from '@/popup/pages/App';
 import General from '@/popup/pages/General';
 import Settings from '@/popup/pages/Settings';
+import Statistics from '@/popup/pages/Statistics';
 
 (async () => {
   log.setLevel((await storage.local.get('loglevel')) ?? log.getLevel());
@@ -24,6 +25,7 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/general" element={<General />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/statistics" element={<Statistics />} />
       </Routes>
     </Router>
     <Footer />
