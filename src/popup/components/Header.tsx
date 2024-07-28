@@ -6,8 +6,19 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import browser, { type Permissions } from 'webextension-polyfill';
 import { Button } from './ui/button';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+  NavigationMenuViewport,
+} from '@/components/ui/navigation-menu';
 import remote from '@/remote';
-import { askOriginPermissions } from '@/utils';
+import { askOriginPermissions, cn } from '@/utils';
 
 type iconProps = {
   to: string;
@@ -99,6 +110,23 @@ const Banner = (props: BannerProps) => {
   return null;
 };
 
+const ListItem = (props: { href: string; title: string; children: any }) => {
+  return (
+    <NavigationMenuLink
+      className={cn(
+        navigationMenuTriggerStyle(),
+        'flex flex-col items-start h-auto px-3 py-1.5'
+      )}
+      asChild
+    >
+      <Link to={props.href}>
+        <h2 className="text-base font-semibold">{props.title}</h2>
+        <p className="text-xs text-muted-foreground">{props.children}</p>
+      </Link>
+    </NavigationMenuLink>
+  );
+};
+
 export default (props: HeaderProps) => {
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const location = useLocation();
@@ -123,19 +151,29 @@ export default (props: HeaderProps) => {
         <h1 className="absolute w-full flex justify-center items-center text-xl font-bold h-11">
           {title}
         </h1>
-        <div className="absolute flex w-full px-1">
-          <div className="flex items-center justify-center">
-            {location.pathname !== '/' && (
-              <HeaderIcon to="/" icon={ArrowLeft} />
-            )}
-          </div>
-          <div className="flex-grow"></div>
-          <div className="flex items-center justify-center">
-            {navIcons.map((Icon, index) => (
-              <HeaderIcon key={index} {...Icon} />
-            ))}
-          </div>
-        </div>
+        <NavigationMenu>
+          <NavigationMenuList className="h-11 max-h-11 px-1">
+            <NavigationMenuItem className="h-11 max-h-11">
+              <NavigationMenuTrigger
+                hideCheveron
+                className="bg-transparent hover:bg-transparent focus:bg-transparent p-0 h-11 max-h-11"
+              >
+                <HeaderIcon to="/general" icon={List} />
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuIndicator />
+                <ul className="flex p-2">
+                  <ListItem href="/general" title="Leaderboard">
+                    View the top players of all time.
+                  </ListItem>
+                  <ListItem href="/statistics" title="Statistics">
+                    View your statistics.
+                  </ListItem>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </header>
       <Banner remoteAvailable={isAvailable} />
     </>
