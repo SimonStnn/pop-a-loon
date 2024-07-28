@@ -15,7 +15,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-  NavigationMenuViewport,
 } from '@/components/ui/navigation-menu';
 import remote from '@/remote';
 import { askOriginPermissions, cn } from '@/utils';
@@ -130,12 +129,6 @@ const ListItem = (props: { href: string; title: string; children: any }) => {
 export default (props: HeaderProps) => {
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const location = useLocation();
-  const navIcons =
-    (isAvailable && [
-      { to: '/general', icon: List },
-      { to: '/settings', icon: Settings },
-    ]) ||
-    [];
 
   const title = Object.keys(routeTitles).includes(location.pathname)
     ? routeTitles[location.pathname]
