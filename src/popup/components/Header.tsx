@@ -151,8 +151,14 @@ export default (props: HeaderProps) => {
         <h1 className="absolute w-full flex justify-center items-center text-xl font-bold h-11">
           {title}
         </h1>
-        <NavigationMenu>
-          <NavigationMenuList className="h-11 px-1 space-x-0">
+        <NavigationMenu className="">
+          <NavigationMenuList className="h-11 px-1 space-x-0 w-dvw max-w-full justify-end">
+            {location.pathname !== '/' && (
+              <NavigationMenuItem>
+                <HeaderIcon to="/" icon={ArrowLeft} />
+              </NavigationMenuItem>
+            )}
+            <div className="flex-grow" />
             <NavigationMenuItem>
               <NavigationMenuTrigger
                 hideCheveron
