@@ -1,5 +1,11 @@
-import React from 'react';
 import { AlertCircle } from 'lucide-react';
+import React from 'react';
+import Main from '@/components/Main';
+import DeleteUser from '@/components/forms/DeleteUser';
+import Developer from '@/components/forms/Developer';
+import LocalSettings from '@/components/forms/LocalSettings';
+import UpdateUser from '@/components/forms/UpdateUser';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -9,13 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import Main from '@/components/Main';
-import LocalSettings from '@/components/forms/LocalSettings';
-import UpdateUser from '@/components/forms/UpdateUser';
-import DeleteUser from '@/components/forms/DeleteUser';
-import Developer from './components/forms/Developer';
 
 export default () => {
   return (

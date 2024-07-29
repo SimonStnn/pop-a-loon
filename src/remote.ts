@@ -5,8 +5,8 @@ import {
   Endpoint,
   BalloonName,
 } from '@/const';
-import storage from '@/managers/storage';
 import log from '@/managers/log';
+import storage from '@/managers/storage';
 
 interface RequestParams {
   [key: string]: string | number | undefined;
@@ -149,6 +149,30 @@ class BackendAPI {
         skip,
       }
     );
+  }
+
+  public async getStatistics() {
+    return await this.request<RemoteResponse['statistics']>(
+      'GET',
+      '/statistics'
+    );
+  }
+
+  public async getPopHistory(start: Date, end: Date, global = false) {
+    const res = await this.request<RemoteResponse['popHistory']>(
+      'GET',
+      '/statistics/history',
+      {
+        'start-date': start.toISOString(),
+        'end-date': end.toISOString(),
+        id: global ? undefined : (await storage.sync.get('user')).id,
+      }
+    );
+    res.history.forEach((node) => {
+      node.date = new Date(node.date);
+      return node;
+    });
+    return res;
   }
 }
 
