@@ -9,7 +9,7 @@ import {
 import { BalloonName, HistoryNode } from '@/const';
 import remote from '@/remote';
 
-export default () => {
+export default (props: { startDate: Date; endDate: Date }) => {
   const [data, setData] = useState({} as (HistoryNode & { total: number })[]);
   const [poppedBalloonTypes, setPoppedBalloonTypes] = useState<BalloonName[]>(
     []
@@ -18,10 +18,10 @@ export default () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const now = new Date();
-      const start = new Date();
-      start.setDate(now.getDate() - 7);
-      const response = await remote.getPopHistory(start, now);
+      const response = await remote.getPopHistory(
+        props.startDate,
+        props.endDate
+      );
 
       const allBalloonNames = [
         ...new Set(
@@ -77,9 +77,10 @@ export default () => {
             tickLine={true}
             tickMargin={8}
             tickFormatter={(value: Date) =>
-              value.getDate().toString().padStart(2, '0') +
-              '-' +
-              (value.getMonth() + 1).toString().padStart(2, '0')
+              value.toLocaleDateString('en-US', {
+                month: 'short',
+                day: '2-digit',
+              })
             }
           />
           <ChartTooltip
