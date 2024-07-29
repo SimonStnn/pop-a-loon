@@ -158,13 +158,14 @@ class BackendAPI {
     );
   }
 
-  public async getPopHistory(start: Date, end: Date) {
+  public async getPopHistory(start: Date, end: Date, global = false) {
     const res = await this.request<RemoteResponse['popHistory']>(
       'GET',
       '/statistics/history',
       {
         'start-date': start.toISOString(),
         'end-date': end.toISOString(),
+        id: global ? undefined : (await storage.sync.get('user')).id,
       }
     );
     res.history.forEach((node) => {
