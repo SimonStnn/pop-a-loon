@@ -129,7 +129,7 @@ const ListItem = (props: {
     <NavigationMenuLink
       className={cn(
         navigationMenuTriggerStyle(),
-        'w-full flex flex-col items-start h-auto px-2.5 py-1.5 pb-2'
+        'w-full flex flex-col justify-start items-start h-auto px-2.5 py-1.5 pb-2'
       )}
       asChild
     >
