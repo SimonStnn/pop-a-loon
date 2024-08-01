@@ -189,8 +189,8 @@ export default (props: HeaderProps) => {
                   <ListItem href="/general" title="Leaderboard">
                     View the top players of all time.
                   </ListItem>
-                  <ListItem href="/statistics" title="Statistics" beta>
-                    View your statistics.
+                  <ListItem href="/statistics" title="History" beta>
+                    View your pop history.
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
