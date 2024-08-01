@@ -21,7 +21,7 @@ import remote from '@/remote';
 import { askOriginPermissions, cn } from '@/utils';
 
 type iconProps = {
-  to: string;
+  to?: string;
   icon: LucideIcon;
 };
 
@@ -41,12 +41,21 @@ const routeTitles: { [key: string]: string } = {
 };
 
 const HeaderIcon = (props: iconProps) => {
+  const icon = <props.icon size={20} />;
+
+  if (!props.to)
+    return (
+      <div className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100">
+        {icon}
+      </div>
+    );
+
   return (
     <Link
-      to={props.to}
+      to={props.to || ''}
       className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100"
     >
-      <props.icon size={20} />
+      {icon}
     </Link>
   );
 };
@@ -174,7 +183,7 @@ export default (props: HeaderProps) => {
                 hideCheveron
                 className="bg-transparent hover:bg-transparent focus:bg-transparent p-0 h-11 max-h-11"
               >
-                <HeaderIcon to="/general" icon={List} />
+                <HeaderIcon icon={List} />
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <NavigationMenuIndicator />
