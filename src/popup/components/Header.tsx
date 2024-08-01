@@ -129,22 +129,20 @@ const ListItem = (props: {
     <NavigationMenuLink
       className={cn(
         navigationMenuTriggerStyle(),
-        'flex flex-col items-start h-auto px-3 py-1.5'
+        'w-full flex flex-col items-start h-auto px-2.5 py-1.5 pb-2'
       )}
       asChild
     >
       <Link to={props.href}>
-        <h2 className="text-base font-semibold">
-          {props.title}
-          {props.beta && (
-            <Badge
-              variant="outline"
-              className="absolute right-3 top-3 text-[10px] px-2 leading-none ml-1 border-destructive bg-background"
-            >
-              Beta
-            </Badge>
-          )}
-        </h2>
+        <h2 className="text-base font-semibold">{props.title}</h2>
+        {props.beta && (
+          <Badge
+            variant="outline"
+            className="absolute right-3 top-3 text-[10px] px-2 leading-none ml-1 border-destructive bg-background"
+          >
+            Beta
+          </Badge>
+        )}
 
         <p className="text-xs text-muted-foreground">{props.children}</p>
       </Link>
@@ -187,7 +185,7 @@ export default (props: HeaderProps) => {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <NavigationMenuIndicator />
-                <ul className="flex p-2">
+                <ul className="grid w-[400px] p-2 grid-cols-2">
                   <ListItem href="/general" title="Leaderboard">
                     View the top players of all time.
                   </ListItem>
