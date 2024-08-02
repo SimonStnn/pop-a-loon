@@ -21,7 +21,7 @@ import remote from '@/remote';
 import { askOriginPermissions, cn } from '@/utils';
 
 type iconProps = {
-  to: string;
+  to?: string;
   icon: LucideIcon;
 };
 
@@ -41,12 +41,21 @@ const routeTitles: { [key: string]: string } = {
 };
 
 const HeaderIcon = (props: iconProps) => {
+  const icon = <props.icon size={20} />;
+
+  if (!props.to)
+    return (
+      <div className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100">
+        {icon}
+      </div>
+    );
+
   return (
     <Link
-      to={props.to}
+      to={props.to || ''}
       className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100"
     >
-      <props.icon size={20} />
+      {icon}
     </Link>
   );
 };
@@ -113,31 +122,35 @@ const Banner = (props: BannerProps) => {
 const ListItem = (props: {
   href: string;
   title: string;
-  children: any;
+  children: string;
   beta?: boolean;
 }) => {
   return (
     <NavigationMenuLink
       className={cn(
         navigationMenuTriggerStyle(),
-        'flex flex-col items-start h-auto px-3 py-1.5'
+        'w-full flex flex-col justify-start items-start h-auto px-2.5 py-1.5 pb-2'
       )}
       asChild
     >
       <Link to={props.href}>
-        <h2 className="text-base font-semibold">
-          {props.title}
-          {props.beta && (
-            <Badge
-              variant="outline"
-              className="absolute right-3 top-3 text-[10px] px-2 leading-none ml-1 border-destructive bg-background"
-            >
-              Beta
-            </Badge>
-          )}
-        </h2>
+        <h2 className="text-base font-semibold">{props.title}</h2>
+        {props.beta && (
+          <Badge
+            variant="outline"
+            className="absolute right-3 top-3 text-[10px] px-2 leading-none ml-1 border-destructive bg-background"
+            title="This feature is in beta and may not work as expected."
+          >
+            Beta
+          </Badge>
+        )}
 
-        <p className="text-xs text-muted-foreground">{props.children}</p>
+        <p
+          className="text-xs text-muted-foreground truncate"
+          title={props.children}
+        >
+          {props.children}
+        </p>
       </Link>
     </NavigationMenuLink>
   );
@@ -174,16 +187,16 @@ export default (props: HeaderProps) => {
                 hideCheveron
                 className="bg-transparent hover:bg-transparent focus:bg-transparent p-0 h-11 max-h-11"
               >
-                <HeaderIcon to="/general" icon={List} />
+                <HeaderIcon icon={List} />
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <NavigationMenuIndicator />
-                <ul className="flex p-2">
+                <ul className="grid w-[400px] p-2 grid-cols-2">
                   <ListItem href="/general" title="Leaderboard">
                     View the top players of all time.
                   </ListItem>
-                  <ListItem href="/statistics" title="Statistics" beta>
-                    View your statistics.
+                  <ListItem href="/statistics" title="History" beta>
+                    View your pop history.
                   </ListItem>
                 </ul>
               </NavigationMenuContent>
