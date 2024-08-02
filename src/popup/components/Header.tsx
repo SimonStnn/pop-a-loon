@@ -139,6 +139,7 @@ const ListItem = (props: {
           <Badge
             variant="outline"
             className="absolute right-3 top-3 text-[10px] px-2 leading-none ml-1 border-destructive bg-background"
+            title="This feature is in beta and may not work as expected."
           >
             Beta
           </Badge>
