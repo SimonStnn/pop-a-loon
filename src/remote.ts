@@ -174,6 +174,13 @@ class BackendAPI {
     });
     return res;
   }
+
+  public async getScores() {
+    return await this.request<RemoteResponse['scores']>(
+      'GET',
+      '/statistics/scores'
+    );
+  }
 }
 
 export default BackendAPI.getInstance();
