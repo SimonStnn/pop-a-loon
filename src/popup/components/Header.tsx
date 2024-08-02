@@ -122,7 +122,7 @@ const Banner = (props: BannerProps) => {
 const ListItem = (props: {
   href: string;
   title: string;
-  children: any;
+  children: string;
   beta?: boolean;
 }) => {
   return (
@@ -144,7 +144,12 @@ const ListItem = (props: {
           </Badge>
         )}
 
-        <p className="text-xs text-muted-foreground">{props.children}</p>
+        <p
+          className="text-xs text-muted-foreground truncate"
+          title={props.children}
+        >
+          {props.children}
+        </p>
       </Link>
     </NavigationMenuLink>
   );
