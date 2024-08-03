@@ -228,8 +228,10 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
 
 export const BalloonContainerId = 'balloon-container';
 
-type BalloonInstances = InstanceType<(typeof Balloons)[keyof typeof Balloons]>;
-export type BalloonName = BalloonInstances['name'];
+export type BalloonInstance = InstanceType<
+  (typeof Balloons)[keyof typeof Balloons]
+>;
+export type BalloonName = BalloonInstance['name'];
 
 export type hexColor = string;
 
