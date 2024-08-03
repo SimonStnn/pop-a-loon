@@ -13,7 +13,6 @@ type Balloon = RemoteResponse['scores']['scores'][0] & {
 const balloons = Object.values(Balloons).sort(
   (a, b) => a.spawn_chance + b.spawn_chance
 );
-const balloonNames = balloons.map((balloon) => balloon.name) as BalloonName[];
 
 function removeAnimations(element: HTMLElement) {
   // Remove animation properties from the element
@@ -54,7 +53,6 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
     cleanedElement.style.height = cleanedElement.style.width;
     balloonRef.current?.appendChild(cleanedElement);
   }, []);
-  console.log('score', props.balloon.name, props.count);
 
   return (
     <div
@@ -65,7 +63,7 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
       ) : (
         <>
           <h2 className="text-sm text-muted-foreground">
-            {props.name} balloon
+            <span className="capitalize">{props.name}</span> balloon
           </h2>
           <p className="text-base font-semibold">
             <>
@@ -96,10 +94,11 @@ export default () => {
         ...balloons.map((balloon) => {
           const score = res.scores.find(
             (score) =>
-              score.name.toLocaleLowerCase() === balloon.name.toLowerCase()
+              score.name.toLocaleLowerCase() ===
+              new balloon().name.toLowerCase()
           );
           return {
-            name: balloon.name as BalloonName,
+            name: score?.name as BalloonName,
             count: score?.count || 0,
             balloon: new balloon(),
           };
