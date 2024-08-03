@@ -54,11 +54,10 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
     cleanedElement.style.height = cleanedElement.style.width;
     balloonRef.current?.appendChild(cleanedElement);
   }, []);
+  console.log('score', props.balloon.name, props.count);
 
   return (
-    <div
-      className={cn('py-4 px-3 flex flex-col items-center', props.className)}
-    >
+    <div className={cn('py-4 flex flex-col items-center', props.className)}>
       <div
         ref={balloonRef}
         className={cn(
@@ -66,15 +65,18 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
           props.count === 0 ? 'brightness-0 opacity-75' : ''
         )}
       />
-      <h2 className="text-base font-semibold ">
-        {props.count === 0 ? (
-          <>???</>
-        ) : (
-          <>
-            {props.name}: {props.count} pops
-          </>
-        )}
-      </h2>
+      {props.count === 0 ? (
+        <h2 className="text-base font-semibold">???</h2>
+      ) : (
+        <>
+          <h2 className="text-base font-semibold">
+            <>
+              {props.count} {props.count === 1 ? 'pop' : 'pops'}
+            </>
+          </h2>
+          <p className="text-sm text-muted-foreground">{props.name} balloon</p>
+        </>
+      )}
     </div>
   );
 };
@@ -108,7 +110,7 @@ export default () => {
     fetchData();
   }, []);
   return (
-    <Main className="h-[286px]">
+    <Main className="h-[350px]">
       <section className="grid grid-cols-2 gap-2">
         {scores.map((score, i) => (
           <Balloon key={i} {...score} className="border rounded" />
