@@ -80,6 +80,12 @@ export type RemoteResponse = {
   popHistory: {
     history: HistoryNode[];
   };
+  scores: {
+    scores: {
+      name: BalloonName;
+      count: number;
+    }[];
+  };
 };
 
 export type Endpoint =
@@ -91,7 +97,8 @@ export type Endpoint =
   | '/user/count/increment'
   | '/leaderboard'
   | '/statistics'
-  | '/statistics/history';
+  | '/statistics/history'
+  | '/statistics/scores';
 
 //
 // * Storage types
@@ -192,6 +199,13 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
           gold: Math.floor(Math.random() * 100),
         },
       })),
+    },
+    '/statistics/scores': {
+      scores: {
+        default: 100,
+        confetti: 200,
+        gold: 300,
+      },
     },
   },
   {

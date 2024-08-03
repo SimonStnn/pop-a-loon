@@ -44,6 +44,18 @@ const response: RemoteResponse = {
   statistics: {
     totalPopped: 0,
   },
+  scores: {
+    scores: [
+      {
+        name: 'default',
+        count: 123,
+      },
+      {
+        name: 'confetti',
+        count: 4,
+      },
+    ],
+  },
 };
 
 export const mockFetchResponse = () => {
