@@ -57,7 +57,23 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
   console.log('score', props.balloon.name, props.count);
 
   return (
-    <div className={cn('py-4 flex flex-col items-center', props.className)}>
+    <div
+      className={cn('py-4 flex flex-col-reverse items-center', props.className)}
+    >
+      {props.count === 0 ? (
+        <h2 className="text-base font-semibold">???</h2>
+      ) : (
+        <>
+          <h2 className="text-sm text-muted-foreground">
+            {props.name} balloon
+          </h2>
+          <p className="text-base font-semibold">
+            <>
+              {props.count} {props.count === 1 ? 'pop' : 'pops'}
+            </>
+          </p>
+        </>
+      )}
       <div
         ref={balloonRef}
         className={cn(
@@ -65,18 +81,6 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
           props.count === 0 ? 'brightness-0 opacity-75' : ''
         )}
       />
-      {props.count === 0 ? (
-        <h2 className="text-base font-semibold">???</h2>
-      ) : (
-        <>
-          <h2 className="text-base font-semibold">
-            <>
-              {props.count} {props.count === 1 ? 'pop' : 'pops'}
-            </>
-          </h2>
-          <p className="text-sm text-muted-foreground">{props.name} balloon</p>
-        </>
-      )}
     </div>
   );
 };
