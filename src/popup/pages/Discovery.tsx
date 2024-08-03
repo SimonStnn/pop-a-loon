@@ -110,8 +110,8 @@ export default () => {
   return (
     <Main className="h-[286px]">
       <section className="grid grid-cols-2 gap-2">
-        {scores.map((score) => (
-          <Balloon key={score.name} {...score} className="border rounded" />
+        {scores.map((score, i) => (
+          <Balloon key={i} {...score} className="border rounded" />
         ))}
       </section>
     </Main>
