@@ -198,6 +198,9 @@ export default (props: HeaderProps) => {
                   <ListItem href="/statistics" title="History" beta>
                     View your pop history.
                   </ListItem>
+                  <ListItem href="/discovery" title="Discoverd balloons" beta>
+                    A list of your discovered balloons.
+                  </ListItem>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
