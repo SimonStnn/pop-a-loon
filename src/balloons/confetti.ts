@@ -1,6 +1,6 @@
+import Default from './default';
 import { balloonResourceLocation } from '@/balloon';
 import { joinPaths, random } from '@/utils';
-import Default from './default';
 
 export default class Confetti extends Default {
   public static readonly spawn_chance: number = 0.1;
@@ -17,8 +17,8 @@ export default class Confetti extends Default {
 
     this.element.firstChild?.firstChild?.appendChild(this.mask);
     this.mask.src = joinPaths(balloonResourceLocation, this.name, 'mask.png');
-    this.mask.style.position = 'absolute';
-    this.mask.style.top = '-10px';
+    this.mask.style.position = 'relative';
+    this.mask.style.top = `calc(-${this.element.style.height} - 12px)`;
     this.mask.style.left = '0';
     // Give it a random rotation
     this.mask.style.transform = `rotate(${Math.random() * 360}deg)`;
