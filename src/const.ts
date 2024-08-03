@@ -201,11 +201,11 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
       })),
     },
     '/statistics/scores': {
-      scores: {
-        default: 100,
-        confetti: 200,
-        gold: 300,
-      },
+      scores: [
+        { name: 'default', count: 10 },
+        { name: 'confetti', count: 20 },
+        { name: 'gold', count: 30 },
+      ],
     },
   },
   {
