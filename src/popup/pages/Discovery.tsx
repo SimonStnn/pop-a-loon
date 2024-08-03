@@ -59,7 +59,13 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
     <div
       className={cn('py-4 px-3 flex flex-col items-center', props.className)}
     >
-      <div ref={balloonRef} className="size-16" />
+      <div
+        ref={balloonRef}
+        className={cn(
+          'size-16',
+          props.count === 0 ? 'brightness-0 opacity-75' : ''
+        )}
+      />
       <h2 className="text-base font-semibold ">
         {props.count === 0 ? (
           <>???</>
@@ -80,8 +86,8 @@ export default () => {
     const fetchData = async () => {
       const res = await remote.getScores();
 
-      setScores(
-        balloons.map((balloon) => {
+      setScores([
+        ...balloons.map((balloon) => {
           const score = res.scores.find(
             (score) =>
               score.name.toLocaleLowerCase() === balloon.name.toLowerCase()
@@ -91,13 +97,18 @@ export default () => {
             count: score?.count || 0,
             balloon: new balloon(),
           };
-        })
-      );
+        }),
+        ...new Array(2).fill({
+          name: 'default',
+          count: 0,
+          balloon: new Balloons.Default(),
+        } satisfies Balloon),
+      ]);
     };
     fetchData();
   }, []);
   return (
-    <Main>
+    <Main className="h-[286px]">
       <section className="grid grid-cols-2 gap-2">
         {scores.map((score) => (
           <Balloon key={score.name} {...score} className="border rounded" />
