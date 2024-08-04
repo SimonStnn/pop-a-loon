@@ -133,12 +133,12 @@ const ListItem = (props: {
       )}
       asChild
     >
-      <Link to={props.href}>
+      <Link to={props.href} className="relative w-full">
         <h2 className="text-base font-semibold">{props.title}</h2>
         {props.beta && (
           <Badge
             variant="outline"
-            className="absolute right-3 top-3 ml-1 border-destructive bg-background px-2 text-[10px] leading-none"
+            className="absolute right-1 top-1 ml-1 border-destructive bg-background px-2 text-[10px] leading-none"
             title="This feature is in beta and may not work as expected."
           >
             Beta
