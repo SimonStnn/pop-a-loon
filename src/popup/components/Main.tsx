@@ -13,7 +13,7 @@ export default (props: MainProps) => {
     <ScrollArea>
       <main
         className={cn(
-          'm-auto my-2 flex w-4/5 flex-col gap-2 min-h-[120px]',
+          'm-auto my-2 flex min-h-[120px] w-4/5 flex-col gap-2',
           props.className
         )}
       >
