@@ -45,7 +45,7 @@ const HeaderIcon = (props: iconProps) => {
 
   if (!props.to)
     return (
-      <div className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100">
+      <div className="flex items-center justify-center p-3 text-primary-foreground opacity-80 hover:opacity-100">
         {icon}
       </div>
     );
@@ -53,7 +53,7 @@ const HeaderIcon = (props: iconProps) => {
   return (
     <Link
       to={props.to || ''}
-      className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100"
+      className="flex items-center justify-center p-3 text-primary-foreground opacity-80 hover:opacity-100"
     >
       {icon}
     </Link>
@@ -129,7 +129,7 @@ const ListItem = (props: {
     <NavigationMenuLink
       className={cn(
         navigationMenuTriggerStyle(),
-        'w-full flex flex-col justify-start items-start h-auto px-2.5 py-1.5 pb-2'
+        'flex h-auto w-full flex-col items-start justify-start px-2.5 py-1.5 pb-2'
       )}
       asChild
     >
@@ -138,7 +138,7 @@ const ListItem = (props: {
         {props.beta && (
           <Badge
             variant="outline"
-            className="absolute right-3 top-3 text-[10px] px-2 leading-none ml-1 border-destructive bg-background"
+            className="absolute right-3 top-3 ml-1 border-destructive bg-background px-2 text-[10px] leading-none"
             title="This feature is in beta and may not work as expected."
           >
             Beta
@@ -146,7 +146,7 @@ const ListItem = (props: {
         )}
 
         <p
-          className="text-xs text-muted-foreground truncate"
+          className="w-full truncate text-xs text-muted-foreground"
           title={props.children}
         >
           {props.children}
@@ -170,12 +170,12 @@ export default (props: HeaderProps) => {
 
   return (
     <>
-      <header className="select-none bg-primary text-primary-foreground h-11">
-        <h1 className="absolute w-full flex justify-center items-center text-xl font-bold h-11">
+      <header className="h-11 select-none bg-primary text-primary-foreground">
+        <h1 className="absolute flex h-11 w-full items-center justify-center text-xl font-bold">
           {title}
         </h1>
         <NavigationMenu className="">
-          <NavigationMenuList className="h-11 px-1 space-x-0 w-dvw max-w-full justify-end">
+          <NavigationMenuList className="h-11 w-dvw max-w-full justify-end space-x-0 px-1">
             {location.pathname !== '/' && (
               <NavigationMenuItem>
                 <HeaderIcon to="/" icon={ArrowLeft} />
@@ -185,13 +185,13 @@ export default (props: HeaderProps) => {
             <NavigationMenuItem>
               <NavigationMenuTrigger
                 hideCheveron
-                className="bg-transparent hover:bg-transparent focus:bg-transparent p-0 h-11 max-h-11"
+                className="h-11 max-h-11 bg-transparent p-0 hover:bg-transparent focus:bg-transparent"
               >
                 <HeaderIcon icon={List} />
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <NavigationMenuIndicator />
-                <ul className="grid w-[400px] p-2 grid-cols-2">
+                <ul className="grid w-[400px] grid-cols-2 p-2">
                   <ListItem href="/general" title="Leaderboard">
                     View the top players of all time.
                   </ListItem>
