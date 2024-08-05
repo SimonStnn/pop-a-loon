@@ -21,7 +21,7 @@ import remote from '@/remote';
 import { askOriginPermissions, cn } from '@/utils';
 
 type iconProps = {
-  to: string;
+  to?: string;
   icon: LucideIcon;
 };
 
@@ -41,12 +41,21 @@ const routeTitles: { [key: string]: string } = {
 };
 
 const HeaderIcon = (props: iconProps) => {
+  const icon = <props.icon size={20} />;
+
+  if (!props.to)
+    return (
+      <div className="flex items-center justify-center p-3 text-primary-foreground opacity-80 hover:opacity-100">
+        {icon}
+      </div>
+    );
+
   return (
     <Link
-      to={props.to}
-      className="flex justify-center items-center p-3 text-primary-foreground opacity-80 hover:opacity-100"
+      to={props.to || ''}
+      className="flex items-center justify-center p-3 text-primary-foreground opacity-80 hover:opacity-100"
     >
-      <props.icon size={20} />
+      {icon}
     </Link>
   );
 };
@@ -113,31 +122,35 @@ const Banner = (props: BannerProps) => {
 const ListItem = (props: {
   href: string;
   title: string;
-  children: any;
+  children: string;
   beta?: boolean;
 }) => {
   return (
     <NavigationMenuLink
       className={cn(
         navigationMenuTriggerStyle(),
-        'flex flex-col items-start h-auto px-3 py-1.5'
+        'flex h-auto w-full flex-col items-start justify-start px-2.5 py-1.5 pb-2'
       )}
       asChild
     >
-      <Link to={props.href}>
-        <h2 className="text-base font-semibold">
-          {props.title}
-          {props.beta && (
-            <Badge
-              variant="outline"
-              className="absolute right-3 top-3 text-[10px] px-2 leading-none ml-1 border-destructive bg-background"
-            >
-              Beta
-            </Badge>
-          )}
-        </h2>
+      <Link to={props.href} className="relative w-full">
+        <h2 className="text-base font-semibold">{props.title}</h2>
+        {props.beta && (
+          <Badge
+            variant="outline"
+            className="absolute right-1 top-1 ml-1 border-destructive bg-background px-2 text-[10px] leading-none"
+            title="This feature is in beta and may not work as expected."
+          >
+            Beta
+          </Badge>
+        )}
 
-        <p className="text-xs text-muted-foreground">{props.children}</p>
+        <p
+          className="w-full truncate text-xs text-muted-foreground"
+          title={props.children}
+        >
+          {props.children}
+        </p>
       </Link>
     </NavigationMenuLink>
   );
@@ -157,12 +170,12 @@ export default (props: HeaderProps) => {
 
   return (
     <>
-      <header className="select-none bg-primary text-primary-foreground h-11">
-        <h1 className="absolute w-full flex justify-center items-center text-xl font-bold h-11">
+      <header className="h-11 select-none bg-primary text-primary-foreground">
+        <h1 className="absolute flex h-11 w-full items-center justify-center text-xl font-bold">
           {title}
         </h1>
         <NavigationMenu className="">
-          <NavigationMenuList className="h-11 px-1 space-x-0 w-dvw max-w-full justify-end">
+          <NavigationMenuList className="h-11 w-dvw max-w-full justify-end space-x-0 px-1">
             {location.pathname !== '/' && (
               <NavigationMenuItem>
                 <HeaderIcon to="/" icon={ArrowLeft} />
@@ -172,18 +185,21 @@ export default (props: HeaderProps) => {
             <NavigationMenuItem>
               <NavigationMenuTrigger
                 hideCheveron
-                className="bg-transparent hover:bg-transparent focus:bg-transparent p-0 h-11 max-h-11"
+                className="h-11 max-h-11 bg-transparent p-0 hover:bg-transparent focus:bg-transparent"
               >
-                <HeaderIcon to="/general" icon={List} />
+                <HeaderIcon icon={List} />
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <NavigationMenuIndicator />
-                <ul className="flex p-2">
+                <ul className="grid w-[400px] grid-cols-2 p-2">
                   <ListItem href="/general" title="Leaderboard">
                     View the top players of all time.
                   </ListItem>
-                  <ListItem href="/statistics" title="Statistics" beta>
-                    View your statistics.
+                  <ListItem href="/statistics" title="History" beta>
+                    View your pop history.
+                  </ListItem>
+                  <ListItem href="/discovery" title="Discoverd balloons" beta>
+                    A list of your discovered balloons.
                   </ListItem>
                 </ul>
               </NavigationMenuContent>

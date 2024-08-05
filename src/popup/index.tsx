@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
 import App from '@/popup/pages/App';
+import Discovery from '@/popup/pages/Discovery';
 import General from '@/popup/pages/General';
 import Settings from '@/popup/pages/Settings';
 import Statistics from '@/popup/pages/Statistics';
@@ -26,6 +27,7 @@ root.render(
         <Route path="/general" element={<General />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/statistics" element={<Statistics />} />
+        <Route path="/discovery" element={<Discovery />} />
       </Routes>
     </Router>
     <Footer />
