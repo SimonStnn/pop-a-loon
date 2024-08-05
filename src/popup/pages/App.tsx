@@ -27,8 +27,8 @@ const App: React.FC = () => {
   return (
     <>
       <Main>
-        <section className="flex flex-col gap-2 items-center">
-          <span className="flex justify-center items-center text-4xl font-bold drop-shadow">
+        <section className="flex flex-grow flex-col items-center justify-center gap-2">
+          <span className="flex items-center justify-center text-4xl font-bold drop-shadow">
             {balloonCount}
           </span>
           <span className="text-[16px]">

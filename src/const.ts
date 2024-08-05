@@ -80,6 +80,12 @@ export type RemoteResponse = {
   popHistory: {
     history: HistoryNode[];
   };
+  scores: {
+    scores: {
+      name: BalloonName;
+      count: number;
+    }[];
+  };
 };
 
 export type Endpoint =
@@ -91,7 +97,8 @@ export type Endpoint =
   | '/user/count/increment'
   | '/leaderboard'
   | '/statistics'
-  | '/statistics/history';
+  | '/statistics/history'
+  | '/statistics/scores';
 
 //
 // * Storage types
@@ -193,6 +200,13 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
         },
       })),
     },
+    '/statistics/scores': {
+      scores: [
+        { name: 'default', count: 10 },
+        { name: 'confetti', count: 20 },
+        { name: 'gold', count: 30 },
+      ],
+    },
   },
   {
     get: function (target, prop, receiver) {
@@ -214,8 +228,10 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
 
 export const BalloonContainerId = 'balloon-container';
 
-type BalloonInstances = InstanceType<(typeof Balloons)[keyof typeof Balloons]>;
-export type BalloonName = BalloonInstances['name'];
+export type BalloonInstance = InstanceType<
+  (typeof Balloons)[keyof typeof Balloons]
+>;
+export type BalloonName = BalloonInstance['name'];
 
 export type hexColor = string;
 
