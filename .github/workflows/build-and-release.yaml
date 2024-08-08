@@ -49,6 +49,7 @@ jobs:
           for asset in ./build/*.zip; do
             assets+=("$asset")
           done
-          tag_name="test_v${{ env.VERSION }}"
+          tag_name="v${{ env.VERSION }}"
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
           gh release create --generate-notes --latest "$tag_name"
           gh release upload "$tag_name" "${assets[@]}"
