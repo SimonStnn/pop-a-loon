@@ -82,15 +82,16 @@ export default class Splitter extends Default {
   }
 
   public isLastChild(): boolean {
+    if (this.depth < this.maxSplits) return false;
     const check = (splitter: Splitter): boolean => {
       for (const child of splitter.children) {
-        if (!child.isRemoved()) return true;
-        return check(child);
+        if (this === child) continue;
+        if (!child.isRemoved()) return false;
+        if (!check(child)) return false;
       }
-      return false;
+      return true;
     };
-    if (!check(this.root)) return false;
-    return true;
+    return check(this.root);
   }
 
   public build() {
@@ -125,13 +126,17 @@ export default class Splitter extends Default {
   }
 
   public async pop(event: MouseEvent) {
-    if (this.depth >= this.maxSplits) {
-      super.pop(event);
-      return;
+    if (this.depth < this.maxSplits) {
+      // Split before removing the balloon
+      this.split(event);
     }
-    this.popSound.play();
-    this.split(event);
-    this.remove();
+    if (this.isLastChild()) {
+      console.log('last child');
+      super.pop(event);
+    } else {
+      this.popSound.play();
+      this.remove();
+    }
   }
 
   public remove(event?: Event): void {
