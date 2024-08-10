@@ -42,14 +42,13 @@ jobs:
       - name: Create Release
         id: create_release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
           assets=()
           for asset in ./build/*.zip; do
             assets+=("$asset")
           done
-          tag_name="v${{ env.VERSION }}"
-          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+          tag_name="test_v${{ env.VERSION }}"
           gh release create --generate-notes --latest "$tag_name"
           gh release upload "$tag_name" "${assets[@]}"
