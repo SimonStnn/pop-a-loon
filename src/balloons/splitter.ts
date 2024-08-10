@@ -133,4 +133,13 @@ export default class Splitter extends Default {
     this.split(event);
     this.remove();
   }
+
+  public remove(event?: Event): void {
+    // Remove the element if the balloon was clicked (event is undefined)
+    // or if the event target is the balloon element
+    // So it doesn't get removed when the offset animation ends
+    if (event === undefined || event.target === this.element) {
+      super.remove();
+    }
+  }
 }
