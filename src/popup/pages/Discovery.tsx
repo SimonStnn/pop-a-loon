@@ -2,6 +2,7 @@ import { ClassValue } from 'clsx';
 import React, { useEffect, useState, useRef } from 'react';
 import * as Balloons from '@/balloons';
 import Main from '@/components/Main';
+import { Skeleton } from '@/components/ui/skeleton';
 import { BalloonInstance, BalloonName, RemoteResponse } from '@/const';
 import remote from '@/remote';
 import { cn } from '@/utils';
@@ -85,6 +86,7 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
 
 export default () => {
   const [scores, setScores] = useState<Balloon[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,15 +111,20 @@ export default () => {
           balloon: new Balloons.Default(),
         } satisfies Balloon),
       ]);
+      setIsLoading(false);
     };
     fetchData();
   }, []);
   return (
     <Main className="h-[350px]">
       <section className="grid grid-cols-2 gap-2">
-        {scores.map((score, i) => (
-          <Balloon key={i} {...score} className="border rounded" />
-        ))}
+        {isLoading
+          ? Array(6)
+              .fill(1)
+              .map((_, i) => <Skeleton key={i} className="h-36" />)
+          : scores.map((score, i) => (
+              <Balloon key={i} {...score} className="border rounded" />
+            ))}
       </section>
     </Main>
   );
