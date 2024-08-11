@@ -45,7 +45,6 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
   const balloonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log('ref', props.balloon.name);
     props.balloon.build();
     props.balloon.element.className = '';
     const cleanedElement = removeEventListeners(props.balloon.element);
@@ -57,7 +56,7 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
 
   return (
     <div
-      className={cn('py-4 flex flex-col-reverse items-center', props.className)}
+      className={cn('flex flex-col-reverse items-center py-4', props.className)}
     >
       {props.count === 0 ? (
         <h2 className="text-base font-semibold">???</h2>
@@ -77,7 +76,7 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
         ref={balloonRef}
         className={cn(
           'size-16',
-          props.count === 0 ? 'brightness-0 opacity-75' : ''
+          props.count === 0 ? 'opacity-75 brightness-0' : ''
         )}
       />
     </div>
@@ -123,7 +122,7 @@ export default () => {
               .fill(1)
               .map((_, i) => <Skeleton key={i} className="h-36" />)
           : scores.map((score, i) => (
-              <Balloon key={i} {...score} className="border rounded" />
+              <Balloon key={i} {...score} className="rounded border" />
             ))}
       </section>
     </Main>
