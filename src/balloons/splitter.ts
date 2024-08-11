@@ -106,7 +106,7 @@ export default class Splitter extends Default {
         `calc(100vh + ${this.pos[1]}px)`
       );
 
-      this.size = this.parent.size * (1 - this.depth * 0.1);
+      this.size = this.parent.size * (1 - this.depth * 0);
 
       const offsetElement = document.createElement('div');
       offsetElement.setAttribute('data-element', 'offset');
