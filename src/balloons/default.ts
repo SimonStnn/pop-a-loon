@@ -62,7 +62,7 @@ export type BalloonOptions = {
 };
 
 export default class Default extends Balloon {
-  public static readonly spawn_chance: number = 0.9;
+  public static readonly spawn_chance: number = 0.75;
 
   public get name(): 'default' {
     return 'default';

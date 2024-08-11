@@ -2,7 +2,7 @@ import Default, { BalloonOptions } from '@/balloons/default';
 import { getBalloonContainer } from '@/utils';
 
 export default class Splitter extends Default {
-  public static readonly spawn_chance: number = 5.2;
+  public static readonly spawn_chance: number = 0.1;
   // @ts-ignore
   public get name(): 'splitter' {
     return 'splitter';
