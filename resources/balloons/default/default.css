@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 9999;
   cursor: pointer;
-  top: 0;
+  bottom: 0;
 
   /* Make image not dragable and not selectable */
   user-drag: none;
@@ -26,10 +26,10 @@
 
 @keyframes rise {
   0% {
-    transform: translateY(100vh);
+    transform: translateY(calc(-1 * var(--rise-from, 0)));
   }
   100% {
-    transform: translateY(var(--rise-to, -10vh));
+    transform: translateY(calc(-1 * var(--rise-to, 100vh)));
   }
 }
 
@@ -37,11 +37,8 @@
   0% {
     transform: translateX(var(--swing-offset, 15px));
   }
-  50% {
-    transform: translateX(calc(-1 * var(--swing-offset, 15px)));
-  }
   100% {
-    transform: translateX(var(--swing-offset, 15px));
+    transform: translateX(calc(-1 * var(--swing-offset, 15px)));
   }
 }
 
