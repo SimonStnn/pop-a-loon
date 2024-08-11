@@ -1,9 +1,9 @@
-import browser from 'webextension-polyfill';
-import { Message, BalloonContainerId } from '@/const';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import storage from '@/managers/storage';
+import browser from 'webextension-polyfill';
+import { Message, BalloonContainerId } from '@/const';
 import log from '@/managers/log';
+import storage from '@/managers/storage';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,9 +19,29 @@ export function minutesToMilliseconds(minutes: number) {
 
 export function random(max: number): number;
 export function random(min: number, max: number): number;
-export function random(minOrMax: number, max?: number): number {
-  if (max === undefined) return Math.random() * (minOrMax - 0) + 0;
-  return Math.random() * (max - minOrMax) + minOrMax;
+export function random<T>(items: T[]): T;
+export function random<T>(...args: T[]): T;
+export function random<T>(
+  ...args: [number] | [number, number] | T[] | [T[]]
+): number | T {
+  // Handle `max: number`
+  if (args.length === 1 && typeof args[0] === 'number')
+    return Math.random() * args[0];
+  // Handle `items: T[]`
+  else if (args.length === 1 && Array.isArray(args[0]))
+    return args[0][Math.floor(random(args[0].length))];
+  // Handle `min: number, max: number`
+  else if (
+    args.length === 2 &&
+    typeof args[0] === 'number' &&
+    typeof args[1] === 'number'
+  ) {
+    const [min, max] = args;
+    return Math.random() * (max - min) + min;
+  }
+  // Handle `...args: T[]`
+  const items = args as T[];
+  return items[Math.floor(random(items.length))];
 }
 
 export function sleep(ms: number) {

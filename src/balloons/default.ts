@@ -1,6 +1,6 @@
 import Balloon, { balloonResourceLocation } from '@/balloon';
-import storage from '@/managers/storage';
 import { BalloonName } from '@/const';
+import storage from '@/managers/storage';
 import { joinPaths, random } from '@/utils';
 
 export type BuildProps = {
@@ -36,19 +36,19 @@ export type BalloonOptions = {
    *
    * The first value is the minimum size and the second value is the maximum size.
    */
-  size: [number, number];
+  size: number | [number, number];
   /**
    * The duration thresholds for the rise animation.
    *
    * The first value is the minimum duration and the second value is the maximum duration.
    */
-  riseDurationThreshold: [number, number];
+  riseDuration: number | [number, number];
   /**
    * The duration thresholds for the swing animation.
    *
    * The first value is the minimum duration and the second value is the maximum duration.
    */
-  swingDurationThreshold: [number, number];
+  swingDuration: number | [number, number];
   /**
    * The amount of pixels the balloon should wave back and forth.
    *
@@ -62,7 +62,7 @@ export type BalloonOptions = {
 };
 
 export default class Default extends Balloon {
-  public static readonly spawn_chance: number = 0.9;
+  public static readonly spawn_chance: number = 0.75;
 
   public get name(): 'default' {
     return 'default';
@@ -74,8 +74,8 @@ export default class Default extends Balloon {
       imageUrl: this.originalPath('/balloon.svg'),
       popSoundUrl: this.originalPath('/pop.mp3'),
       size: [50, 75],
-      riseDurationThreshold: [10000, 15000],
-      swingDurationThreshold: [2, 4],
+      riseDuration: [10000, 15000],
+      swingDuration: [2, 4],
       swingOffset: 15,
       waveDegrees: 8,
     };
@@ -114,6 +114,42 @@ export default class Default extends Balloon {
     );
   }
 
+  public get size(): number {
+    return this.element.clientWidth;
+  }
+
+  protected set size(size: number | [number, number]) {
+    if (typeof size !== 'number') {
+      size = random(size[0], size[1]);
+    }
+    this.element.style.width = size + 'px';
+    this.element.style.height = this.element.style.width;
+  }
+
+  public get riseDuration(): number {
+    return parseFloat(
+      getComputedStyle(this.element).getPropertyValue('--rise-duration')
+    );
+  }
+
+  public get swingDuration(): number {
+    return parseFloat(
+      getComputedStyle(this.element).getPropertyValue('--swing-duration')
+    );
+  }
+
+  public get swingElement(): HTMLDivElement {
+    const element = this.element.querySelector('[data-element="swing"]');
+    if (!element) throw new Error('Balloon is not built yet');
+    return element as HTMLDivElement;
+  }
+
+  public get waveElement(): HTMLDivElement {
+    const element = this.element.querySelector('[data-element="wave"]');
+    if (!element) throw new Error('Balloon is not built yet');
+    return element as HTMLDivElement;
+  }
+
   /**
    * Get the path for the resources of the default balloon.
    *
@@ -126,6 +162,16 @@ export default class Default extends Balloon {
     return joinPaths('..', 'default', name);
   }
 
+  protected swingDirection(direction: 'left' | 'right') {
+    if (direction === 'left') {
+      this.swingElement.style.animationDirection = 'alternate';
+      this.waveElement.style.animationDirection = 'alternate';
+    } else {
+      this.swingElement.style.animationDirection = 'alternate-reverse';
+      this.waveElement.style.animationDirection = 'alternate-reverse';
+    }
+  }
+
   public build() {
     this.importStylesheet({
       id: 'default',
@@ -133,15 +179,18 @@ export default class Default extends Balloon {
     });
 
     const positionX = random(5, 95);
-    const size = random(this.options.size[0], this.options.size[1]);
-    const riseDuration = random(
-      this.options.riseDurationThreshold[0],
-      this.options.riseDurationThreshold[1]
-    );
-    const waveDuration = random(
-      this.options.swingDurationThreshold[0],
-      this.options.swingDurationThreshold[1]
-    );
+    const size =
+      typeof this.options.size === 'number'
+        ? this.options.size
+        : random(this.options.size[0], this.options.size[1]);
+    const riseDuration =
+      typeof this.options.riseDuration === 'number'
+        ? this.options.riseDuration
+        : random(this.options.riseDuration[0], this.options.riseDuration[1]);
+    const waveDuration =
+      typeof this.options.swingDuration === 'number'
+        ? this.options.swingDuration
+        : random(this.options.swingDuration[0], this.options.swingDuration[1]);
 
     // Load the pop sound
     this.popSound.src = this.popSoundUrl;
@@ -151,7 +200,7 @@ export default class Default extends Balloon {
     this.element.classList.add('balloon');
 
     // Set css variables
-    this.element.style.setProperty('--rise-to', -size + 'px');
+    this.element.style.setProperty('--rise-from', `-${size}px`);
     this.element.style.setProperty(
       '--swing-offset',
       this.options.swingOffset + 'px'
@@ -162,8 +211,7 @@ export default class Default extends Balloon {
     );
 
     // Set the balloon's width and height
-    this.element.style.width = size + 'px';
-    this.element.style.height = this.element.style.width;
+    this.size = size;
     this.element.style.left = `calc(${positionX.toString() + 'vw'} - ${size / 2}px)`;
     this.element.style.animationDuration = riseDuration.toString() + 'ms';
     this.element.style.animationTimingFunction = 'linear';
@@ -173,15 +221,20 @@ export default class Default extends Balloon {
 
     // Create a second div and apply the swing animation to it
     const swingElement = document.createElement('div');
-    swingElement.style.animation = `swing ${waveDuration}s infinite ease-in-out`;
+    swingElement.setAttribute('data-element', 'swing');
+    swingElement.style.animation = `swing ${waveDuration / 2}s infinite ease-in-out`;
+    this.element.appendChild(swingElement);
+
     const waveElement = document.createElement('div');
-    waveElement.style.animation = `wave ${waveDuration / 2}s infinite ease-in-out alternate`;
+    waveElement.setAttribute('data-element', 'wave');
+    waveElement.style.animation = `wave ${waveDuration / 2}s infinite ease-in-out`;
+    swingElement.appendChild(waveElement);
     // Start wave animation at -3/4 of the swing animation (makes sure the wave has started before the balloon comes on screen)
     waveElement.style.animationDelay = `-${(waveDuration * 3) / 4}s`;
 
-    swingElement.appendChild(waveElement);
+    this.swingDirection(random('left', 'right'));
+
     waveElement.appendChild(this.balloonImage);
-    this.element.appendChild(swingElement);
   }
 
   public async pop(event: MouseEvent) {

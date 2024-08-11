@@ -273,7 +273,8 @@ Refer to [adding a balloon](./adding-balloon.md) for instructions on how to add 
 ```mermaid
 pie showdata
 title Balloon spawn chances
-   "Default" : 0.90
+   "Default" : 0.75
+   "Splitter": 0.10
    "Confetti" : 0.10
    "Gold": 0.05
 ```

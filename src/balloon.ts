@@ -1,11 +1,11 @@
 import browser from 'webextension-polyfill';
+import { BalloonName } from './const';
 import {
   getBalloonContainer,
   importStylesheet,
   joinPaths,
   sendMessage,
 } from '@/utils';
-import { BalloonName } from './const';
 
 /**
  * The location of the balloon resources. (`resources/balloons/`)
@@ -75,6 +75,10 @@ export default abstract class Balloon {
     return this.element.style.animationName === 'rise';
   }
 
+  public isRemoved(): boolean {
+    return !getBalloonContainer().contains(this.element);
+  }
+
   /**
    * Make the balloon rise.
    *
@@ -88,6 +92,9 @@ export default abstract class Balloon {
         joinPaths('resources', 'balloons', 'base-styles.css')
       )
     );
+    // Set data attribute
+    this.element.setAttribute('data-balloon', this.name);
+
     // Build the balloon element
     this.build();
     // Add the balloon to the container
