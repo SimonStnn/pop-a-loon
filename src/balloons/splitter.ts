@@ -61,7 +61,7 @@ export default class Splitter extends Default {
       new Splitter(
         this,
         [
-          event.clientX - rect.width / 2,
+          event.clientX - rect.width / 2 - this.options.swingOffset,
           container.clientHeight - rect.top - rect.height,
         ],
         -50
@@ -69,7 +69,7 @@ export default class Splitter extends Default {
       new Splitter(
         this,
         [
-          event.clientX - rect.width / 2,
+          event.clientX - rect.width / 2 + this.options.swingOffset,
           container.clientHeight - rect.top - rect.height,
         ],
         50
