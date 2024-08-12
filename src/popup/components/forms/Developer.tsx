@@ -72,6 +72,13 @@ export default () => {
             </FormItem>
           )}
         />
+        <div data-orientation="horizontal" role="none" className="bg-border h-[1px] w-full">
+          <span className="select-none invisible">‎</span>
+        </div>
+        <div>
+          <p className="font-bold">Note:</p>
+          <p className="text-muted mt-1">Spawn times can vary. Please be patient.</p>
+        </div>
       </form>
     </Form>
   );
