@@ -1,13 +1,13 @@
 import browser from 'webextension-polyfill';
 import * as balloons from '@/balloons';
+import log from '@/managers/log';
+import storage from '@/managers/storage';
 import {
   getBalloonContainer,
   importStylesheet,
   isFullScreenVideoPlaying,
   weightedRandom,
 } from '@/utils';
-import log from '@/managers/log';
-import storage from '@/managers/storage';
 
 (async () => {
   // Prevent running in popup
@@ -30,9 +30,10 @@ import storage from '@/managers/storage';
 
   const balloonClasses = Object.values(balloons);
   // Make a list from the spawn_chance from each balloon class
-  const spawnChances = balloonClasses.map(
-    (BalloonType) => BalloonType.spawn_chance
-  );
+  const spawnChances =
+    process.env.NODE_ENV === 'development'
+      ? new Array(balloonClasses.length).fill(1)
+      : balloonClasses.map((BalloonType) => BalloonType.spawn_chance);
 
   // Create a new balloon and make it rise
   const Balloon = weightedRandom(balloonClasses, spawnChances, {
