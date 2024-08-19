@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Main from '@/components/Main';
 import Graph from '@/components/graph';
 
