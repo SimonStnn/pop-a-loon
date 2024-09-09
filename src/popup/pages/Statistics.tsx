@@ -11,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/utils';
 
 export default () => {
@@ -59,7 +60,11 @@ export default () => {
           />
         </PopoverContent>
       </Popover>
-      <Graph startDate={date?.from!} endDate={date?.to!} />
+      {date?.from && date?.to ? (
+        <Graph startDate={date?.from} endDate={date?.to} />
+      ) : (
+        <Skeleton className="h-[200px] w-full" />
+      )}
     </Main>
   );
 };
