@@ -196,6 +196,10 @@ export default class Default extends Balloon {
     this.popSound.src = this.popSoundUrl;
     // Load the balloon image
     this.balloonImage.src = this.balloonImageUrl;
+    (async () => {
+      // Set volume
+      this.popSound.volume = (await storage.sync.get('config')).popVolume / 100;
+    })();
 
     this.element.classList.add('balloon');
 
@@ -239,8 +243,6 @@ export default class Default extends Balloon {
 
   public async pop(event: MouseEvent) {
     super.pop();
-    // Set volume
-    this.popSound.volume = (await storage.sync.get('config')).popVolume / 100;
     // Play the pop sound
     this.popSound.play();
   }
