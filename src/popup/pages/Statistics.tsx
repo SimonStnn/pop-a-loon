@@ -67,7 +67,7 @@ export default () => {
             id="date"
             variant={'outline'}
             className={cn(
-              'justify-start text-left font-normal',
+              'mb-8 justify-start text-left font-normal',
               !date && 'text-muted-foreground'
             )}
           >
@@ -86,7 +86,10 @@ export default () => {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent
+          className="flex w-full flex-col gap-2 p-2"
+          align="start"
+        >
           <Select onValueChange={handleDatePresetChange}>
             <SelectTrigger>
               <SelectValue placeholder="Select" />
@@ -100,6 +103,7 @@ export default () => {
           </Select>
           <Calendar
             initialFocus
+            className="p-0"
             mode="range"
             defaultMonth={date?.from}
             selected={date}
