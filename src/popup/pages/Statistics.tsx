@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import storage from '@/managers/storage';
 import { cn } from '@/utils';
 
 export default () => {
@@ -27,7 +28,7 @@ export default () => {
     to: new Date(),
   });
 
-  const handleDatePresetChange = (value: string) => {
+  const handleDatePresetChange = async (value: string) => {
     const minDate = new Date('2024-07-01');
     const today = new Date();
     let fromDate: Date | undefined = undefined;
@@ -47,7 +48,12 @@ export default () => {
         fromDate.setMonth(today.getMonth() - 3);
         break;
       case 'all-time':
-        fromDate = minDate;
+        const accountCreationDate = new Date(
+          (await storage.sync.get('user')).createdAt
+        );
+        fromDate = new Date(
+          Math.max(minDate.getTime(), accountCreationDate.getTime())
+        );
         break;
       default:
         fromDate = undefined;
