@@ -68,7 +68,7 @@ export default (props: { startDate: Date; endDate: Date }) => {
     <>
       <ChartContainer
         config={chartConfig}
-        className="ml-[-25px] min-h-[200px] w-full select-none"
+        className="ml-[-40px] min-h-[200px] w-[calc(100%+40px)] select-none"
       >
         <BarChart accessibilityLayer data={data}>
           <XAxis
