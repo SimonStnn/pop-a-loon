@@ -11,7 +11,7 @@ export default class Fast extends Default {
   public get options(): BalloonOptions {
     return {
       ...super.options,
-      imageUrl: '/balloon.svg',
+      imageUrl: 'balloon.svg',
       riseDuration: [5000, 7500],
       size: [65, 75],
     };

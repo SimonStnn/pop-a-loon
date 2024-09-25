@@ -8,7 +8,7 @@ direction LR
 class Balloon { <<Abstract>> }
 click Balloon href "#abstract-balloon-class" "Abstract balloon class"
 
-class fast {
+class Fast {
   +spawn_chance: number$
   +<< get >>name: string
   +<< get >>options: BalloonOptions
