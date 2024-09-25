@@ -55,9 +55,9 @@ Extending the [Default balloon](./balloons/default.md) is a simpler process.
 
 ```ts
 // example.ts
-import Default from '@/balloons/default';
+import Default, { BalloonOptions } from './default';
 
-class Example extends Default {
+export default class Example extends Default {
   public static readonly spawn_chance: number = 0.1;
   // @ts-ignore
   public get name(): 'example' {
