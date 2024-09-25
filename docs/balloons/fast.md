@@ -13,9 +13,9 @@ class fast {
   +<< get >>name: string
   +<< get >>options: BalloonOptions
 }
-fast --|> Balloon
+Fast --|> Balloon
 ```
 
-Has a custom image resource in [`/resources/balloons/fast/fast.svg`](/resources/balloons/fast/fast.svg).
+Has a custom image resource in [`/resources/balloons/fast/balloon.svg`](/resources/balloons/fast/balloon.svg).
 
-![Gold balloon](/resources/balloons/fast/fast.svg)
+![Fast balloon](/resources/balloons/fast/balloon.svg)
