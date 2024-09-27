@@ -104,7 +104,7 @@ export default () => {
             balloon: new balloon(),
           };
         }),
-        ...new Array(2).fill({
+        ...new Array(1).fill({
           name: 'default',
           count: 0,
           balloon: new Balloons.Default(),

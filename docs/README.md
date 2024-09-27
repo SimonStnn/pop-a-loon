@@ -271,11 +271,12 @@ Refer to [adding a balloon](./adding-balloon.md) for instructions on how to add 
 ## Balloon spawn chances
 
 ```mermaid
-pie showdata
+pie showData
 title Balloon spawn chances
-   "Default" : 0.75
+   "Default" : 0.65
    "Splitter": 0.10
    "Confetti" : 0.10
+   "Fast": 0.10
    "Gold": 0.05
 ```
 
@@ -288,7 +289,9 @@ class Balloon { <<Abstract>> }
 
 Default --|> Balloon
 Confetti --|> Default
+Fast --|> Default
 Gold --|> Default
+Splitter --|> Default
 ```
 
 ## Abstract balloon class
@@ -325,12 +328,3 @@ These properties and methods **must** be implemented in the child classes.
 > [!IMPORTANT]
 > The `element` is the html element that will be added to the DOM after the balloon is built.
 
-## Balloons
-
-### Default balloon
-
-See [Default balloon documentation](./balloons/default.md) for more information.
-
-### Confetti balloon
-
-See [Confetti balloon documentation](./balloons/confetti.md) for more information.
