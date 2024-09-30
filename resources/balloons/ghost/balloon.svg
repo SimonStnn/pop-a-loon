@@ -1,0 +1,67 @@
+<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" version="1.1"
+    xmlns:xlink="http://www.w3.org/1999/xlink" opacity="0.7">
+    <style>
+        /* Animation to fade in and out */
+        @keyframes fade {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0.1; }
+        }
+
+        svg {
+            animation: fade 4s infinite;
+        }QA
+    </style>
+
+    <!-- String -->
+    <path
+        d="M 64 88.5 m 1 0 q -2 1.5 -1 5 q 3 7.5 1 15 q -3 5 -1 12"
+        stroke="rgb(150, 150, 150)" 
+        stroke-width="4px"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+    />
+
+    <!-- Knot -->
+    <path
+        d="M 64 77 l -8 8 q 8 6 16 0 Z"
+        fill="rgb(211, 211, 211)"  
+        stroke="rgb(150, 150,150)" 
+        stroke-width="4px"
+        stroke-linejoin="round"
+    />
+
+    <!-- Balloon -->
+    <defs>
+        <linearGradient id="balloonGradient" x1="0%" y1="0%" x2="60%" y2="100%">
+            <stop offset="0%" style="stop-color: rgb(150, 150, 150); stop-opacity: 1" /> <!-- Light gray -->
+            <stop offset="70%" style="stop-color: rgb(211, 211, 211); stop-opacity: 1" /> <!-- Light gray -->
+        </linearGradient>
+    </defs>
+    <ellipse
+        cx="64"
+        cy="42"
+        rx="30"
+        ry="35"
+        fill="url(#balloonGradient)"
+        stroke="rgb(150, 150, 150)" 
+        stroke-width="4px"
+        stroke-dasharray="4 10 4 12 200"
+        stroke-dashoffset="0"
+        stroke-linecap="round"
+    />
+
+    <!-- Balloon shine reflection -->
+    <ellipse
+        cx="64"
+        cy="42"
+        rx="20"
+        ry="25"
+        fill="none"
+        stroke="rgb(150, 150, 150)" 
+        stroke-width="4px"
+        stroke-dasharray="21 100"
+        stroke-dashoffset="41"
+        stroke-linecap="round"
+    />
+</svg>
