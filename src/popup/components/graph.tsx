@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
@@ -68,7 +68,7 @@ export default (props: { startDate: Date; endDate: Date }) => {
     <>
       <ChartContainer
         config={chartConfig}
-        className="min-h-[200px] w-full select-none"
+        className="ml-[-40px] min-h-[200px] w-[calc(100%+40px)] select-none"
       >
         <BarChart accessibilityLayer data={data}>
           <XAxis
@@ -83,6 +83,7 @@ export default (props: { startDate: Date; endDate: Date }) => {
               })
             }
           />
+          <YAxis axisLine={false} tickLine={false} />
           <ChartTooltip
             content={
               <ChartTooltipContent className="capitalize" hideIndicator />
