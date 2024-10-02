@@ -3,16 +3,15 @@
     <style>
         /* Animation to fade in and out */
         @keyframes fade {
-            0% { opacity: 0.1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 0.1; }
+            0% { opacity: 0.2; }      /*minimum opacity*/
+            50% { opacity: 1; }       /*maximum opacity*/
+            100% { opacity: 0.2; }    /*minimum opacity*/
         }
 
         svg {
-            animation: fade 4s infinite;
-        }QA
+            animation: fade 4s infinite; /* 4 seconds to fade in and out. To change the speed of the animation, change the value of 4s.*/
+        }
     </style>
-
     <!-- String -->
     <path
         d="M 64 88.5 m 1 0 q -2 1.5 -1 5 q 3 7.5 1 15 q -3 5 -1 12"

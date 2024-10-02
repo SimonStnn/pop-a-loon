@@ -12,7 +12,7 @@ export default class Fast extends Default {
     return {
       ...super.options,
       imageUrl: 'balloon.svg',
-      riseDuration: [2000, 4000],
+      riseDuration: [4000, 6500],
       size: [65, 75],
     };
   }
