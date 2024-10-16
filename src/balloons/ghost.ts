@@ -14,7 +14,6 @@ export default class Ghost extends Default {
       riseDuration: [15000, 20000],
       swingDuration: [3, 4],
       swingOffset: 25,
-    
     };
   }
 }

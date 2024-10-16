@@ -278,6 +278,7 @@ title Balloon spawn chances
    "Confetti" : 0.10
    "Fast": 0.10
    "Gold": 0.05
+   "Ghost": 0.10
 ```
 
 ## Inheritance Tree
@@ -291,6 +292,7 @@ Default --|> Balloon
 Confetti --|> Default
 Fast --|> Default
 Gold --|> Default
+Ghost --|> Default
 Splitter --|> Default
 ```
 

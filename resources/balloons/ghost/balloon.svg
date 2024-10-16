@@ -1,16 +1,20 @@
 <svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" version="1.1"
     xmlns:xlink="http://www.w3.org/1999/xlink" opacity="0.7">
     <style>
-        /* Animation to fade in and out */
+        :root {
+            --animation-speed: 4s; /* Set default animation speed to 4 seconds */
+        }
+
         @keyframes fade {
-            0% { opacity: 0.2; }      /*minimum opacity*/
-            50% { opacity: 1; }       /*maximum opacity*/
-            100% { opacity: 0.2; }    /*minimum opacity*/
+            0% { opacity: 0.2; }      /* minimum opacity */
+            50% { opacity: 1; }       /* maximum opacity */
+            100% { opacity: 0.2; }    /* minimum opacity */
         }
 
         svg {
-            animation: fade 4s infinite; /* 4 seconds to fade in and out. To change the speed of the animation, change the value of 4s.*/
+            animation: fade var(--animation-speed) infinite; /* Use the variable for animation speed */
         }
+
     </style>
     <!-- String -->
     <path
