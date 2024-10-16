@@ -1,21 +1,5 @@
 <svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" version="1.1"
     xmlns:xlink="http://www.w3.org/1999/xlink" opacity="0.7">
-    <style>
-        :root {
-            --animation-speed: 4s; /* Set default animation speed to 4 seconds */
-        }
-
-        @keyframes fade {
-            0% { opacity: 0.2; }      /* minimum opacity */
-            50% { opacity: 1; }       /* maximum opacity */
-            100% { opacity: 0.2; }    /* minimum opacity */
-        }
-
-        svg {
-            animation: fade var(--animation-speed) infinite; /* Use the variable for animation speed */
-        }
-
-    </style>
     <!-- String -->
     <path
         d="M 64 88.5 m 1 0 q -2 1.5 -1 5 q 3 7.5 1 15 q -3 5 -1 12"
