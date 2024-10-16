@@ -8,7 +8,6 @@
         stroke-linejoin="round"
         stroke-linecap="round"
     />
-
     <!-- Knot -->
     <path
         d="M 64 77 l -8 8 q 8 6 16 0 Z"
@@ -17,7 +16,6 @@
         stroke-width="4px"
         stroke-linejoin="round"
     />
-
     <!-- Balloon -->
     <defs>
         <linearGradient id="balloonGradient" x1="0%" y1="0%" x2="60%" y2="100%">
@@ -37,7 +35,6 @@
         stroke-dashoffset="0"
         stroke-linecap="round"
     />
-
     <!-- Balloon shine reflection -->
     <ellipse
         cx="64"
