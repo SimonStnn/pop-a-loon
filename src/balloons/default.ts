@@ -1,4 +1,8 @@
-import Balloon, { balloonResourceLocation } from '@/balloon';
+import Balloon, {
+  balloonResourceLocation,
+  PopOptions as BasePopOptions,
+  basePopOptions as baseBalloonPopOptions,
+} from '@/balloon';
 import { BalloonName } from '@/const';
 import storage from '@/managers/storage';
 import { joinPaths, random } from '@/utils';
@@ -59,6 +63,15 @@ export type BalloonOptions = {
    * The degrees the balloon will tilt when back ant forth.
    */
   waveDegrees: number;
+};
+
+export type PopOptions = BasePopOptions & {
+  playSound?: boolean;
+};
+
+export const basePopOptions: PopOptions = {
+  ...baseBalloonPopOptions,
+  playSound: true,
 };
 
 export default class Default extends Balloon {
@@ -241,9 +254,13 @@ export default class Default extends Balloon {
     waveElement.appendChild(this.balloonImage);
   }
 
-  public async pop(event: MouseEvent) {
-    super.pop();
-    // Play the pop sound
-    this.popSound.play();
+  public async pop(event: MouseEvent, options?: PopOptions) {
+    options = { ...basePopOptions, ...options };
+    super.pop(event, options);
+
+    if (options.playSound) {
+      // Play the pop sound
+      this.popSound.play();
+    }
   }
 }
