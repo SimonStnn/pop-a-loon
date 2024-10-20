@@ -27,6 +27,14 @@ type StyleSheetProps = {
   name?: string;
 };
 
+export type PopOptions = {
+  increaseCount?: boolean;
+};
+
+export const basePopOptions: PopOptions = {
+  increaseCount: true,
+};
+
 export default abstract class Balloon {
   public abstract readonly name: BalloonName;
 
@@ -117,11 +125,14 @@ export default abstract class Balloon {
    *
    * @param event The mouse event that triggered the pop.
    */
-  public pop(event?: MouseEvent): void | Promise<void> {
+  public pop(event?: MouseEvent, options?: PopOptions): void | Promise<void> {
+    options = { ...basePopOptions, ...options };
     // Remove the balloon
     this.remove();
 
-    // Send message with the new count
-    sendMessage({ action: 'incrementCount', type: this.name });
+    if (options?.increaseCount) {
+      // Send message with the new count
+      sendMessage({ action: 'incrementCount', type: this.name });
+    }
   }
 }
