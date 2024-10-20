@@ -126,13 +126,9 @@ export default class Splitter extends Default {
   }
 
   public async pop(event: MouseEvent) {
-    if (this.depth < this.maxSplits) this.split(event); // Split before removing the balloon
-    this.popSound.play();
-    this.remove();
+    if (this.depth < this.maxSplits) this.split(event);
 
-    if (this === this.root) {
-      super.pop(event);
-    }
+    super.pop(event, { increaseCount: this === this.root });
   }
 
   public remove(event?: Event): void {
