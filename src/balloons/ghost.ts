@@ -16,9 +16,9 @@ export default class Ghost extends Default {
     return {
       ...super.options,
       imageUrl: 'balloon.svg',
-      riseDuration: [15000, 20000],
+      riseDuration: [20000, 40000],
       swingDuration: [3, 4],
-      swingOffset: 25,
+      swingOffset: 70,
       fadeSpeed: [2000, 3000],
     };
   }
