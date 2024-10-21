@@ -1,0 +1,17 @@
+@keyframes fade {
+    0% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+}
+
+.balloon[data-balloon="ghost"] img {
+    animation-name: fade;
+    animation-duration: var(--animation-speed, 3000ms);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
