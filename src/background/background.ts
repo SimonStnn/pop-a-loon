@@ -1,9 +1,9 @@
-import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
-import storage from '@/managers/storage';
-import log, { type LogLevelNames } from '@/managers/log';
-import remote from '@/remote';
+import browser from 'webextension-polyfill';
 import { AlarmName, Message, initalConfig } from '@/const';
+import log, { type LogLevelNames } from '@/managers/log';
+import storage from '@/managers/storage';
+import remote from '@/remote';
 import {
   calculateBalloonSpawnDelay,
   random,
@@ -33,6 +33,28 @@ const updateBadgeColors = () => {
   })();
 };
 
+// Snooze state variable to track if the spawn is snoozed
+let isSnoozed = false;
+let snoozeTimer: NodeJS.Timeout | null = null;
+
+// Function to handle starting the snooze
+const startSnooze = async (duration: number) => {
+  // Activate snooze
+  isSnoozed = true;
+
+  // Clear existing timer if present
+  if (snoozeTimer) clearTimeout(snoozeTimer);
+
+  // If snooze is not indefinite (-1), set up a timeout to end snooze
+  if (duration !== -1) {
+    snoozeTimer = setTimeout(() => {
+      isSnoozed = false;
+      snoozeTimer = null;
+      log.info('Snooze ended, resuming balloon spawns');
+    }, duration);
+  }
+};
+
 (() => {
   // Check if the background script is running in the background
   if (!isRunningInBackground()) return;
@@ -56,16 +78,9 @@ const updateBadgeColors = () => {
       log.getLevel(),
       ')'
     );
-    log.debug('');
 
     // Clear all alarms
     await browser.alarms.clearAll();
-
-    //! Fix for #145
-    try {
-      log.debug('Checking for depricated balloonCount');
-      await storage.sync.remove('balloonCount' as any);
-    } catch (e) {}
 
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
@@ -82,6 +97,7 @@ const updateBadgeColors = () => {
       await storage.sync.set('token', usr.token);
       localUser = usr;
     }
+
     // Get the user from the remote and save it to the local storage
     const user = await remote.getUser(localUser.id);
     await storage.sync.set('user', user);
@@ -108,6 +124,12 @@ const updateBadgeColors = () => {
   };
 
   const spawnBalloon = async () => {
+    // Prevent spawn if snooze is active
+    if (isSnoozed) {
+      log.info('Balloon spawn snoozed');
+      return;
+    }
+
     log.groupCollapsed(
       'debug',
       `(${new Date().toLocaleTimeString()}) Spawning Balloon...`
@@ -228,7 +250,6 @@ const updateBadgeColors = () => {
           ...(await storage.sync.get('user')),
           count: newCount.count,
         });
-
         const msg: Message = {
           action: 'updateCounter',
           balloonCount: newCount.count,

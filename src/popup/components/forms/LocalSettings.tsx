@@ -1,7 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect, useState } from 'react';
-import browser, { manifest, type Permissions } from 'webextension-polyfill';
 import { useForm } from 'react-hook-form';
+import browser, { type Permissions } from 'webextension-polyfill';
 import { z } from 'zod';
+import { Default as DefaultBalloon } from '@/balloons';
+import InfoIcon from '@/components/InfoIcon';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -12,13 +15,19 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import InfoIcon from '@/components/InfoIcon';
-import { Default as DefaultBalloon } from '@/balloons';
-import storage from '@/managers/storage';
-import log from '@/managers/log';
-import { askOriginPermissions } from '@/utils';
 import { initalConfig } from '@/const';
+import log from '@/managers/log';
+import storage from '@/managers/storage';
+import { askOriginPermissions } from '@/utils';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -31,13 +40,23 @@ const formSchema = z.object({
   popVolume: z.number().int().min(MIN_POP_VOLUME).max(MAX_POP_VOLUME),
   spawnRate: z.number().int().min(MIN_SPAWN_RATE).max(MAX_SPAWN_RATE),
   fullScreenVideoSpawn: z.boolean(),
+  snooze: z.number().int().min(0),
   permissions: z.object({
     origins: z.array(z.string()),
     permissions: z.array(z.string()),
   }),
 });
 
-export default () => {
+const SNOOZE_OPTIONS = [
+  { label: '15 minutes', value: 15 * 60 * 1000 },
+  { label: '1 hour', value: 1 * 60 * 60 * 1000 },
+  { label: '3 hours', value: 3 * 60 * 60 * 1000 },
+  { label: '8 hours', value: 8 * 60 * 60 * 1000 },
+  { label: '24 hours', value: 24 * 60 * 60 * 1000 },
+  { label: 'Until I turn it back on', value: -1 },
+];
+
+const ConfigForm = () => {
   const [popVolume, setPopVolume] = useState(initalConfig.popVolume);
   const [spawnRate, setSpawnRate] = useState(initalConfig.spawnRate);
   const [fullScreenVideoSpawn, setFullScreenVideoSpawn] = useState(
@@ -46,58 +65,39 @@ export default () => {
   const [permissions, setPermissions] = useState<Permissions.AnyPermissions>(
     {}
   );
-  const form = useForm<z.infer<typeof formSchema>>({});
+  const [isSnoozed, setIsSnoozed] = useState(false);
+  const [snoozeTimer, setSnoozeTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+
   const popSound = new DefaultBalloon().popSound;
 
   const onPopVolumeChange = async (popVolume: number) => {
-    // Save volume to storage
     const config = await storage.sync.get('config');
-    await storage.sync.set('config', {
-      ...config,
-      popVolume,
-    });
-
+    await storage.sync.set('config', { ...config, popVolume });
     setPopVolume(popVolume);
-    log.debug(
-      'Pop volume changed to',
-      (await storage.sync.get('config')).popVolume
-    );
+    log.debug('Pop volume changed to', popVolume);
 
-    // Play the pop sound
     popSound.volume = popVolume / 100;
     popSound.play();
   };
 
   const onSpawnRateChange = async (spawnRate: number) => {
-    // Save volume to storage
     const config = await storage.sync.get('config');
-    await storage.sync.set('config', {
-      ...config,
-      spawnRate,
-    });
-
+    await storage.sync.set('config', { ...config, spawnRate });
     setSpawnRate(spawnRate);
-    log.debug(
-      'Spawn rate changed to',
-      (await storage.sync.get('config')).spawnRate
-    );
+    log.debug('Spawn rate changed to', spawnRate);
   };
 
   const onFullScreenVideoSpawnChange = async (
     fullScreenVideoSpawn: boolean
   ) => {
-    // Save volume to storage
     const config = await storage.sync.get('config');
-    await storage.sync.set('config', {
-      ...config,
-      fullScreenVideoSpawn,
-    });
-
+    await storage.sync.set('config', { ...config, fullScreenVideoSpawn });
     setFullScreenVideoSpawn(fullScreenVideoSpawn);
-    log.debug(
-      'Spawning in full screen video players:',
-      (await storage.sync.get('config')).fullScreenVideoSpawn
-    );
+    log.debug('Spawning in full screen video players:', fullScreenVideoSpawn);
   };
 
   const onGrantOriginPermissionClick = async () => {
@@ -105,22 +105,91 @@ export default () => {
     setPermissions(await browser.permissions.getAll());
   };
 
+  const startSnooze = (duration: number) => {
+    setIsSnoozed(true);
+    setSpawnRate(0);
+
+    if (duration === -1) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setSpawnRate(initalConfig.spawnRate);
+      setIsSnoozed(false);
+      form.setValue('snooze', 0);
+    }, duration);
+
+    setSnoozeTimer(timer);
+  };
+
+  const handleSnoozeChange = (selectedDuration: string) => {
+    const duration = Number(selectedDuration);
+    form.setValue('snooze', duration);
+    startSnooze(duration);
+  };
+
   useEffect(() => {
-    const loadVolume = async () => {
+    const loadConfig = async () => {
       const config = await storage.sync.get('config');
-      // Load volume from storage
       setPopVolume(config.popVolume);
       setSpawnRate(config.spawnRate);
       setFullScreenVideoSpawn(config.fullScreenVideoSpawn);
       setPermissions(await browser.permissions.getAll());
     };
 
-    loadVolume();
-  }, []);
+    loadConfig();
+
+    return () => {
+      if (snoozeTimer) {
+        clearTimeout(snoozeTimer);
+      }
+    };
+  }, [snoozeTimer]);
 
   return (
     <Form {...form}>
       <form className="grid gap-4">
+        <FormField
+          control={form.control}
+          name="snooze"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex justify-between gap-1">
+                <span>Snooze Balloon Spawn</span>
+                <InfoIcon>
+                  <h4 className="mb-1 font-medium leading-none">
+                    Snooze Baloon Spawn
+                  </h4>
+                  <p className="text-sm font-normal leading-tight text-muted-foreground">
+                    Set how long to pause the balloon appearances. During this
+                    snooze period, no new balloons will spawn on your screen.
+                  </p>
+                </InfoIcon>
+              </FormLabel>
+              <FormControl>
+                <Select
+                  value={String(field.value)}
+                  onValueChange={handleSnoozeChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Duration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SNOOZE_OPTIONS.map((option) => (
+                      <SelectItem
+                        key={option.label}
+                        value={String(option.value)}
+                      >
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="popVolume"
@@ -197,76 +266,26 @@ export default () => {
           name="fullScreenVideoSpawn"
           render={({ field: { onChange } }) => (
             <FormItem>
-              <FormLabel className="flex justify-between gap-1">
-                <span>Fullscreen video spawn</span>
-                <span className="flex gap-2">
-                  <FormControl>
-                    <Checkbox
-                      checked={fullScreenVideoSpawn}
-                      onCheckedChange={(val) => {
-                        onChange(val);
-                        onFullScreenVideoSpawnChange(!!val);
-                      }}
-                    />
-                  </FormControl>
-                  <InfoIcon>
-                    <h4 className="mb-1 font-medium leading-none">
-                      Fullscreen video spawn
-                    </h4>
-                    <p className="text-sm font-normal leading-tight text-muted-foreground">
-                      Weither or not to spawn balloons in fullscreen video
-                      players, like youtube.
-                    </p>
-                    <p className="pt-1 text-sm font-medium leading-tight text-muted-foreground">
-                      {fullScreenVideoSpawn ? (
-                        <>Balloons can spawn!</>
-                      ) : (
-                        <>Balloons will not spawn.</>
-                      )}
-                    </p>
-                  </InfoIcon>
-                </span>
-              </FormLabel>
+              <FormLabel>Full-Screen Video Spawn</FormLabel>
+              <FormControl>
+                <Checkbox
+                  checked={fullScreenVideoSpawn}
+                  onCheckedChange={(checked: boolean) => {
+                    onFullScreenVideoSpawnChange(checked);
+                    onChange(checked);
+                  }}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* If the user hasn't granted the host permissions; show the grant permission button */}
-        {!(permissions.origins?.length !== 0) && (
-          <FormField
-            control={form.control}
-            name="permissions.origins"
-            render={({ field: { onChange } }) => (
-              <FormItem>
-                <FormLabel className="flex justify-between gap-1">
-                  <span>Host Permission</span>
-                  <InfoIcon>
-                    <h4 className="mb-1 font-medium leading-none">
-                      Host Permission{' '}
-                      <span className="text-xs text-red-500">*recommended</span>
-                    </h4>
-                    <p className="text-sm font-normal leading-tight text-muted-foreground">
-                      Pop-a-loon requires host permissions to function properly.
-                    </p>
-                  </InfoIcon>
-                </FormLabel>
-                <FormControl>
-                  <span className="flex gap-2">
-                    <Button
-                      className="w-full"
-                      size={'sm'}
-                      onClick={onGrantOriginPermissionClick}
-                    >
-                      Grant permission
-                    </Button>
-                  </span>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        <Button type="submit" onClick={() => console.log(form.getValues())}>
+          Save
+        </Button>
       </form>
     </Form>
   );
 };
+
+export default ConfigForm;
