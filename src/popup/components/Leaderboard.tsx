@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { type ClassValue } from 'clsx';
 import { Medal, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -11,17 +13,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
-import remote from '@/remote';
-import { RemoteResponse } from '@/const';
-import { cn } from '@/utils';
-import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { RemoteResponse } from '@/const';
+import remote from '@/remote';
+import { cn } from '@/utils';
 
 const limit = 10;
 const maxPages = 10;
@@ -88,7 +88,7 @@ export default () => {
             <TooltipTrigger asChild>
               <Button
                 variant={'ghost'}
-                className="w-10 p-0"
+                size={'icon'}
                 disabled={isLoading || page <= 1}
                 onClick={() => setPage(page - 1)}
               >
