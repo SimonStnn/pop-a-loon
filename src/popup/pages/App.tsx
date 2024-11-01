@@ -31,7 +31,7 @@ const App: React.FC = () => {
           <span className="flex items-center justify-center text-4xl font-bold drop-shadow">
             {balloonCount}
           </span>
-          <span className="text-[16px]">
+          <span className="text-base">
             {balloonCount === 1 ? 'Baloon popped' : 'Balloons popped'}
           </span>
         </section>
