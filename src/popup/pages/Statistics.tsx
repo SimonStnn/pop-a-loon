@@ -7,6 +7,11 @@ import Graph from '@/components/graph';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -123,13 +128,25 @@ export default () => {
             />
           </PopoverContent>
         </Popover>
-        <Toggle
-          variant="outline"
-          aria-label="Toggle global stats"
-          onClick={(e) => setGlobal(!global)}
-        >
-          <Globe className="size-4" />
-        </Toggle>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Toggle
+              variant="outline"
+              aria-label="Toggle global stats"
+              onClick={(e) => setGlobal(!global)}
+            >
+              <Globe className="size-4" />
+            </Toggle>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <h4 className="mb-1 font-medium leading-none">
+              Toggle global history
+            </h4>
+            <p className="text-sm font-normal leading-tight text-muted-foreground">
+              View global history or your own history.
+            </p>
+          </HoverCardContent>
+        </HoverCard>
       </div>
       {date?.from && date?.to ? (
         <Graph startDate={date?.from} endDate={date?.to} global={global} />
