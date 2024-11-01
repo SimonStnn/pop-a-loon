@@ -63,7 +63,7 @@ export default (props: { startDate: Date; endDate: Date; global: boolean }) => {
     };
 
     fetchData();
-  }, [props.startDate, props.endDate]);
+  }, [props.startDate, props.endDate, props.global]);
 
   return (
     <>
