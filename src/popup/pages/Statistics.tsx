@@ -1,5 +1,5 @@
 import { format, subDays } from 'date-fns';
-import { Calendar as CalendarIcon, Globe } from 'lucide-react';
+import { Calendar as CalendarIcon, Globe, CircleUser } from 'lucide-react';
 import React from 'react';
 import { DateRange } from 'react-day-picker';
 import Main from '@/components/Main';
@@ -135,7 +135,11 @@ export default () => {
               aria-label="Toggle global stats"
               onClick={(e) => setGlobal(!global)}
             >
-              <Globe className="size-4" />
+              {global ? (
+                <Globe className="size-4" />
+              ) : (
+                <CircleUser className="size-4" />
+              )}
             </Toggle>
           </HoverCardTrigger>
           <HoverCardContent>
