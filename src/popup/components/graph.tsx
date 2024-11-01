@@ -9,7 +9,7 @@ import {
 import { BalloonName, HistoryNode } from '@/const';
 import remote from '@/remote';
 
-export default (props: { startDate: Date; endDate: Date }) => {
+export default (props: { startDate: Date; endDate: Date; global: boolean }) => {
   const [data, setData] = useState({} as (HistoryNode & { total: number })[]);
   const [poppedBalloonTypes, setPoppedBalloonTypes] = useState<BalloonName[]>(
     []
@@ -20,7 +20,8 @@ export default (props: { startDate: Date; endDate: Date }) => {
     const fetchData = async () => {
       const response = await remote.getPopHistory(
         props.startDate,
-        props.endDate
+        props.endDate,
+        props.global
       );
 
       const allBalloonNames = [
