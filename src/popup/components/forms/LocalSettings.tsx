@@ -27,7 +27,7 @@ import { Slider } from '@/components/ui/slider';
 import { initalConfig } from '@/const';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
-import { askOriginPermissions } from '@/utils';
+import { askOriginPermissions, isInSnooze } from '@/utils';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -40,14 +40,15 @@ const formSchema = z.object({
   popVolume: z.number().int().min(MIN_POP_VOLUME).max(MAX_POP_VOLUME),
   spawnRate: z.number().int().min(MIN_SPAWN_RATE).max(MAX_SPAWN_RATE),
   fullScreenVideoSpawn: z.boolean(),
-  snooze: z.number().int().min(0),
+  snooze: z.number().int().min(-1).nullable(),
   permissions: z.object({
     origins: z.array(z.string()),
     permissions: z.array(z.string()),
   }),
 });
 
-const SNOOZE_OPTIONS = [
+const SNOOZE_OPTIONS: { label: string; value: number | null }[] = [
+  { label: 'Off', value: null },
   { label: '15 minutes', value: 15 * 60 * 1000 },
   { label: '1 hour', value: 1 * 60 * 60 * 1000 },
   { label: '3 hours', value: 3 * 60 * 60 * 1000 },
@@ -56,7 +57,7 @@ const SNOOZE_OPTIONS = [
   { label: 'Until I turn it back on', value: -1 },
 ];
 
-const ConfigForm = () => {
+export default () => {
   const [popVolume, setPopVolume] = useState(initalConfig.popVolume);
   const [spawnRate, setSpawnRate] = useState(initalConfig.spawnRate);
   const [fullScreenVideoSpawn, setFullScreenVideoSpawn] = useState(
@@ -65,8 +66,6 @@ const ConfigForm = () => {
   const [permissions, setPermissions] = useState<Permissions.AnyPermissions>(
     {}
   );
-  const [isSnoozed, setIsSnoozed] = useState(false);
-  const [snoozeTimer, setSnoozeTimer] = useState<NodeJS.Timeout | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -105,32 +104,20 @@ const ConfigForm = () => {
     setPermissions(await browser.permissions.getAll());
   };
 
-  const startSnooze = (duration: number) => {
-    setIsSnoozed(true);
-    setSpawnRate(0);
-
-    if (duration === -1) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setSpawnRate(initalConfig.spawnRate);
-      setIsSnoozed(false);
-      form.setValue('snooze', 0);
-    }, duration);
-
-    setSnoozeTimer(timer);
-  };
-
-  const handleSnoozeChange = (selectedDuration: string) => {
-    const duration = Number(selectedDuration);
+  const handleSnoozeChange = async (selectedDuration: string) => {
+    const duration =
+      selectedDuration === 'null' ? null : Number(selectedDuration);
     form.setValue('snooze', duration);
-    startSnooze(duration);
+
+    const snoozeEnd =
+      duration === null ? null : duration > 0 ? Date.now() + duration : -1;
+    await storage.sync.set('snooze', snoozeEnd);
   };
 
   useEffect(() => {
     const loadConfig = async () => {
       const config = await storage.sync.get('config');
+
       setPopVolume(config.popVolume);
       setSpawnRate(config.spawnRate);
       setFullScreenVideoSpawn(config.fullScreenVideoSpawn);
@@ -138,13 +125,7 @@ const ConfigForm = () => {
     };
 
     loadConfig();
-
-    return () => {
-      if (snoozeTimer) {
-        clearTimeout(snoozeTimer);
-      }
-    };
-  }, [snoozeTimer]);
+  }, []);
 
   return (
     <Form {...form}>
@@ -265,14 +246,14 @@ const ConfigForm = () => {
           control={form.control}
           name="fullScreenVideoSpawn"
           render={({ field: { onChange } }) => (
-            <FormItem>
+            <FormItem className="flex justify-between gap-1">
               <FormLabel>Full-Screen Video Spawn</FormLabel>
               <FormControl>
                 <Checkbox
                   checked={fullScreenVideoSpawn}
-                  onCheckedChange={(checked: boolean) => {
-                    onFullScreenVideoSpawnChange(checked);
-                    onChange(checked);
+                  onCheckedChange={(val) => {
+                    onFullScreenVideoSpawnChange(!!val);
+                    onChange(!!val);
                   }}
                 />
               </FormControl>
@@ -280,12 +261,42 @@ const ConfigForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" onClick={() => console.log(form.getValues())}>
-          Save
-        </Button>
+        {/* If the user hasn't granted the host permissions; show the grant permission button */}
+        {!(permissions.origins?.length !== 0) && (
+          <FormField
+            control={form.control}
+            name="permissions.origins"
+            render={({ field: { onChange } }) => (
+              <FormItem>
+                <FormLabel className="flex justify-between gap-1">
+                  <span>Host Permission</span>
+                  <InfoIcon>
+                    <h4 className="mb-1 font-medium leading-none">
+                      Host Permission{' '}
+                      <span className="text-xs text-red-500">*recommended</span>
+                    </h4>
+                    <p className="text-sm font-normal leading-tight text-muted-foreground">
+                      Pop-a-loon requires host permissions to function properly.
+                    </p>
+                  </InfoIcon>
+                </FormLabel>
+                <FormControl>
+                  <span className="flex gap-2">
+                    <Button
+                      className="w-full"
+                      size={'sm'}
+                      onClick={onGrantOriginPermissionClick}
+                    >
+                      Grant permission
+                    </Button>
+                  </span>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
       </form>
     </Form>
   );
 };
-
-export default ConfigForm;

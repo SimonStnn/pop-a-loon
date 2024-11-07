@@ -9,6 +9,7 @@ import {
   random,
   getBrowser,
   isRunningInBackground,
+  isInSnooze,
   sendMessage,
 } from '@/utils';
 
@@ -31,28 +32,6 @@ const updateBadgeColors = () => {
     });
     browser.action.setBadgeTextColor({ color: config.badge.color });
   })();
-};
-
-// Snooze state variable to track if the spawn is snoozed
-let isSnoozed = false;
-let snoozeTimer: NodeJS.Timeout | null = null;
-
-// Function to handle starting the snooze
-const startSnooze = async (duration: number) => {
-  // Activate snooze
-  isSnoozed = true;
-
-  // Clear existing timer if present
-  if (snoozeTimer) clearTimeout(snoozeTimer);
-
-  // If snooze is not indefinite (-1), set up a timeout to end snooze
-  if (duration !== -1) {
-    snoozeTimer = setTimeout(() => {
-      isSnoozed = false;
-      snoozeTimer = null;
-      log.info('Snooze ended, resuming balloon spawns');
-    }, duration);
-  }
 };
 
 (() => {
@@ -78,6 +57,7 @@ const startSnooze = async (duration: number) => {
       log.getLevel(),
       ')'
     );
+    log.debug('');
 
     // Clear all alarms
     await browser.alarms.clearAll();
@@ -124,12 +104,6 @@ const startSnooze = async (duration: number) => {
   };
 
   const spawnBalloon = async () => {
-    // Prevent spawn if snooze is active
-    if (isSnoozed) {
-      log.info('Balloon spawn snoozed');
-      return;
-    }
-
     log.groupCollapsed(
       'debug',
       `(${new Date().toLocaleTimeString()}) Spawning Balloon...`
@@ -156,6 +130,9 @@ const startSnooze = async (duration: number) => {
       return skipSpawnMessage('Spawned too recently, setting timeout');
     }
     log.debug(' - Last spawn was not too recent');
+
+    if (await isInSnooze()) return skipSpawnMessage('In snooze');
+    log.debug(' - Not in snooze');
 
     // Check if the browser is idle
     const state = await browser.idle.queryState(5 * 60);

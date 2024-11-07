@@ -110,6 +110,7 @@ export type SyncStorageStructure = {
   config: Config;
   token: string;
   user: User;
+  snooze: number | null;
 };
 export type SyncStorageKey = keyof SyncStorageStructure;
 
@@ -142,7 +143,7 @@ type SetLogLevelMessage = {
 };
 
 type StartSnoozeMessage = {
-  action: 'startSnooze';
+  action: 'setSnooze';
   duration: number;
 };
 
