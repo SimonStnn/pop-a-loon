@@ -142,17 +142,11 @@ type SetLogLevelMessage = {
   level: LogLevelNumbers;
 };
 
-type StartSnoozeMessage = {
-  action: 'setSnooze';
-  duration: number;
-};
-
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
   | SpawnBalloonMessage
-  | SetLogLevelMessage
-  | StartSnoozeMessage;
+  | SetLogLevelMessage;
 
 //
 // * Alarms
