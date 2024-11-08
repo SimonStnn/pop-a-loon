@@ -186,6 +186,7 @@ export default (props: HeaderProps) => {
               <NavigationMenuTrigger
                 hideCheveron
                 className="h-11 max-h-11 bg-transparent p-0 hover:bg-transparent focus:bg-transparent"
+                onPointerMove={(e) => e.preventDefault()}
               >
                 <HeaderIcon icon={List} />
               </NavigationMenuTrigger>

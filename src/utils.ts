@@ -159,7 +159,7 @@ export async function askOriginPermissions() {
   log.debug('Permissions granted for', permissions);
 }
 
-export const isFullScreenVideoPlaying = () => {
+export function isFullScreenVideoPlaying() {
   const fullscreenElement = document.fullscreenElement;
   if (fullscreenElement) {
     if (fullscreenElement.tagName.toLowerCase() === 'video') {
@@ -174,9 +174,14 @@ export const isFullScreenVideoPlaying = () => {
     }
   }
   return false;
-};
+}
 
-export const joinPaths = (...paths: string[]): string => {
+export async function isInSnooze(): Promise<boolean> {
+  const snooze = await storage.sync.get('snooze');
+  return snooze !== null && (snooze === -1 || Date.now() < snooze);
+}
+
+export function joinPaths(...paths: string[]): string {
   return paths
     .map((part, index) => {
       if (index === 0) {
@@ -187,4 +192,4 @@ export const joinPaths = (...paths: string[]): string => {
     })
     .filter((part) => part.length)
     .join('/');
-};
+}

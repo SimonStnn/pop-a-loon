@@ -11,6 +11,7 @@ const defaultStorage: SyncStorageStructure = {
     updatedAt: '',
     createdAt: '',
   },
+  snooze: null,
 };
 
 let mockStorage: SyncStorageStructure = defaultStorage;
