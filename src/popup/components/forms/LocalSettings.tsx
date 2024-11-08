@@ -78,8 +78,12 @@ export default () => {
     const config = await storage.sync.get('config');
     await storage.sync.set('config', { ...config, popVolume });
     setPopVolume(popVolume);
-    log.debug('Pop volume changed to', popVolume);
+    log.debug(
+      'Pop volume changed to',
+      (await storage.sync.get('config')).popVolume
+    );
 
+    // Play the pop sound
     popSound.volume = popVolume / 100;
     popSound.play();
   };
@@ -88,7 +92,10 @@ export default () => {
     const config = await storage.sync.get('config');
     await storage.sync.set('config', { ...config, spawnRate });
     setSpawnRate(spawnRate);
-    log.debug('Spawn rate changed to', spawnRate);
+    log.debug(
+      'Spawn rate changed to',
+      (await storage.sync.get('config')).spawnRate
+    );
   };
 
   const onFullScreenVideoSpawnChange = async (
@@ -97,7 +104,10 @@ export default () => {
     const config = await storage.sync.get('config');
     await storage.sync.set('config', { ...config, fullScreenVideoSpawn });
     setFullScreenVideoSpawn(fullScreenVideoSpawn);
-    log.debug('Spawning in full screen video players:', fullScreenVideoSpawn);
+    log.debug(
+      'Spawning in full screen video players:',
+      (await storage.sync.get('config')).fullScreenVideoSpawn
+    );
   };
 
   const onGrantOriginPermissionClick = async () => {
