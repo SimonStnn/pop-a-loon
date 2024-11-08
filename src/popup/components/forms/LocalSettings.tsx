@@ -21,13 +21,13 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-  SelectLabel,
 } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Slider } from '@/components/ui/slider';
 import { initalConfig } from '@/const';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
-import { askOriginPermissions, isInSnooze } from '@/utils';
+import { askOriginPermissions } from '@/utils';
 
 const MIN_POP_VOLUME = 0;
 const VOLUME_STEP = 20;
@@ -35,18 +35,6 @@ const MAX_POP_VOLUME = 100;
 const MIN_SPAWN_RATE = 0.1;
 const MAX_SPAWN_RATE = 1;
 const SPAWN_RATE_STEP = 0.1;
-
-const formSchema = z.object({
-  popVolume: z.number().int().min(MIN_POP_VOLUME).max(MAX_POP_VOLUME),
-  spawnRate: z.number().int().min(MIN_SPAWN_RATE).max(MAX_SPAWN_RATE),
-  fullScreenVideoSpawn: z.boolean(),
-  snooze: z.number().int().min(-1).nullable(),
-  permissions: z.object({
-    origins: z.array(z.string()),
-    permissions: z.array(z.string()),
-  }),
-});
-
 const SNOOZE_OPTIONS: { label: string; value: number | null }[] = [
   { label: 'Off', value: null },
   { label: '15 minutes', value: 15 * 60 * 1000 },
@@ -57,7 +45,19 @@ const SNOOZE_OPTIONS: { label: string; value: number | null }[] = [
   { label: 'Until I turn it back on', value: -1 },
 ];
 
+const formSchema = z.object({
+  popVolume: z.number().int().min(MIN_POP_VOLUME).max(MAX_POP_VOLUME),
+  spawnRate: z.number().int().min(MIN_SPAWN_RATE).max(MAX_SPAWN_RATE),
+  fullScreenVideoSpawn: z.boolean(),
+  snooze: z.number().int().min(-1).nullable().optional(),
+  permissions: z.object({
+    origins: z.array(z.string()),
+    permissions: z.array(z.string()),
+  }),
+});
+
 export default () => {
+  const [isConfigLoaded, setIsConfigLoaded] = useState(false);
   const [popVolume, setPopVolume] = useState(initalConfig.popVolume);
   const [spawnRate, setSpawnRate] = useState(initalConfig.spawnRate);
   const [fullScreenVideoSpawn, setFullScreenVideoSpawn] = useState(
@@ -66,6 +66,7 @@ export default () => {
   const [permissions, setPermissions] = useState<Permissions.AnyPermissions>(
     {}
   );
+  const [snooze, setSnooze] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -104,14 +105,45 @@ export default () => {
     setPermissions(await browser.permissions.getAll());
   };
 
+  const updateSnooze = async (
+    snoozeEnd: number | null,
+    saveToStorage: boolean = true
+  ) => {
+    setSnooze(snoozeEnd);
+    if (saveToStorage) await storage.sync.set('snooze', snoozeEnd);
+    console.debug('Snooze changed to', snoozeEnd);
+
+    const snoozeOption = SNOOZE_OPTIONS.find(
+      // Can only detect off or until I turn it back on
+      (option) => option.value === snoozeEnd
+    );
+    console.debug('Snooze option is', snoozeOption);
+    form.setValue('snooze', snoozeOption?.value);
+  };
+
   const handleSnoozeChange = async (selectedDuration: string) => {
     const duration =
       selectedDuration === 'null' ? null : Number(selectedDuration);
-    form.setValue('snooze', duration);
-
     const snoozeEnd =
       duration === null ? null : duration > 0 ? Date.now() + duration : -1;
-    await storage.sync.set('snooze', snoozeEnd);
+    await updateSnooze(snoozeEnd);
+  };
+
+  const renderSnoozeStatus = () => {
+    if (snooze !== null && snooze > 0) {
+      return (
+        <>
+          Snoozed until{' '}
+          {new Date(snooze).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+          })}
+        </>
+      );
+    } else if (snooze === -1) {
+      return <>Snoozed until you turn it back off</>;
+    }
+    return <>Snooze is off</>;
   };
 
   useEffect(() => {
@@ -122,6 +154,8 @@ export default () => {
       setSpawnRate(config.spawnRate);
       setFullScreenVideoSpawn(config.fullScreenVideoSpawn);
       setPermissions(await browser.permissions.getAll());
+      await updateSnooze(await storage.sync.get('snooze'), false);
+      setIsConfigLoaded(true); // Set loading status to true after config is loaded
     };
 
     loadConfig();
@@ -130,47 +164,69 @@ export default () => {
   return (
     <Form {...form}>
       <form className="grid gap-4">
-        <FormField
-          control={form.control}
-          name="snooze"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex justify-between gap-1">
-                <span>Snooze Balloon Spawn</span>
-                <InfoIcon>
-                  <h4 className="mb-1 font-medium leading-none">
-                    Snooze Baloon Spawn
-                  </h4>
-                  <p className="text-sm font-normal leading-tight text-muted-foreground">
-                    Set how long to pause the balloon appearances. During this
-                    snooze period, no new balloons will spawn on your screen.
-                  </p>
-                </InfoIcon>
-              </FormLabel>
-              <FormControl>
-                <Select
-                  value={String(field.value)}
-                  onValueChange={handleSnoozeChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Duration" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SNOOZE_OPTIONS.map((option) => (
-                      <SelectItem
-                        key={option.label}
-                        value={String(option.value)}
-                      >
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {!isConfigLoaded ? (
+          <Skeleton className="h-[62px] w-full" />
+        ) : (
+          <FormField
+            control={form.control}
+            name="snooze"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex justify-between gap-1">
+                  <span>Snooze Balloon Spawn</span>
+                  <InfoIcon>
+                    <h4 className="mb-1 font-medium leading-none">
+                      Snooze Baloon Spawn
+                    </h4>
+                    <p className="text-sm font-normal leading-tight text-muted-foreground">
+                      Set how long to pause the balloon appearances. During this
+                      snooze period, no new balloons will spawn on your screen.
+                    </p>
+                    <p className="pt-1 text-sm font-medium leading-tight text-muted-foreground">
+                      {renderSnoozeStatus()}
+                    </p>
+                  </InfoIcon>
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={handleSnoozeChange}
+                    defaultValue={
+                      snooze === null || snooze === -1
+                        ? String(snooze)
+                        : undefined
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder={
+                          snooze !== null && snooze > 0
+                            ? `Snoozed until ${new Date(
+                                snooze
+                              ).toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: 'numeric',
+                              })}`
+                            : 'Select a snooze duration'
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SNOOZE_OPTIONS.map((option) => (
+                        <SelectItem
+                          key={option.label}
+                          value={String(option.value)}
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           name="popVolume"
@@ -249,13 +305,31 @@ export default () => {
             <FormItem className="flex justify-between gap-1">
               <FormLabel>Full-Screen Video Spawn</FormLabel>
               <FormControl>
-                <Checkbox
-                  checked={fullScreenVideoSpawn}
-                  onCheckedChange={(val) => {
-                    onFullScreenVideoSpawnChange(!!val);
-                    onChange(!!val);
-                  }}
-                />
+                <span className="flex gap-2">
+                  <Checkbox
+                    checked={fullScreenVideoSpawn}
+                    onCheckedChange={(val) => {
+                      onFullScreenVideoSpawnChange(!!val);
+                      onChange(!!val);
+                    }}
+                  />
+                  <InfoIcon>
+                    <h4 className="mb-1 font-medium leading-none">
+                      Fullscreen video spawn
+                    </h4>
+                    <p className="text-sm font-normal leading-tight text-muted-foreground">
+                      Weither or not to spawn balloons in fullscreen video
+                      players, like youtube.
+                    </p>
+                    <p className="pt-1 text-sm font-medium leading-tight text-muted-foreground">
+                      {fullScreenVideoSpawn ? (
+                        <>Balloons can spawn!</>
+                      ) : (
+                        <>Balloons will not spawn.</>
+                      )}
+                    </p>
+                  </InfoIcon>
+                </span>
               </FormControl>
               <FormMessage />
             </FormItem>
