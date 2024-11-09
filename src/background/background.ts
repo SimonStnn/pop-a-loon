@@ -1,14 +1,15 @@
-import browser from 'webextension-polyfill';
 import { abbreviateNumber } from 'js-abbreviation-number';
-import storage from '@/managers/storage';
-import log, { type LogLevelNames } from '@/managers/log';
-import remote from '@/remote';
+import browser from 'webextension-polyfill';
 import { AlarmName, Message, initalConfig } from '@/const';
+import log, { type LogLevelNames } from '@/managers/log';
+import storage from '@/managers/storage';
+import remote from '@/remote';
 import {
   calculateBalloonSpawnDelay,
   random,
   getBrowser,
   isRunningInBackground,
+  isInSnooze,
   sendMessage,
 } from '@/utils';
 
@@ -61,12 +62,6 @@ const updateBadgeColors = () => {
     // Clear all alarms
     await browser.alarms.clearAll();
 
-    //! Fix for #145
-    try {
-      log.debug('Checking for depricated balloonCount');
-      await storage.sync.remove('balloonCount' as any);
-    } catch (e) {}
-
     const remoteAvailable = await remote.isAvailable();
     if (!remoteAvailable) {
       log.warn('Remote is not available, retrying in 1 minute');
@@ -82,6 +77,7 @@ const updateBadgeColors = () => {
       await storage.sync.set('token', usr.token);
       localUser = usr;
     }
+
     // Get the user from the remote and save it to the local storage
     const user = await remote.getUser(localUser.id);
     await storage.sync.set('user', user);
@@ -134,6 +130,9 @@ const updateBadgeColors = () => {
       return skipSpawnMessage('Spawned too recently, setting timeout');
     }
     log.debug(' - Last spawn was not too recent');
+
+    if (await isInSnooze()) return skipSpawnMessage('In snooze');
+    log.debug(' - Not in snooze');
 
     // Check if the browser is idle
     const state = await browser.idle.queryState(5 * 60);
@@ -228,7 +227,6 @@ const updateBadgeColors = () => {
           ...(await storage.sync.get('user')),
           count: newCount.count,
         });
-
         const msg: Message = {
           action: 'updateCounter',
           balloonCount: newCount.count,

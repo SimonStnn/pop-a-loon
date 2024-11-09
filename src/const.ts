@@ -110,6 +110,7 @@ export type SyncStorageStructure = {
   config: Config;
   token: string;
   user: User;
+  snooze: number | null;
 };
 export type SyncStorageKey = keyof SyncStorageStructure;
 
