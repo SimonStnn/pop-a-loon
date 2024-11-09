@@ -1,6 +1,6 @@
 {
   "name": "pop-a-loon",
-  "version": "1.17.1",
+  "version": "1.18.0",
   "description": "The new rising trend (literally) that changes the browser game completely.",
   "private": true,
   "scripts": {
@@ -45,7 +45,6 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
-    "@radix-ui/react-toggle": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.0.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
