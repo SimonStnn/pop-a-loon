@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
@@ -26,6 +27,11 @@ import { cn } from '@/utils';
 const limit = 10;
 const maxPages = 10;
 
+enum LeaderboardType {
+  OVERALL = 'All time',
+  MONTHLY = 'Monthly',
+}
+
 const TextSkeleton = ({ className }: { className: ClassValue }) => {
   return <Skeleton className={cn('mt-1 h-4', className)} />;
 };
@@ -34,17 +40,24 @@ export default () => {
   const [data, setData] = useState({} as RemoteResponse['leaderboard']);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const result = await remote.getLeaderboard(limit, (page - 1) * limit);
+      const result = await remote.getLeaderboard(
+        limit,
+        (page - 1) * limit,
+        startDate,
+        endDate
+      );
       setData(result);
       setIsLoading(false);
     };
 
     fetchData();
-  }, [page]);
+  }, [page, startDate, endDate]);
 
   const loadingBody = new Array(limit).fill(0).map((item, index) => (
     <TableRow key={index} className="">
@@ -141,8 +154,39 @@ export default () => {
     );
   };
 
+  const onTabsValueChange = async (value: keyof typeof LeaderboardType) => {
+    switch (LeaderboardType[value]) {
+      case LeaderboardType.OVERALL:
+        setStartDate(null);
+        setEndDate(null);
+        break;
+      case LeaderboardType.MONTHLY:
+        setStartDate(
+          new Date(
+            Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)
+          )
+        );
+        break;
+    }
+  };
+
   return (
     <>
+      <Tabs
+        defaultValue={'OVERALL' satisfies keyof typeof LeaderboardType}
+        onValueChange={(value) => {
+          onTabsValueChange(value as keyof typeof LeaderboardType);
+        }}
+        asChild
+      >
+        <TabsList>
+          {Object.entries(LeaderboardType).map(([key, value]) => (
+            <TabsTrigger key={key} value={key} className="flex-grow capitalize">
+              {value}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
       <Table>
         <TableCaption>
           <PageNavigation />
