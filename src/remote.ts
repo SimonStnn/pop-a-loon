@@ -140,13 +140,20 @@ class BackendAPI {
     );
   }
 
-  public async getLeaderboard(limit?: number, skip?: number) {
+  public async getLeaderboard(
+    limit?: number,
+    skip?: number,
+    startDate?: Date | null,
+    endDate?: Date | null
+  ) {
     return await this.request<RemoteResponse['leaderboard']>(
       'GET',
       '/leaderboard',
       {
         limit,
         skip,
+        'start-date': startDate?.toISOString(),
+        'end-date': endDate?.toISOString(),
       }
     );
   }
