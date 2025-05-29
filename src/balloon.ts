@@ -50,6 +50,16 @@ export default abstract class Balloon {
   public abstract build(): void;
 
   public readonly element: HTMLDivElement = document.createElement('div');
+  private stylesheet: HTMLStyleElement | null = null;
+
+  /**
+   * Get the stylesheet element for the balloon.
+   *
+   * Null if the stylesheet has not been imported yet.
+   */
+  public get stylesheetElement(): HTMLStyleElement | null {
+    return this.stylesheet;
+  }
 
   public get resourceLocation(): string {
     return joinPaths(balloonResourceLocation, this.name);
@@ -70,7 +80,7 @@ export default abstract class Balloon {
   ): Promise<void> {
     const { id, name } =
       typeof args === 'string' ? { id: undefined, name: args } : (args ?? {});
-    await importStylesheet(
+    this.stylesheet = await importStylesheet(
       `${id ?? this.name}-styles`,
       joinPaths(this.resourceLocation, name ?? 'styles.css')
     );
@@ -100,8 +110,6 @@ export default abstract class Balloon {
         joinPaths('resources', 'balloons', 'base-styles.css')
       )
     );
-    // Set data attribute
-    this.element.setAttribute('data-balloon', this.name);
 
     // Build the balloon element
     this.build();

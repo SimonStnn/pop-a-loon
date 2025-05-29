@@ -134,20 +134,25 @@ export function getBalloonContainer() {
   );
 }
 
-export async function importStylesheet(id: string, href: string) {
-  if (!document.getElementById(id)) {
-    // Fetch the CSS file content
-    const response = await fetch(href);
-    const css = await response.text();
+export async function importStylesheet(
+  id: string,
+  href: string
+): Promise<HTMLStyleElement> {
+  const styleElement = document.getElementById(id) as HTMLStyleElement | null;
+  if (styleElement) return styleElement;
 
-    // Create a <style> element with the CSS content
-    let style = document.createElement('style');
-    style.id = id;
-    style.textContent = css;
+  // Fetch the CSS file content
+  const response = await fetch(href);
+  const css = await response.text();
 
-    // Append the <style> element to the <head>
-    getBalloonContainer().appendChild(style);
-  }
+  // Create a <style> element with the CSS content
+  let style = document.createElement('style');
+  style.id = id;
+  style.textContent = css;
+
+  // Append the <style> element to the <head>
+  getBalloonContainer().appendChild(style);
+  return style;
 }
 
 export async function askOriginPermissions() {
