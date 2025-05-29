@@ -102,7 +102,7 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
       <div
         ref={balloonRef}
         className={cn(
-          'size-16 select-none',
+          'relative size-16 select-none',
           props.count === 0 ? 'opacity-75 brightness-0' : ''
         )}
         onDragStart={(e) => {
