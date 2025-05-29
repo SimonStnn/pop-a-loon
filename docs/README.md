@@ -33,6 +33,7 @@
 - [Balloons](#balloons)
   - [Default balloon](#default-balloon)
   - [Confetti balloon](#confetti-balloon)
+  - [Disco balloon](#disco-balloon)
 
 <!-- markdownlint-enable link-fragments -->
 
@@ -279,6 +280,7 @@ title Balloon spawn chances
    "Fast": 0.10
    "Gold": 0.05
    "Ghost": 0.10
+   "Disco": 0.01
 ```
 
 ## Inheritance Tree
@@ -290,6 +292,7 @@ class Balloon { <<Abstract>> }
 
 Default --|> Balloon
 Confetti --|> Default
+Disco --|> Default
 Fast --|> Default
 Gold --|> Default
 Ghost --|> Default
