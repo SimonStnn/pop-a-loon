@@ -15,14 +15,29 @@ const balloons = Object.values(Balloons).sort(
   (a, b) => a.spawn_chance + b.spawn_chance
 );
 
-function removeAnimations(element: HTMLElement) {
+function removeAnimations(element: HTMLElement, _depth: number = 0) {
   // Remove animation properties from the element
-  element.style.animation = 'none';
-  element.style.transition = 'none';
+  element.style.setProperty('animation', 'none');
+  element.style.setProperty('transition', 'none');
+
+  if (_depth === 0) {
+    // If this is the root element, remove all animations
+    const styleTag = document.createElement('style');
+    styleTag.setAttribute('data-remove-animations', 'true');
+    styleTag.textContent = `
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+      }
+    `;
+    element.appendChild(styleTag);
+  }
 
   // Recursively remove animations from all child elements
   Array.from(element.children).forEach((child) => {
-    removeAnimations(child as HTMLElement);
+    removeAnimations(child as HTMLElement, _depth + 1);
   });
 }
 
@@ -47,11 +62,25 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
   useEffect(() => {
     props.balloon.build();
     props.balloon.element.className = '';
+
+    // Clean up the balloon element by removing event listeners and animations
     const cleanedElement = removeEventListeners(props.balloon.element);
     removeAnimations(cleanedElement);
     cleanedElement.style.width = '';
     cleanedElement.style.height = cleanedElement.style.width;
+    // Add the cleaned element
     balloonRef.current?.appendChild(cleanedElement);
+
+    // Get the balloon stylesheet and append it to the balloon element
+    // This is in a setTimeout to ensure the element is fully rendered
+    // as the stylesheet might not be ready immediately
+    // Importing is async, building is sync
+    setTimeout(() => {
+      const stylesheet = props.balloon.stylesheetElement;
+      if (stylesheet) {
+        cleanedElement.parentElement?.appendChild(stylesheet);
+      }
+    }, 250);
   }, []);
 
   return (
@@ -66,18 +95,21 @@ const Balloon = (props: { className?: ClassValue } & Balloon) => {
             <span className="capitalize">{props.name}</span> balloon
           </h2>
           <p className="text-base font-semibold">
-            <>
-              {props.count} {props.count === 1 ? 'pop' : 'pops'}
-            </>
+            {props.count} {props.count === 1 ? 'pop' : 'pops'}
           </p>
         </>
       )}
       <div
         ref={balloonRef}
         className={cn(
-          'size-16',
+          'size-16 select-none',
           props.count === 0 ? 'opacity-75 brightness-0' : ''
         )}
+        onDragStart={(e) => {
+          if ((e.target as HTMLElement).tagName === 'IMG') {
+            e.preventDefault();
+          }
+        }}
       />
     </div>
   );
@@ -122,7 +154,11 @@ export default () => {
               .fill(1)
               .map((_, i) => <Skeleton key={i} className="h-36" />)
           : scores.map((score, i) => (
-              <Balloon key={i} {...score} className="rounded border" />
+              <Balloon
+                key={i}
+                {...score}
+                className="overflow-hidden rounded border"
+              />
             ))}
       </section>
     </Main>
