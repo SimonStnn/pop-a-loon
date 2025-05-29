@@ -215,6 +215,8 @@ export default class Default extends Balloon {
     })();
 
     this.element.classList.add('balloon');
+    // Set data attribute
+    this.element.setAttribute('data-balloon', this.name);
 
     // Set css variables
     this.element.style.setProperty('--rise-from', `-${size}px`);

@@ -195,7 +195,7 @@ export default () => {
           <TableRow>
             <TableHead className="h-8 px-2 text-right">#</TableHead>
             <TableHead className="h-8 w-full px-2">Name</TableHead>
-            <TableHead className="h-8 px-2">Pops</TableHead>
+            <TableHead className="h-8 px-2 text-right">Pops</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -208,7 +208,7 @@ export default () => {
                     {(page - 1) * 10 + index + 1}
                   </TableCell>
                   <TableCell className="w-full p-2">{item.username}</TableCell>
-                  <TableCell className="p-2">{item.count}</TableCell>
+                  <TableCell className="p-2 text-right">{item.count}</TableCell>
                 </TableRow>
               ))}
         </TableBody>
