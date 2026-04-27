@@ -22,7 +22,7 @@
       "request": "launch",
       "type": "chrome",
       "url": "https://google.com/",
-      "runtimeArgs": ["--load-extension=${workspaceFolder}/dist"],
+      "runtimeArgs": ["--load-extension=${workspaceFolder}\\dist"],
       "preLaunchTask": "npm: dev:chrome:noremote",
       "postDebugTask": "stop node"
     },
@@ -31,7 +31,7 @@
       "request": "launch",
       "type": "chrome",
       "url": "https://google.com/",
-      "runtimeArgs": ["--load-extension=${workspaceFolder}/dist"],
+      "runtimeArgs": ["--load-extension=${workspaceFolder}\\dist"],
       "preLaunchTask": "npm: dev:chrome:remote",
       "postDebugTask": "stop node"
     },

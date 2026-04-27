@@ -1,0 +1,19 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main bubble -->
+  <circle cx="50" cy="50" r="45" fill="none" stroke="#87CEEB" stroke-width="2" opacity="0.7" />
+
+  <!-- Bubble shine/reflection -->
+  <ellipse cx="35" cy="35" rx="12" ry="15" fill="white" opacity="0.4" />
+
+  <!-- Subtle gradient bubble interior -->
+  <defs>
+    <radialGradient id="bubbleGradient" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#E0F6FF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#87CEEB;stop-opacity:0.1" />
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="45" fill="url(#bubbleGradient)" />
+
+  <!-- Bubble string -->
+  <!--<line x1="50" y1="95" x2="50" y2="110" stroke="#87CEEB" stroke-width="1.5" opacity="0.6" />-->
+</svg>
