@@ -8,10 +8,9 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["./popup/components/*"]
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/popup/components/*"]
     }
   }
 }

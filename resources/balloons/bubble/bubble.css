@@ -1,0 +1,10 @@
+/* Bubble balloon styling scoped to the bubble element */
+[data-balloon='bubble'] {
+  opacity: 0.85;
+  filter: drop-shadow(0 0 8px rgba(135, 206, 235, 0.4));
+}
+
+[data-balloon='bubble']:hover {
+  opacity: 0.95;
+  filter: drop-shadow(0 0 12px rgba(135, 206, 235, 0.6));
+}
