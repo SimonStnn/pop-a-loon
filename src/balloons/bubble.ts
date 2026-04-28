@@ -11,6 +11,7 @@ export default class Bubble extends Default {
     return {
       ...super.options,
       imageUrl: 'bubble.svg',
+      popSoundUrl: 'pop.mp3',
       size: [40, 70],
       waveDegrees: 5,
       swingDuration: [1, 2],
