@@ -206,7 +206,6 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
         { name: 'default', count: 10 },
         { name: 'confetti', count: 20 },
         { name: 'gold', count: 30 },
-        { name: 'christmas', count: 32 },
       ],
     },
   },

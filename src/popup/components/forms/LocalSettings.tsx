@@ -74,7 +74,6 @@ export default () => {
 
   const defaultBalloon = new DefaultBalloon();
   const popSound = defaultBalloon.popSound;
-  // The popup preview does not build the balloon, so set the sound source here.
   popSound.src = defaultBalloon.popSoundUrl;
 
   const onPopVolumeChange = async (popVolume: number) => {
