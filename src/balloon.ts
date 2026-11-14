@@ -31,11 +31,18 @@ export type PopOptions = {
   increaseCount?: boolean;
 };
 
+export type Season = {
+  start: { month: number; day: number };
+  end: { month: number; day: number };
+  timeZone?: string;
+};
+
 export const basePopOptions: PopOptions = {
   increaseCount: true,
 };
 
 export default abstract class Balloon {
+  public static readonly season: Season | undefined = undefined;
   public abstract readonly name: BalloonName;
 
   /**

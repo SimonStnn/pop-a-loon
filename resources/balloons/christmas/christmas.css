@@ -1,0 +1,43 @@
+.christmas-snow {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.christmas-snowflake {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: var(--snow-size);
+  height: var(--snow-size);
+  color: #fff;
+  opacity: 1;
+  filter: drop-shadow(0 0 2px rgb(255 255 255 / 75%));
+  animation: christmas-snow-burst var(--snow-duration) linear forwards;
+}
+
+.christmas-snowflake svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes christmas-snow-burst {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(0.8) rotate(0);
+    animation-timing-function: cubic-bezier(0.2, 0.65, 0.3, 1);
+  }
+  5% {
+    opacity: 1;
+    transform: translate3d(var(--snow-burst-x), var(--snow-burst-y), 0)
+      scale(1) rotate(60deg);
+    animation-timing-function: linear;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--snow-fall-x), var(--snow-fall-y), 0)
+      rotate(var(--snow-rotation));
+  }
+}

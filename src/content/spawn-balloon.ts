@@ -8,6 +8,7 @@ import {
   isFullScreenVideoPlaying,
   weightedRandom,
 } from '@/utils';
+import { isInSeason } from '@/utils';
 
 (async () => {
   // Prevent running in popup
@@ -28,12 +29,16 @@ import {
   // Add the balloon container to the document
   const _ = getBalloonContainer();
 
-  const balloonClasses = Object.values(balloons);
+  const balloonClasses = Object.values(balloons).filter((BalloonType) => {
+    const season = BalloonType.season;
+    return (
+      !season || process.env.NODE_ENV === 'development' || isInSeason(season)
+    );
+  });
   // Make a list from the spawn_chance from each balloon class
-  const spawnChances =
-    process.env.NODE_ENV === 'development'
-      ? new Array(balloonClasses.length).fill(1)
-      : balloonClasses.map((BalloonType) => BalloonType.spawn_chance);
+  const spawnChances = balloonClasses.map(
+    (BalloonType) => BalloonType.spawn_chance
+  );
 
   // Create a new balloon and make it rise
   const Balloon = weightedRandom(balloonClasses, spawnChances, {
