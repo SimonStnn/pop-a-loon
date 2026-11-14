@@ -4,6 +4,7 @@ import browser from 'webextension-polyfill';
 import { Message, BalloonContainerId } from '@/const';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
+import type { Season } from '@/balloon';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,6 +16,24 @@ export function secondsToMilliseconds(seconds: number) {
 
 export function minutesToMilliseconds(minutes: number) {
   return secondsToMilliseconds(minutes * 60);
+}
+
+/** Check whether a date falls within a seasonal date range. */
+export function isInSeason(season: Season, date: Date = new Date()): boolean {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: season.timeZone,
+    month: 'numeric',
+    day: 'numeric',
+  }).formatToParts(date);
+  const month = Number(parts.find((part) => part.type === 'month')?.value);
+  const day = Number(parts.find((part) => part.type === 'day')?.value);
+  const current = month * 100 + day;
+  const start = season.start.month * 100 + season.start.day;
+  const end = season.end.month * 100 + season.end.day;
+
+  return start <= end
+    ? current >= start && current <= end
+    : current >= start || current <= end;
 }
 
 export function random(max: number): number;

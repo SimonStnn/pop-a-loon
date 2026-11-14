@@ -72,7 +72,9 @@ export default () => {
     resolver: zodResolver(formSchema),
   });
 
-  const popSound = new DefaultBalloon().popSound;
+  const defaultBalloon = new DefaultBalloon();
+  const popSound = defaultBalloon.popSound;
+  popSound.src = defaultBalloon.popSoundUrl;
 
   const onPopVolumeChange = async (popVolume: number) => {
     const config = await storage.sync.get('config');
