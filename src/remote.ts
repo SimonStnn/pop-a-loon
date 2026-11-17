@@ -99,6 +99,13 @@ class BackendAPI {
     );
   }
 
+  public async getSpawnToken() {
+    return await this.request<RemoteResponse['spawnToken']>(
+      'GET',
+      '/configuration/spawn-token'
+    );
+  }
+
   public async NewUser(username?: string, email?: string) {
     return await this.request<
       Prettify<{ token: string } & RemoteResponse['user']>
@@ -130,12 +137,13 @@ class BackendAPI {
     return response;
   }
 
-  public async incrementCount(type: BalloonName) {
+  public async incrementCount(type: BalloonName, spawnToken?: string) {
     return await this.request<RemoteResponse['count']>(
       'POST',
       '/user/count/increment',
       {
         type,
+        spawnToken,
       }
     );
   }

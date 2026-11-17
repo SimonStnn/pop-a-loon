@@ -69,6 +69,12 @@ export type RemoteResponse = {
     version: string;
   };
   configuration: RemoteConfig;
+  spawnToken: {
+    spawnToken: string;
+    balloonType: BalloonName;
+    expiresAt: number;
+    nextSpawnAt: number;
+  };
   leaderboard: {
     user: User;
     rank: number | null;
@@ -91,6 +97,7 @@ export type RemoteResponse = {
 export type Endpoint =
   | '/status'
   | '/configuration'
+  | '/configuration/spawn-token'
   | '/user/new'
   | '/user/:id'
   | '/user'
@@ -131,6 +138,7 @@ type UpdateCounterMessage = {
 type IncrementCount = {
   action: 'incrementCount';
   type: BalloonName;
+  spawnToken?: string;
 };
 
 type SpawnBalloonMessage = {
@@ -178,6 +186,12 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
       },
     },
     '/user/count/increment': {},
+    '/configuration/spawn-token': {
+      spawnToken: 'dev-token-' + Math.random().toString(36).slice(2),
+      balloonType: 'default' as BalloonName,
+      expiresAt: Date.now() + 30000,
+      nextSpawnAt: Date.now() + 600000,
+    },
     '/user/new': { token: 'token', ...dev_user },
     '/user/:id': dev_user,
     '/user': dev_user,

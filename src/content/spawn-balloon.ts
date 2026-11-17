@@ -10,6 +10,14 @@ import {
 } from '@/utils';
 import { isInSeason } from '@/utils';
 
+let pendingSpawnToken: string | null = null;
+
+browser.runtime.onMessage.addListener((message: any) => {
+  if (message.action === 'spawnToken') {
+    pendingSpawnToken = message.token;
+  }
+});
+
 (async () => {
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
@@ -46,6 +54,8 @@ import { isInSeason } from '@/utils';
   });
 
   const balloon = new Balloon();
+  balloon.spawnToken = pendingSpawnToken ?? undefined;
+  pendingSpawnToken = null;
   balloon.rise();
 
   log.debug('Balloon spawned:', balloon.name);
