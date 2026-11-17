@@ -154,8 +154,19 @@ const updateBadgeColors = () => {
     log.debug(' - Selected tab', tab.id);
 
     try {
-      // Fetch a spawn token from the backend
-      const spawnTokenData = await remote.getSpawnToken();
+      // Fetch a spawn token from the backend (optional — backward compatible)
+      let spawnTokenData: {
+        spawnToken: string;
+        balloonType: string;
+        expiresAt: number;
+      } | null = null;
+      try {
+        spawnTokenData = await remote.getSpawnToken();
+      } catch (e) {
+        log.debug(
+          ' - Backend does not support spawn tokens, spawning without token'
+        );
+      }
 
       // Execute content script on tab
       await browser.scripting.executeScript({
@@ -164,12 +175,14 @@ const updateBadgeColors = () => {
       });
 
       // Send the spawn token to the content script so it can attach it to the balloon
-      await browser.tabs.sendMessage(tab.id, {
-        action: 'spawnToken',
-        token: spawnTokenData.spawnToken,
-        balloonType: spawnTokenData.balloonType,
-        expiresAt: spawnTokenData.expiresAt,
-      });
+      if (spawnTokenData) {
+        await browser.tabs.sendMessage(tab.id, {
+          action: 'spawnToken',
+          token: spawnTokenData.spawnToken,
+          balloonType: spawnTokenData.balloonType,
+          expiresAt: spawnTokenData.expiresAt,
+        });
+      }
 
       log.info(' - Successfully sent spawn balloon script to tab', tab.id);
     } catch (e) {

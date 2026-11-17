@@ -11,10 +11,12 @@ import {
 import { isInSeason } from '@/utils';
 
 let pendingSpawnToken: string | null = null;
+let pendingBalloonType: string | null = null;
 
 browser.runtime.onMessage.addListener((message: any) => {
   if (message.action === 'spawnToken') {
     pendingSpawnToken = message.token;
+    pendingBalloonType = message.balloonType;
   }
 });
 
@@ -37,25 +39,32 @@ browser.runtime.onMessage.addListener((message: any) => {
   // Add the balloon container to the document
   const _ = getBalloonContainer();
 
-  const balloonClasses = Object.values(balloons).filter((BalloonType) => {
-    const season = BalloonType.season;
-    return (
-      !season || process.env.NODE_ENV === 'development' || isInSeason(season)
-    );
-  });
-  // Make a list from the spawn_chance from each balloon class
-  const spawnChances = balloonClasses.map(
-    (BalloonType) => BalloonType.spawn_chance
-  );
+  let Balloon: any;
 
-  // Create a new balloon and make it rise
-  const Balloon = weightedRandom(balloonClasses, spawnChances, {
-    default: balloons.Default,
-  });
+  if (pendingBalloonType) {
+    // Use the backend-chosen balloon type from the spawn token
+    const balloonName = pendingBalloonType as keyof typeof balloons;
+    Balloon = balloons[balloonName];
+  } else {
+    // Fallback: weighted random selection (legacy mode)
+    const balloonClasses = Object.values(balloons).filter((BalloonType) => {
+      const season = BalloonType.season;
+      return (
+        !season || process.env.NODE_ENV === 'development' || isInSeason(season)
+      );
+    });
+    const spawnChances = balloonClasses.map(
+      (BalloonType) => BalloonType.spawn_chance
+    );
+    Balloon = weightedRandom(balloonClasses, spawnChances, {
+      default: balloons.Default,
+    });
+  }
 
   const balloon = new Balloon();
   balloon.spawnToken = pendingSpawnToken ?? undefined;
   pendingSpawnToken = null;
+  pendingBalloonType = null;
   balloon.rise();
 
   log.debug('Balloon spawned:', balloon.name);
