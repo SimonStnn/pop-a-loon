@@ -73,7 +73,6 @@ export type RemoteResponse = {
     spawnToken: string;
     balloonType: BalloonName;
     expiresAt: number;
-    nextSpawnAt: number;
   };
   leaderboard: {
     user: User;
@@ -190,7 +189,6 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
       spawnToken: 'dev-token-' + Math.random().toString(36).slice(2),
       balloonType: 'default' as BalloonName,
       expiresAt: Date.now() + 30000,
-      nextSpawnAt: Date.now() + 600000,
     },
     '/user/new': { token: 'token', ...dev_user },
     '/user/:id': dev_user,

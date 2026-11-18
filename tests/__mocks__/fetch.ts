@@ -60,7 +60,6 @@ const response: RemoteResponse = {
     spawnToken: 'mockToken',
     balloonType: 'default',
     expiresAt: Date.now() + 30000,
-    nextSpawnAt: Date.now() + 600000,
   },
 };
 
