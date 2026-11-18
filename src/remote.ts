@@ -46,18 +46,41 @@ class BackendAPI {
       return devRemoteResponse[endpoint] as any;
     }
     const url = new URL(`${BackendAPI.BASE_URL}/api${endpoint}`);
+    const searchParams = new URLSearchParams();
+    const body: Record<string, string> = {};
+
     if (params) {
-      Object.keys(params).forEach((key) => {
-        if (params[key] === undefined) return;
-        url.searchParams.append(key, String(params[key]));
-      });
+      for (const [key, value] of Object.entries(params)) {
+        if (value === undefined) continue;
+        // POST body params (like spawnToken) go in the body, not the URL
+        if (method === 'POST' && key === 'spawnToken') {
+          body[key] = String(value);
+        } else {
+          searchParams.append(key, String(value));
+        }
+      }
     }
-    const response = await fetch(url.toString(), {
+
+    const fetchOptions: RequestInit = {
       method,
       headers: {
         authorization: (await storage.sync.get('token')) || '',
       },
-    });
+    };
+
+    if (searchParams.toString()) {
+      url.search = searchParams.toString();
+    }
+
+    if (Object.keys(body).length > 0) {
+      fetchOptions.headers = {
+        ...fetchOptions.headers,
+        'Content-Type': 'application/json',
+      };
+      fetchOptions.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(url.toString(), fetchOptions);
     if (!response.ok) {
       log.error(response, await response.json());
       throw new Error(`Failed to fetch ${url.toString()}`);
@@ -99,6 +122,13 @@ class BackendAPI {
     );
   }
 
+  public async getSpawnToken() {
+    return await this.request<RemoteResponse['spawnToken']>(
+      'GET',
+      '/configuration/spawn-token'
+    );
+  }
+
   public async NewUser(username?: string, email?: string) {
     return await this.request<
       Prettify<{ token: string } & RemoteResponse['user']>
@@ -130,12 +160,13 @@ class BackendAPI {
     return response;
   }
 
-  public async incrementCount(type: BalloonName) {
+  public async incrementCount(type: BalloonName, spawnToken?: string) {
     return await this.request<RemoteResponse['count']>(
       'POST',
       '/user/count/increment',
       {
         type,
+        spawnToken,
       }
     );
   }

@@ -154,11 +154,38 @@ const updateBadgeColors = () => {
     log.debug(' - Selected tab', tab.id);
 
     try {
+      // Fetch a spawn token from the backend (optional — backward compatible)
+      let spawnTokenData: {
+        spawnToken: string;
+        balloonType: string;
+        expiresAt: number;
+      } | null = null;
+      try {
+        spawnTokenData = await remote.getSpawnToken();
+      } catch (e) {
+        log.debug(
+          ' - Backend does not support spawn tokens, spawning without token'
+        );
+      }
+
+      // Inject the spawn token as a global before the content script runs,
+      // avoiding a race between executeScript and tabs.sendMessage
+      if (spawnTokenData) {
+        await browser.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: (token: string, balloonType: string) => {
+            (window as any).__SPAWN_TOKEN__ = { token, balloonType };
+          },
+          args: [spawnTokenData.spawnToken, spawnTokenData.balloonType],
+        });
+      }
+
       // Execute content script on tab
       await browser.scripting.executeScript({
         files: ['spawn-balloon.js'],
         target: { tabId: tab.id },
       });
+
       log.info(' - Successfully sent spawn balloon script to tab', tab.id);
     } catch (e) {
       log.softerror(' - Error sending spawn balloon script to tab', tab.id, e);
@@ -222,7 +249,10 @@ const updateBadgeColors = () => {
         break;
       case 'incrementCount':
         // Increment the count and save it to the local storage
-        const newCount = await remote.incrementCount(message.type);
+        const newCount = await remote.incrementCount(
+          message.type,
+          message.spawnToken
+        );
         storage.sync.set('user', {
           ...(await storage.sync.get('user')),
           count: newCount.count,

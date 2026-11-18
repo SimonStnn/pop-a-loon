@@ -147,7 +147,17 @@ export default abstract class Balloon {
 
     if (options?.increaseCount) {
       // Send message with the new count
-      sendMessage({ action: 'incrementCount', type: this.name });
+      sendMessage({
+        action: 'incrementCount',
+        type: this.name,
+        spawnToken: this.spawnToken,
+      });
     }
   }
+
+  /**
+   * The spawn token for this balloon instance.
+   * Set by the background script when the balloon is spawned.
+   */
+  public spawnToken?: string;
 }
