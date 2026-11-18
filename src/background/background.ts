@@ -168,21 +168,23 @@ const updateBadgeColors = () => {
         );
       }
 
+      // Inject the spawn token as a global before the content script runs,
+      // avoiding a race between executeScript and tabs.sendMessage
+      if (spawnTokenData) {
+        await browser.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: (token: string, balloonType: string) => {
+            (window as any).__SPAWN_TOKEN__ = { token, balloonType };
+          },
+          args: [spawnTokenData.spawnToken, spawnTokenData.balloonType],
+        });
+      }
+
       // Execute content script on tab
       await browser.scripting.executeScript({
         files: ['spawn-balloon.js'],
         target: { tabId: tab.id },
       });
-
-      // Send the spawn token to the content script so it can attach it to the balloon
-      if (spawnTokenData) {
-        await browser.tabs.sendMessage(tab.id, {
-          action: 'spawnToken',
-          token: spawnTokenData.spawnToken,
-          balloonType: spawnTokenData.balloonType,
-          expiresAt: spawnTokenData.expiresAt,
-        });
-      }
 
       log.info(' - Successfully sent spawn balloon script to tab', tab.id);
     } catch (e) {

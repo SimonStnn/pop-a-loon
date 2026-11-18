@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill';
 import * as balloons from '@/balloons';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
@@ -10,15 +9,14 @@ import {
 } from '@/utils';
 import { isInSeason } from '@/utils';
 
-let pendingSpawnToken: string | null = null;
-let pendingBalloonType: string | null = null;
-
-browser.runtime.onMessage.addListener((message: any) => {
-  if (message.action === 'spawnToken') {
-    pendingSpawnToken = message.token;
-    pendingBalloonType = message.balloonType;
-  }
-});
+// Spawn token injected as a global by the background script before this
+// file runs. Absent when the backend doesn't support spawn tokens.
+const spawnTokenData = (window as any).__SPAWN_TOKEN__ as
+  | {
+      token: string;
+      balloonType: string;
+    }
+  | undefined;
 
 (async () => {
   // Prevent running in popup
@@ -41,12 +39,14 @@ browser.runtime.onMessage.addListener((message: any) => {
 
   let Balloon: any;
 
-  if (pendingBalloonType) {
+  if (spawnTokenData?.balloonType) {
     // Use the backend-chosen balloon type from the spawn token
-    const balloonName = pendingBalloonType as keyof typeof balloons;
+    const balloonName = spawnTokenData.balloonType as keyof typeof balloons;
     Balloon = balloons[balloonName];
-  } else {
-    // Fallback: weighted random selection (legacy mode)
+  }
+
+  // Fallback: weighted random selection (legacy mode or invalid balloonType)
+  if (!Balloon) {
     const balloonClasses = Object.values(balloons).filter((BalloonType) => {
       const season = BalloonType.season;
       return (
@@ -62,9 +62,7 @@ browser.runtime.onMessage.addListener((message: any) => {
   }
 
   const balloon = new Balloon();
-  balloon.spawnToken = pendingSpawnToken ?? undefined;
-  pendingSpawnToken = null;
-  pendingBalloonType = null;
+  balloon.spawnToken = spawnTokenData?.token ?? undefined;
   balloon.rise();
 
   log.debug('Balloon spawned:', balloon.name);
