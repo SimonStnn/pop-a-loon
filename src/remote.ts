@@ -122,10 +122,11 @@ class BackendAPI {
     );
   }
 
-  public async getSpawnToken() {
+  public async getSpawnToken(spawnRate?: number) {
     return await this.request<RemoteResponse['spawnToken']>(
       'GET',
-      '/configuration/spawn-token'
+      '/configuration/spawn-token',
+      { 'spawn-rate': spawnRate }
     );
   }
 

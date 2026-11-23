@@ -106,8 +106,11 @@ const updateBadgeColors = () => {
 
   const fetchSchedule = async (): Promise<SpawnSchedule> => {
     try {
+      // Forward the user's spawnRate slider. The backend clamps it and applies
+      // it when it creates the next schedule.
+      const config = await storage.sync.get('config');
       const requestedAt = Date.now();
-      const data = await remote.getSpawnToken();
+      const data = await remote.getSpawnToken(config?.spawnRate);
       const receivedAt = Date.now();
 
       // spawnAt/expiresAt are server-clock timestamps, but browser alarms run
