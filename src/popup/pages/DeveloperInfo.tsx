@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getPopupDebugInfo, type PopupDebugInfo } from '@/managers/debugInfo';
 import log from '@/managers/log';
 import { useDebugMode } from '@/popup/hooks/useDebugMode';
-import type { DebugInfoResponse, Message } from '@/const';
+import type { DebugInfoResponse } from '@/const';
 
 const formatTime = (value: number | null | undefined) =>
   value ? new Date(value).toLocaleString() : '—';
@@ -35,9 +35,6 @@ const JsonBlock = ({ value }: { value: unknown }) => (
 export default () => {
   const { enabled, toggle } = useDebugMode();
   const [info, setInfo] = useState<PopupDebugInfo | null>(null);
-  const [messages, setMessages] = useState<{ at: number; message: Message }[]>(
-    []
-  );
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -57,18 +54,11 @@ export default () => {
     if (!enabled) return;
     refresh();
 
-    const onMessage = (message: Message) => {
-      setMessages((previous) =>
-        [{ at: Date.now(), message }, ...previous].slice(0, 50)
-      );
-    };
-    browser.runtime.onMessage.addListener(onMessage);
     browser.storage.onChanged.addListener(refresh);
     browser.alarms.onAlarm.addListener(refresh);
     const timer = window.setInterval(refresh, 5000);
 
     return () => {
-      browser.runtime.onMessage.removeListener(onMessage);
       browser.storage.onChanged.removeListener(refresh);
       browser.alarms.onAlarm.removeListener(refresh);
       window.clearInterval(timer);
@@ -93,7 +83,7 @@ export default () => {
   const copyDiagnostics = () => {
     if (!info) return;
     const textarea = document.createElement('textarea');
-    textarea.value = JSON.stringify({ ...info, messages }, null, 2);
+    textarea.value = JSON.stringify(info, null, 2);
     textarea.setAttribute('readonly', '');
     textarea.style.position = 'fixed';
     textarea.style.opacity = '0';
@@ -224,26 +214,6 @@ export default () => {
             label="Log level"
             value={info ? log.toLogLevelName(info.background.logLevel) : '—'}
           />
-          <h3 className="text-xs font-semibold">Messages (live)</h3>
-          {messages.length ? (
-            <div className="space-y-1">
-              {messages.map(({ at, message }, index) => (
-                <div
-                  key={index}
-                  className="rounded bg-muted p-1 font-mono text-[10px]"
-                >
-                  <span className="text-muted-foreground">
-                    {new Date(at).toLocaleTimeString()}{' '}
-                  </span>
-                  {JSON.stringify(message)}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              Waiting for runtime messages…
-            </p>
-          )}
         </TabsContent>
 
         <TabsContent value="actions" className="space-y-2">
