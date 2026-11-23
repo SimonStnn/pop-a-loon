@@ -1,6 +1,13 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
 import browser from 'webextension-polyfill';
-import { AlarmName, Message, SpawnSchedule, User, initalConfig } from '@/const';
+import {
+  AlarmName,
+  Message,
+  SpawnSchedule,
+  SpawnTokenMessageResponse,
+  User,
+  initalConfig,
+} from '@/const';
 import log, { type LogLevelNames } from '@/managers/log';
 import storage from '@/managers/storage';
 import remote, { AuthenticationError } from '@/remote';
@@ -10,6 +17,7 @@ import {
   isRunningInBackground,
   isInSnooze,
   sendMessage,
+  sleep,
 } from '@/utils';
 
 console.log(
@@ -37,13 +45,26 @@ const updateBadgeColors = () => {
   // Check if the background script is running in the background
   if (!isRunningInBackground()) return;
 
-  if (process.env.NODE_ENV === 'development') log.setLevel('debug');
-  else log.setLevel('info');
+  // Stored loglevel is the single source of truth across extension contexts.
+  (async () => {
+    const storedLevel = await storage.local.get('loglevel');
+    if (storedLevel !== undefined) log.setLevel(storedLevel);
+    else if (process.env.NODE_ENV === 'development') log.setLevel('debug');
+    else log.setLevel('info');
+  })();
 
   const startedAt = Date.now();
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
+  const spawnTokenFetchAttempts = 3;
+  const spawnTokenRetryBaseMs = 1000;
+  const spawnTokenRetryAlarmMs = 30 * 1000;
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
+  // One-time token handed to the content script injected into a tab. Scoped by
+  // tab id and cleared on first request; never written to the page's window.
+  let pendingSpawnToken:
+    | (SpawnTokenMessageResponse & { tabId: number })
+    | null = null;
 
   const setup = async () => {
     log.info('Pop-a-loon version:', process.env.npm_package_version);
@@ -120,57 +141,56 @@ const updateBadgeColors = () => {
 
   const getSchedule = async () => await storage.local.get('spawnSchedule');
 
-  const fetchSchedule = async (): Promise<SpawnSchedule> => {
-    try {
-      // Forward the user's spawnRate slider. The backend clamps it and applies
-      // it when it creates the next schedule.
-      const config = await storage.sync.get('config');
-      const requestedAt = Date.now();
-      const data = await remote.getSpawnToken(config?.spawnRate);
-      const receivedAt = Date.now();
+  const fetchScheduleOnce = async (): Promise<SpawnSchedule> => {
+    // Forward the user's spawnRate slider. The backend clamps it and applies
+    // it when it creates the next schedule.
+    const config = await storage.sync.get('config');
+    const requestedAt = Date.now();
+    const data = await remote.getSpawnToken(config?.spawnRate);
+    const receivedAt = Date.now();
 
-      // spawnAt/expiresAt are server-clock timestamps, but browser alarms run
-      // on the local clock. Estimate the offset assuming request and response
-      // took about the same time: the server clock at receipt was roughly
-      // serverTime + half the round trip.
-      const clockOffset =
-        typeof data.serverTime === 'number'
-          ? data.serverTime - (requestedAt + receivedAt) / 2
-          : 0;
-      if (clockOffset) {
-        log.debug(' - Correcting server clock skew', clockOffset, 'ms');
-      }
-
-      const schedule: SpawnSchedule = {
-        ...data,
-        spawnAt: data.spawnAt - clockOffset,
-        expiresAt: data.expiresAt - clockOffset,
-        spawned: false,
-      };
-      await storage.local.set('spawnSchedule', schedule);
-      return schedule;
-    } catch (e) {
-      // Backend without spawn-token support: fall back to a local schedule and
-      // spawn without a token, exactly like the pre-token extension did.
-      log.debug(
-        ' - Backend does not support spawn tokens, using local schedule'
-      );
-      const config = await storage.sync.get('config');
-      const spawnRateMultiplier = Math.max(0, Math.min(config.spawnRate, 1));
-      const delay =
-        random(config.spawnInterval.min, config.spawnInterval.max) /
-        spawnRateMultiplier;
-      const spawnAt = Date.now() + delay;
-      const schedule: SpawnSchedule = {
-        spawnToken: '',
-        balloonType: 'default',
-        spawnAt,
-        expiresAt: spawnAt + 30 * 1000,
-        spawned: false,
-      };
-      await storage.local.set('spawnSchedule', schedule);
-      return schedule;
+    // spawnAt/expiresAt are server-clock timestamps, but browser alarms run
+    // on the local clock. Estimate the offset assuming request and response
+    // took about the same time: the server clock at receipt was roughly
+    // serverTime + half the round trip.
+    const clockOffset =
+      typeof data.serverTime === 'number'
+        ? data.serverTime - (requestedAt + receivedAt) / 2
+        : 0;
+    if (clockOffset) {
+      log.debug(' - Correcting server clock skew', clockOffset, 'ms');
     }
+
+    const schedule: SpawnSchedule = {
+      ...data,
+      spawnAt: data.spawnAt - clockOffset,
+      expiresAt: data.expiresAt - clockOffset,
+      spawned: false,
+    };
+    await storage.local.set('spawnSchedule', schedule);
+    return schedule;
+  };
+
+  /**
+   * There is no tokenless fallback: every pop needs a server-issued token.
+   * Retry a transient failure with bounded backoff, then give up on this
+   * balloon and let the caller arm a retry alarm.
+   */
+  const fetchSchedule = async (): Promise<SpawnSchedule | null> => {
+    for (let attempt = 1; attempt <= spawnTokenFetchAttempts; attempt++) {
+      try {
+        return await fetchScheduleOnce();
+      } catch (e) {
+        log.softerror(
+          ` - Failed to fetch spawn token (attempt ${attempt}/${spawnTokenFetchAttempts})`,
+          e
+        );
+        if (attempt < spawnTokenFetchAttempts) {
+          await sleep(spawnTokenRetryBaseMs * 2 ** (attempt - 1));
+        }
+      }
+    }
+    return null;
   };
 
   const clearSchedule = async () => {
@@ -228,17 +248,16 @@ const updateBadgeColors = () => {
     log.debug(' - Selected tab', tab.id);
 
     try {
-      // Inject the scheduled token as a global before the content script
-      // runs, avoiding a race between executeScript and tabs.sendMessage
-      if (schedule.spawnToken) {
-        await browser.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: (token: string, balloonType: string) => {
-            (window as any).__SPAWN_TOKEN__ = { token, balloonType };
-          },
-          args: [schedule.spawnToken, schedule.balloonType],
-        });
-      }
+      // Hand the one-time token to the content script over the extension
+      // message channel after it starts. It is scoped to this tab and cleared
+      // on first request, so host-page scripts can never read it from `window`.
+      pendingSpawnToken = schedule.spawnToken
+        ? {
+            spawnToken: schedule.spawnToken,
+            balloonType: schedule.balloonType,
+            tabId: tab.id,
+          }
+        : null;
 
       // Execute content script on tab
       await browser.scripting.executeScript({
@@ -252,6 +271,7 @@ const updateBadgeColors = () => {
       schedule.spawned = true;
       await storage.local.set('spawnSchedule', schedule);
     } catch (e) {
+      pendingSpawnToken = null;
       log.softerror(' - Error sending spawn balloon script to tab', tab.id, e);
     }
     // Base the "too recent" guard on the scheduled time rather than wall time
@@ -261,40 +281,74 @@ const updateBadgeColors = () => {
     log.groupEnd('debug');
   };
 
-  let scheduling = false;
-  const syncSchedule = async (forceRefresh = false) => {
-    if (scheduling) return;
-    scheduling = true;
-    try {
-      let schedule = forceRefresh ? undefined : await getSchedule();
-      const now = Date.now();
+  const doSyncSchedule = async (forceRefresh: boolean) => {
+    let schedule: SpawnSchedule | null | undefined = forceRefresh
+      ? undefined
+      : await getSchedule();
+    const now = Date.now();
 
-      // No schedule yet, or the previous one expired without being popped.
-      // A missed balloon must never be re-spawned with an expired token.
-      if (!schedule || now >= schedule.expiresAt) {
-        await browser.alarms.clear('spawnBalloon');
-        schedule = await fetchSchedule();
+    // No schedule yet, or the previous one expired without being popped.
+    // A missed balloon must never be re-spawned with an expired token.
+    if (!schedule || now >= schedule.expiresAt) {
+      await browser.alarms.clear('spawnBalloon');
+      schedule = await fetchSchedule();
+      if (!schedule) {
+        // Never spawn a balloon without a token. Arm a retry so a suspended
+        // service worker cannot leave the extension without a schedule.
+        await browser.alarms.create('retrySpawnToken', {
+          when: Date.now() + spawnTokenRetryAlarmMs,
+        });
+        return;
       }
-
-      if (!schedule.spawned) {
-        if (now >= schedule.spawnAt) {
-          // The backend-chosen spawn time has arrived.
-          await spawnBalloon(schedule);
-        } else {
-          // Arm the alarm for the backend-chosen spawn time.
-          await browser.alarms.create('spawnBalloon', {
-            when: schedule.spawnAt,
-          });
-        }
-      }
-
-      // If the balloon is never popped, fetch a fresh schedule on expiry.
-      await browser.alarms.create('refreshSpawnToken', {
-        when: schedule.expiresAt,
-      });
-    } finally {
-      scheduling = false;
     }
+    await browser.alarms.clear('retrySpawnToken');
+
+    if (!schedule.spawned) {
+      if (now >= schedule.spawnAt) {
+        // The backend-chosen spawn time has arrived.
+        await spawnBalloon(schedule);
+      } else {
+        // Arm the alarm for the backend-chosen spawn time.
+        await browser.alarms.create('spawnBalloon', {
+          when: schedule.spawnAt,
+        });
+      }
+    }
+
+    // If the balloon is never popped, fetch a fresh schedule on expiry.
+    await browser.alarms.create('refreshSpawnToken', {
+      when: schedule.expiresAt,
+    });
+  };
+
+  let scheduling: Promise<void> | null = null;
+  let pendingForcedRefresh = false;
+
+  const runSync = async (forceRefresh: boolean) => {
+    let force = forceRefresh;
+    do {
+      pendingForcedRefresh = false;
+      try {
+        await doSyncSchedule(force);
+      } catch (e) {
+        log.softerror('Failed to sync spawn schedule', e);
+      }
+      force = pendingForcedRefresh;
+    } while (force);
+  };
+
+  const syncSchedule = (forceRefresh = false): Promise<void> => {
+    if (scheduling) {
+      // Coalesce concurrent alarms/messages instead of dropping them. A forced
+      // refresh that arrives mid-sync is replayed once the sync finishes.
+      if (forceRefresh) pendingForcedRefresh = true;
+      return scheduling;
+    }
+    const run = runSync(forceRefresh);
+    scheduling = run;
+    return run.finally(() => {
+      scheduling = null;
+    });
   };
   const scheduleNext = () => syncSchedule();
   const refreshSchedule = () => syncSchedule(true);
@@ -328,6 +382,9 @@ const updateBadgeColors = () => {
         // The previous balloon was never popped. Replace its schedule; do not
         // try to spawn it again, its token may already be expired.
         await refreshSchedule();
+        break;
+      case 'retrySpawnToken':
+        await scheduleNext();
         break;
       case 'restart':
         // Restart the extension
@@ -381,6 +438,15 @@ const updateBadgeColors = () => {
       case 'setLogLevel':
         log.setLevel(message.level);
         break;
+      case 'getSpawnToken': {
+        // Only the content script injected into the spawn tab may take the
+        // one-time token, and only once. Page scripts have no extension API.
+        if (!pendingSpawnToken || sender.tab?.id !== pendingSpawnToken.tabId)
+          return undefined;
+        const { spawnToken, balloonType } = pendingSpawnToken;
+        pendingSpawnToken = null;
+        return { spawnToken, balloonType };
+      }
       case 'getDebugInfo':
         return {
           startedAt,

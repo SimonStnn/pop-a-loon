@@ -179,6 +179,15 @@ type GetDebugInfoMessage = {
   action: 'getDebugInfo';
 };
 
+type GetSpawnTokenMessage = {
+  action: 'getSpawnToken';
+};
+
+export type SpawnTokenMessageResponse = Pick<
+  SpawnSchedule,
+  'spawnToken' | 'balloonType'
+>;
+
 /** State that only lives in the background worker. */
 export type DebugInfoResponse = {
   startedAt: number;
@@ -197,13 +206,18 @@ export type Message =
   | IncrementCount
   | SpawnBalloonMessage
   | SetLogLevelMessage
-  | GetDebugInfoMessage;
+  | GetDebugInfoMessage
+  | GetSpawnTokenMessage;
 
 //
 // * Alarms
 //
 
-export type AlarmName = 'spawnBalloon' | 'refreshSpawnToken' | 'restart';
+export type AlarmName =
+  | 'spawnBalloon'
+  | 'refreshSpawnToken'
+  | 'retrySpawnToken'
+  | 'restart';
 
 //
 // * Development

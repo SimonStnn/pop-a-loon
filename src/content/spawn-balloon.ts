@@ -5,22 +5,22 @@ import {
   getBalloonContainer,
   importStylesheet,
   isFullScreenVideoPlaying,
+  sendMessage,
   weightedRandom,
 } from '@/utils';
 import { isInSeason } from '@/utils';
-
-// Spawn token injected as a global by the background script before this
-// file runs. Absent when the backend doesn't support spawn tokens.
-const spawnTokenData = (window as any).__SPAWN_TOKEN__ as
-  | {
-      token: string;
-      balloonType: string;
-    }
-  | undefined;
+import type { SpawnTokenMessageResponse } from '@/const';
 
 (async () => {
   // Prevent running in popup
   if (document.body.id === 'pop-a-loon') return;
+
+  // Request the one-time token over the extension message channel. It is
+  // scoped to this tab and cleared after this call, and is never placed on
+  // `window` where a host-page script could read it.
+  const spawnTokenData = (await sendMessage({
+    action: 'getSpawnToken',
+  })) as SpawnTokenMessageResponse | undefined;
 
   const config = await storage.sync.get('config');
 
@@ -40,9 +40,18 @@ const spawnTokenData = (window as any).__SPAWN_TOKEN__ as
   let Balloon: any;
 
   if (spawnTokenData?.balloonType) {
-    // Use the backend-chosen balloon type from the spawn token
-    const balloonName = spawnTokenData.balloonType as keyof typeof balloons;
-    Balloon = balloons[balloonName];
+    // Use the backend-chosen balloon type, but never trust the raw value: an
+    // unexpected name must fall back instead of throwing on `new Balloon()`.
+    const balloonMap = balloons as Record<string, unknown>;
+    const balloonName = spawnTokenData.balloonType as string;
+    if (
+      Object.hasOwn(balloonMap, balloonName) &&
+      typeof balloonMap[balloonName] === 'function'
+    ) {
+      Balloon = balloonMap[balloonName];
+    } else {
+      log.warn(' - Unknown balloonType from backend:', balloonName);
+    }
   }
 
   // Fallback: weighted random selection (legacy mode or invalid balloonType)
@@ -62,7 +71,7 @@ const spawnTokenData = (window as any).__SPAWN_TOKEN__ as
   }
 
   const balloon = new Balloon();
-  balloon.spawnToken = spawnTokenData?.token ?? undefined;
+  balloon.spawnToken = spawnTokenData?.spawnToken ?? undefined;
   balloon.rise();
 
   log.debug('Balloon spawned:', balloon.name);
