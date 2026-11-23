@@ -38,6 +38,7 @@ type BannerProps = {
 const routeTitles: { [key: string]: string } = {
   '/settings': 'Settings',
   '/general': 'Leaderboard',
+  '/recover': 'Recover account',
 };
 
 const HeaderIcon = (props: iconProps) => {
@@ -211,7 +212,9 @@ export default (props: HeaderProps) => {
           </NavigationMenuList>
         </NavigationMenu>
       </header>
-      <Banner remoteAvailable={isAvailable} />
+      {location.pathname !== '/recover' && (
+        <Banner remoteAvailable={isAvailable} />
+      )}
     </>
   );
 };

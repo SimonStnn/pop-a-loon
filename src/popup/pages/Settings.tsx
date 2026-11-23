@@ -4,6 +4,7 @@ import Main from '@/components/Main';
 import DeleteUser from '@/components/forms/DeleteUser';
 import Developer from '@/components/forms/Developer';
 import LocalSettings from '@/components/forms/LocalSettings';
+import RecoveryCode from '@/components/forms/RecoveryCode';
 import UpdateUser from '@/components/forms/UpdateUser';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,7 @@ export default () => {
   return (
     <>
       <Main className="">
-        <div className="h-[286px] grid gap-4 mt-2">
+        <div className="mt-2 grid h-[286px] gap-4">
           <section>
             <LocalSettings />
           </section>
@@ -31,11 +32,15 @@ export default () => {
           </section>
           <Separator />
           <section>
+            <RecoveryCode />
+          </section>
+          <Separator />
+          <section>
             <Dialog>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="border-destructive text-destructive hover:text-destructive py-1 px-2 h-7 w-full"
+                  className="h-7 w-full border-destructive px-2 py-1 text-destructive hover:text-destructive"
                 >
                   Delete account
                 </Button>

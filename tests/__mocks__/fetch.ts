@@ -28,6 +28,7 @@ const response: RemoteResponse = {
     },
   },
   user: user,
+  recoveryCode: { code: 'ABCD-EFGH-JKLM-NPQR-STUV-WXYZ' },
   count: {
     id: user.id,
     count: user.count,
@@ -68,6 +69,12 @@ export const mockFetchResponse = () => {
         return JSON.stringify(response.configuration);
       case req.method === 'POST' && req.url.endsWith('/user/new'):
         return JSON.stringify(response.user);
+      case req.method === 'GET' && req.url.endsWith('/api/user'):
+        return JSON.stringify(response.user);
+      case req.method === 'POST' && req.url.endsWith('/user/recovery-code'):
+        return JSON.stringify(response.recoveryCode);
+      case req.method === 'POST' && req.url.endsWith('/auth/recover'):
+        return JSON.stringify({ token: testToken, ...response.user });
       case req.method === 'GET' && req.url.endsWith(`/user/${user.id}`):
         return JSON.stringify(response.user);
       case req.method === 'PUT' && req.url.endsWith('/user'):
