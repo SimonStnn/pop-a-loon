@@ -1,5 +1,5 @@
 import { AlertCircle } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import browser from 'webextension-polyfill';
 import Main from '@/components/Main';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -15,6 +15,22 @@ export default () => {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [preservedPops, setPreservedPops] = useState<number | null>(null);
+  const [codeAvailable, setCodeAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const storedUser = await storage.sync.get('user');
+      setCodeAvailable(
+        Boolean(await storage.sync.get('recoveryCodeSet')) ||
+          Boolean(storedUser?.hasRecoveryCode)
+      );
+    })();
+  }, []);
+
+  const startFresh = async () => {
+    await storage.sync.clear();
+    browser.runtime.reload();
+  };
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -42,6 +58,7 @@ export default () => {
       await storage.sync.set('user', recovered);
       await storage.sync.set('accountInitialized', true);
       await storage.sync.set('needsRecovery', false);
+      await storage.sync.set('recoveryCodeSet', true);
       await storage.sync.set('recoveryCodeSaved', true);
 
       if (isDifferentAccount && (temporaryUser?.count ?? 0) > 0) {
@@ -80,6 +97,22 @@ export default () => {
 
   return (
     <Main>
+      {codeAvailable === false && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>No recovery code saved</AlertTitle>
+          <AlertDescription className="grid gap-2">
+            <span>
+              This browser has no recovery code for the old account, so it
+              cannot be restored. Starting a new account leaves the old one
+              behind permanently.
+            </span>
+            <Button type="button" variant="outline" onClick={startFresh}>
+              Start a new account
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
       <form className="grid gap-3" onSubmit={onSubmit}>
         <Label htmlFor="recovery-code">Recovery code</Label>
         <AlertDescription className="text-sm text-muted-foreground">

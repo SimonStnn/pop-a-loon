@@ -24,6 +24,7 @@ export default () => {
       const { code: newCode } = await remote.createRecoveryCode();
       setCode(newCode);
       setCopied(false);
+      await storage.sync.set('recoveryCodeSet', true);
       setUser(await remote.getSelf());
     } finally {
       setBusy(false);
