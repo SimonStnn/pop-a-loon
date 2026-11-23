@@ -31,4 +31,21 @@ describe('BackendAPI', () => {
     expect(response).toEqual(mockedUser);
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
+
+  test('should create a recovery code', async () => {
+    const response = await remote.createRecoveryCode();
+    expect(response.code).toBe('ABCD-EFGH-JKLM-NPQR-STUV-WXYZ');
+    expect(fetchMock.mock.calls[0][0]).toContain('/user/recovery-code');
+  });
+
+  test('should send the recovery code in the request body', async () => {
+    const response = await remote.recoverAccount(
+      'ABCD-EFGH-JKLM-NPQR-STUV-WXYZ'
+    );
+    expect(response.token).toBe('testToken');
+    expect(fetchMock.mock.calls[0][0]).toContain('/auth/recover');
+    expect(JSON.parse(fetchMock.mock.calls[0][1]!.body as string)).toEqual({
+      code: 'ABCD-EFGH-JKLM-NPQR-STUV-WXYZ',
+    });
+  });
 });

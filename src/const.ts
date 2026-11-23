@@ -36,6 +36,7 @@ export type User = {
   id: string;
   username?: string;
   email?: string;
+  hasRecoveryCode?: boolean;
   count: number;
   updatedAt: string;
   createdAt: string;
@@ -59,6 +60,9 @@ export type RemoteConfig = {
 
 export type RemoteResponse = {
   user: User;
+  recoveryCode: {
+    code: string;
+  };
   count: {
     id: string;
     count: number;
@@ -92,6 +96,8 @@ export type Endpoint =
   | '/status'
   | '/configuration'
   | '/user/new'
+  | '/user/recovery-code'
+  | '/auth/recover'
   | '/user/:id'
   | '/user'
   | '/user/count/increment'
@@ -111,11 +117,15 @@ export type SyncStorageStructure = {
   token: string;
   user: User;
   snooze: number | null;
+  accountInitialized?: boolean;
+  needsRecovery?: boolean;
+  recoveryCodeSaved?: boolean;
 };
 export type SyncStorageKey = keyof SyncStorageStructure;
 
 export type LocalStorageStructure = {
   loglevel?: LogLevelNumbers;
+  pendingRecoveryCode?: string;
 };
 export type LocalStorageKey = keyof LocalStorageStructure;
 
@@ -179,6 +189,8 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
     },
     '/user/count/increment': {},
     '/user/new': { token: 'token', ...dev_user },
+    '/user/recovery-code': { code: 'ABCD-EFGH-JKLM-NPQR-STUV-WXYZ' },
+    '/auth/recover': { token: 'token', ...dev_user },
     '/user/:id': dev_user,
     '/user': dev_user,
     '/leaderboard': {

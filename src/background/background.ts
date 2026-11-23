@@ -1,9 +1,9 @@
 import { abbreviateNumber } from 'js-abbreviation-number';
 import browser from 'webextension-polyfill';
-import { AlarmName, Message, initalConfig } from '@/const';
+import { AlarmName, Message, User, initalConfig } from '@/const';
 import log, { type LogLevelNames } from '@/managers/log';
 import storage from '@/managers/storage';
-import remote from '@/remote';
+import remote, { AuthenticationError } from '@/remote';
 import {
   calculateBalloonSpawnDelay,
   random,
@@ -69,18 +69,33 @@ const updateBadgeColors = () => {
       return;
     }
 
-    // Get the user from the local storage
-    let localUser = await storage.sync.get('user');
-    // If the user is not in the local storage, get a new user from the remote
-    if (!localUser) {
+    // A token from an older version also means this account is already set up.
+    // Never create a new account once one exists locally: a lost token must
+    // lead to recovery, not to a second anonymous account.
+    const initialized =
+      (await storage.sync.get('accountInitialized')) ||
+      Boolean(await storage.sync.get('token'));
+
+    if (!initialized) {
       const usr = await remote.NewUser();
       await storage.sync.set('token', usr.token);
-      localUser = usr;
     }
+    await storage.sync.set('accountInitialized', true);
 
-    // Get the user from the remote and save it to the local storage
-    const user = await remote.getUser(localUser.id);
+    let user: User;
+    try {
+      // Also validates the token before any balloons are scheduled.
+      user = await remote.getSelf();
+    } catch (e) {
+      if (e instanceof AuthenticationError) {
+        log.warn('Account needs recovery');
+        await storage.sync.set('needsRecovery', true);
+        return;
+      }
+      throw e;
+    }
     await storage.sync.set('user', user);
+    await storage.sync.set('needsRecovery', false);
 
     // Get the config from the remote
     const remoteConfig = await remote.getConfiguration();
