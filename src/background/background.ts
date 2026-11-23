@@ -174,6 +174,12 @@ const updateBadgeColors = () => {
       log.groupEnd('debug');
     };
 
+    // Never inject a token that has already expired. Otherwise a balloon can
+    // be on screen while every pop is guaranteed to be rejected server-side.
+    if (now >= schedule.expiresAt)
+      return skipSpawnMessage('spawn token already expired');
+    log.debug(' - Spawn token still valid');
+
     // Check if there is a spawn timeout
     if (spawnTimeout !== null && Date.now() < spawnTimeout)
       return skipSpawnMessage('balloon spawn in timeout');
@@ -193,12 +199,6 @@ const updateBadgeColors = () => {
     const state = await browser.idle.queryState(5 * 60);
     if (state !== 'active') return skipSpawnMessage('Browser is idle');
     log.debug(' - Browser is not idle');
-
-    // Check if no spawn alarms are already set
-    const alarms = await browser.alarms.getAll();
-    if (alarms.some((alarm) => alarm.name === 'spawnBalloon'))
-      return skipSpawnMessage('Spawn alarm already set');
-    log.debug(' - No spawn alarm already set');
 
     // Get all active tabs
     const tabs = await browser.tabs.query({ active: true });
@@ -243,26 +243,30 @@ const updateBadgeColors = () => {
   };
 
   let scheduling = false;
-  const scheduleNext = async () => {
+  const syncSchedule = async (forceRefresh = false) => {
     if (scheduling) return;
     scheduling = true;
     try {
-      let schedule = await getSchedule();
+      let schedule = forceRefresh ? undefined : await getSchedule();
       const now = Date.now();
 
       // No schedule yet, or the previous one expired without being popped.
+      // A missed balloon must never be re-spawned with an expired token.
       if (!schedule || now >= schedule.expiresAt) {
+        await browser.alarms.clear('spawnBalloon');
         schedule = await fetchSchedule();
       }
 
-      if (!schedule.spawned && now >= schedule.spawnAt) {
-        // The backend-chosen spawn time has arrived.
-        await spawnBalloon(schedule);
-      } else if (!schedule.spawned) {
-        // Arm the alarm for the backend-chosen spawn time.
-        await browser.alarms.create('spawnBalloon', {
-          when: schedule.spawnAt,
-        });
+      if (!schedule.spawned) {
+        if (now >= schedule.spawnAt) {
+          // The backend-chosen spawn time has arrived.
+          await spawnBalloon(schedule);
+        } else {
+          // Arm the alarm for the backend-chosen spawn time.
+          await browser.alarms.create('spawnBalloon', {
+            when: schedule.spawnAt,
+          });
+        }
       }
 
       // If the balloon is never popped, fetch a fresh schedule on expiry.
@@ -273,6 +277,8 @@ const updateBadgeColors = () => {
       scheduling = false;
     }
   };
+  const scheduleNext = () => syncSchedule();
+  const refreshSchedule = () => syncSchedule(true);
 
   let backgroundScriptRunning = false;
   const backgroundScript = async () => {
@@ -297,9 +303,12 @@ const updateBadgeColors = () => {
     log.debug('Alarm triggered', alarm.name);
     switch (alarm.name as AlarmName) {
       case 'spawnBalloon':
-      case 'refreshSpawnToken':
-        // Spawn the scheduled balloon or fetch the next schedule
         await scheduleNext();
+        break;
+      case 'refreshSpawnToken':
+        // The previous balloon was never popped. Replace its schedule; do not
+        // try to spawn it again, its token may already be expired.
+        await refreshSchedule();
         break;
       case 'restart':
         // Restart the extension
@@ -343,7 +352,11 @@ const updateBadgeColors = () => {
           await clearSchedule();
           await scheduleNext();
         } catch (e) {
+          // The pop was not accepted (e.g. the token expired). Drop the stale
+          // schedule so the next balloon is issued with a valid token.
           log.softerror('Failed to increment count:', e);
+          await clearSchedule();
+          await refreshSchedule();
         }
         break;
       case 'setLogLevel':
