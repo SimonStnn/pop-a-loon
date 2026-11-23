@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { User } from '@/const';
 import storage from '@/managers/storage';
 import remote from '@/remote';
+import { cn } from '@/utils';
 
 export default () => {
   const [user, setUser] = useState<User | null>(null);
@@ -123,7 +124,7 @@ export default () => {
         <Button
           type="button"
           variant={hasCode ? 'outline' : 'default'}
-          className="h-7 px-2 py-1"
+          className={cn('h-7 px-2 py-1', hasCode && 'w-full')}
           disabled={busy}
           onClick={() => (hasCode ? setConfirmOpen(true) : generate())}
         >
