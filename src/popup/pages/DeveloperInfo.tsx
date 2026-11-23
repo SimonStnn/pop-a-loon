@@ -106,7 +106,7 @@ export default () => {
   };
 
   return (
-    <Main className="w-[94%]">
+    <Main>
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -114,12 +114,22 @@ export default () => {
         </Alert>
       )}
       <Tabs defaultValue="runtime">
-        <TabsList className="w-full">
-          <TabsTrigger value="runtime">Runtime</TabsTrigger>
-          <TabsTrigger value="storage">Storage</TabsTrigger>
-          <TabsTrigger value="alarms">Alarms</TabsTrigger>
-          <TabsTrigger value="remote">Remote</TabsTrigger>
-          <TabsTrigger value="actions">Actions</TabsTrigger>
+        <TabsList size="sm">
+          <TabsTrigger size="sm" value="runtime">
+            Runtime
+          </TabsTrigger>
+          <TabsTrigger size="sm" value="storage">
+            Storage
+          </TabsTrigger>
+          <TabsTrigger size="sm" value="alarms">
+            Alarms
+          </TabsTrigger>
+          <TabsTrigger size="sm" value="remote">
+            Remote
+          </TabsTrigger>
+          <TabsTrigger size="sm" value="actions">
+            Actions
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runtime" className="space-y-0.5">
@@ -238,21 +248,24 @@ export default () => {
 
         <TabsContent value="actions" className="space-y-2">
           <Button
-            className="h-7 w-full text-xs"
+            className="w-full"
+            size="xs"
             variant="outline"
             onClick={toggle}
           >
             {enabled ? 'Disable debug logging' : 'Enable debug logging'}
           </Button>
           <Button
-            className="h-7 w-full text-xs"
+            className="w-full"
+            size="xs"
             variant="outline"
             onClick={() => browser.runtime.reload()}
           >
             <RotateCcw className="size-3" /> Reload extension
           </Button>
           <Button
-            className="h-7 w-full text-xs"
+            className="w-full"
+            size="xs"
             variant="outline"
             onClick={copyDiagnostics}
             disabled={!info}

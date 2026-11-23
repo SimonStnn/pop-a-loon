@@ -72,8 +72,9 @@ export default () => {
             {enabled && (
               <Button
                 asChild
+                size="xs"
                 variant="outline"
-                className="mt-2 h-7 w-full px-2 py-1 text-xs"
+                className="mt-2 w-full"
               >
                 <Link to="/developer">Open developer info</Link>
               </Button>
