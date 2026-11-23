@@ -41,6 +41,8 @@ export type User = {
   createdAt: string;
 };
 
+export type HistoryBucket = 'day' | 'week' | 'month';
+
 export type HistoryNode = {
   date: Date;
   pops: Record<BalloonName, number>;
@@ -86,6 +88,7 @@ export type RemoteResponse = {
   };
   popHistory: {
     history: HistoryNode[];
+    bucket?: HistoryBucket;
   };
   scores: {
     scores: {
