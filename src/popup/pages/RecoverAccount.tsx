@@ -68,19 +68,16 @@ export default () => {
   if (preservedPops !== null) {
     return (
       <Main>
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Account recovered</AlertTitle>
-          <AlertDescription className="grid gap-2">
-            <span>
-              Your account is restored. The temporary account had{' '}
-              {preservedPops} pops, so it was kept instead of being deleted.
-            </span>
-            <Button type="button" onClick={() => browser.runtime.reload()}>
-              Continue
-            </Button>
-          </AlertDescription>
-        </Alert>
+        <div className="grid gap-2" role="status">
+          <h2 className="font-medium">Account recovered</h2>
+          <p className="text-sm text-muted-foreground">
+            Your account is restored. The temporary account had {preservedPops}{' '}
+            pops, so it was kept instead of being deleted.
+          </p>
+          <Button type="button" onClick={() => browser.runtime.reload()}>
+            Continue
+          </Button>
+        </div>
       </Main>
     );
   }

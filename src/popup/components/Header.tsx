@@ -208,7 +208,7 @@ export default (props: HeaderProps) => {
       if (generation !== latest) return;
 
       if (pendingCode) setRecoveryNotice('pending');
-      else if (user && !user.hasRecoveryCode && !saved)
+      else if (user && !user.hasRecoveryCode && !saved && user.count > 0)
         setRecoveryNotice('missing');
       else setRecoveryNotice(null);
     };
