@@ -81,7 +81,7 @@ export default () => {
             <Button
               type="button"
               variant="outline"
-              className="h-7 flex-1 px-2 py-1"
+              className="h-7 px-2 py-1"
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(code);
@@ -100,7 +100,7 @@ export default () => {
             </Button>
             <Button
               type="button"
-              className="h-7 flex-1 px-2 py-1"
+              className="h-7 px-2 py-1"
               onClick={confirmSaved}
             >
               I saved it
@@ -122,20 +122,23 @@ export default () => {
       <div className="flex gap-2">
         <Button
           type="button"
-          className="h-7 flex-1 px-2 py-1"
+          variant={hasCode ? 'outline' : 'default'}
+          className="h-7 px-2 py-1"
           disabled={busy}
           onClick={() => (hasCode ? setConfirmOpen(true) : generate())}
         >
           {hasCode ? 'Regenerate recovery code' : 'Create recovery code'}
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="h-7 flex-1 px-2 py-1"
-          asChild
-        >
-          <Link to="/recover">I already have an account</Link>
-        </Button>
+        {!hasCode && (
+          <Button
+            type="button"
+            variant="outline"
+            className="h-7 px-2 py-1"
+            asChild
+          >
+            <Link to="/recover">I already have an account</Link>
+          </Button>
+        )}
       </div>
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>
