@@ -12,13 +12,17 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, onFocusCapture, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
       'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       className
     )}
+    onFocusCapture={(e) => {
+      onFocusCapture?.(e);
+      if (!e.defaultPrevented) e.stopPropagation();
+    }}
     {...props}
   >
     {children}
@@ -67,7 +71,7 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = 'popper', ...props }, ref) => (
+>(({ className, children, position = 'popper', onPointerDownOutside, ...props }, ref) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
@@ -78,6 +82,17 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
+      onPointerDownOutside={(e) => {
+        onPointerDownOutside?.(e);
+        if (e.defaultPrevented) return;
+        const target = e.target as Element | null;
+        // Firefox extension popup workaround: Radix Select can dismiss immediately
+        // due spurious outside pointer events in extension popups. Keep normal
+        // trigger toggling behavior by allowing events on the select trigger.
+        if (!target?.closest('[data-radix-select-trigger]')) {
+          e.preventDefault();
+        }
+      }}
       {...props}
     >
       <SelectScrollUpButton />
