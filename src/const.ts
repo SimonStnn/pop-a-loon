@@ -181,7 +181,6 @@ export type DebugInfoResponse = {
   startedAt: number;
   lastSpawn: number | null;
   spawnTimeout: number | null;
-  scheduling: boolean;
   remoteAvailable: boolean | null;
   remoteLastChecked: number | null;
   logLevel: LogLevelNumbers;

@@ -386,7 +386,6 @@ const updateBadgeColors = () => {
           startedAt,
           lastSpawn: lastSpawn ?? null,
           spawnTimeout,
-          scheduling,
           remoteAvailable: remote.availability,
           remoteLastChecked: remote.lastCheckedAt,
           logLevel: log.getLevel(),

@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import remote from '@/remote';
 import { getBrowser } from '@/utils';
-import type { DebugInfoResponse } from '@/const';
+import type { DebugInfoResponse, SpawnSchedule } from '@/const';
 
 const SECRET_KEYS = new Set([
   'token',
@@ -45,6 +45,12 @@ export type PopupDebugInfo = {
     tokenConfigured: boolean;
   };
   alarms: browser.Alarms.Alarm[];
+  schedule: {
+    spawnAt: number;
+    expiresAt: number;
+    spawned: boolean;
+    tokenConfigured: boolean;
+  } | null;
   permissions: {
     origins: string[];
     permissions: string[];
@@ -96,6 +102,16 @@ export async function getPopupDebugInfo(
       tokenConfigured: Boolean(sync.token),
     },
     alarms,
+    schedule: (() => {
+      const schedule = local.spawnSchedule as SpawnSchedule | undefined;
+      if (!schedule) return null;
+      return {
+        spawnAt: schedule.spawnAt,
+        expiresAt: schedule.expiresAt,
+        spawned: Boolean(schedule.spawned),
+        tokenConfigured: Boolean(schedule.spawnToken),
+      };
+    })(),
     permissions: {
       origins: permissions.origins ?? [],
       permissions: permissions.permissions ?? [],

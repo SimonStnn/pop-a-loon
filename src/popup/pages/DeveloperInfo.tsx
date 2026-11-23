@@ -114,22 +114,12 @@ export default () => {
         </Alert>
       )}
       <Tabs defaultValue="runtime">
-        <TabsList className="grid h-8 w-full grid-cols-5">
-          <TabsTrigger value="runtime" className="px-1 text-[10px]">
-            Runtime
-          </TabsTrigger>
-          <TabsTrigger value="storage" className="px-1 text-[10px]">
-            Storage
-          </TabsTrigger>
-          <TabsTrigger value="alarms" className="px-1 text-[10px]">
-            Alarms
-          </TabsTrigger>
-          <TabsTrigger value="remote" className="px-1 text-[10px]">
-            Remote
-          </TabsTrigger>
-          <TabsTrigger value="actions" className="px-1 text-[10px]">
-            Actions
-          </TabsTrigger>
+        <TabsList className="w-full">
+          <TabsTrigger value="runtime">Runtime</TabsTrigger>
+          <TabsTrigger value="storage">Storage</TabsTrigger>
+          <TabsTrigger value="alarms">Alarms</TabsTrigger>
+          <TabsTrigger value="remote">Remote</TabsTrigger>
+          <TabsTrigger value="actions">Actions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="runtime" className="space-y-0.5">
@@ -166,8 +156,25 @@ export default () => {
 
         <TabsContent value="alarms" className="space-y-0.5">
           <Row
-            label="Scheduling"
-            value={info?.background.scheduling ? 'yes' : 'no'}
+            label="Schedule"
+            value={
+              !info?.schedule
+                ? 'none'
+                : info.schedule.spawned
+                  ? 'spawned'
+                  : Date.now() >= info.schedule.expiresAt
+                    ? 'expired'
+                    : 'pending'
+            }
+          />
+          <Row
+            label="Spawn token"
+            value={info?.schedule?.tokenConfigured ? 'set' : 'none'}
+          />
+          <Row label="Spawn at" value={formatTime(info?.schedule?.spawnAt)} />
+          <Row
+            label="Expires at"
+            value={formatTime(info?.schedule?.expiresAt)}
           />
           <Row
             label="Last spawn"
