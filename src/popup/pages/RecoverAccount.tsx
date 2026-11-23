@@ -14,7 +14,7 @@ export default () => {
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [preservedPops, setPreservedPops] = useState<number | null>(null);
+  const [removedPops, setRemovedPops] = useState<number | null>(null);
   const [showFreshOption, setShowFreshOption] = useState(false);
 
   const startFresh = async () => {
@@ -32,12 +32,13 @@ export default () => {
       const recovered = await remote.recoverAccount(code);
 
       // A fresh install creates a temporary account before the user can enter
-      // a code. Remove it when it is empty; never discard progress silently.
+      // a code. Its token is about to be replaced and it has no recovery code,
+      // so it cannot be reached again — remove it even if it has pops.
       const temporaryToken = await storage.sync.get('token');
       const temporaryUser = await storage.sync.get('user');
       const isDifferentAccount =
         Boolean(temporaryToken) && temporaryUser?.id !== recovered.id;
-      if (isDifferentAccount && temporaryUser?.count === 0) {
+      if (isDifferentAccount) {
         try {
           await remote.deleteUser(temporaryToken);
         } catch (e) {
@@ -52,7 +53,7 @@ export default () => {
       await storage.sync.set('recoveryCodeSaved', true);
 
       if (isDifferentAccount && (temporaryUser?.count ?? 0) > 0) {
-        setPreservedPops(temporaryUser!.count);
+        setRemovedPops(temporaryUser!.count);
         return;
       }
       browser.runtime.reload();
@@ -65,14 +66,14 @@ export default () => {
     }
   };
 
-  if (preservedPops !== null) {
+  if (removedPops !== null) {
     return (
       <Main>
         <div className="grid gap-2" role="status">
           <h2 className="font-medium">Account recovered</h2>
           <p className="text-sm text-muted-foreground">
-            Your account is restored. The temporary account had {preservedPops}{' '}
-            pops, so it was kept instead of being deleted.
+            Your account is restored. The temporary account had {removedPops}{' '}
+            pops, but it had no recovery code, so it was removed.
           </p>
           <Button type="button" onClick={() => browser.runtime.reload()}>
             Continue
