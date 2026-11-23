@@ -122,14 +122,18 @@ export default () => {
       <div className="flex gap-2">
         <Button
           type="button"
-          variant="outline"
           className="h-7 flex-1 px-2 py-1"
           disabled={busy}
           onClick={() => (hasCode ? setConfirmOpen(true) : generate())}
         >
           {hasCode ? 'Regenerate recovery code' : 'Create recovery code'}
         </Button>
-        <Button type="button" variant="link" className="h-7 flex-1 p-0" asChild>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-7 flex-1 px-2 py-1"
+          asChild
+        >
           <Link to="/recover">I already have an account</Link>
         </Button>
       </div>

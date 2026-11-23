@@ -26,15 +26,15 @@ export default () => {
           <section>
             <LocalSettings />
           </section>
-          <Separator className="h-px shrink-0" />
+          <Separator />
           <section>
             <UpdateUser />
           </section>
-          <Separator className="h-px shrink-0" />
+          <Separator />
           <section>
             <RecoveryCode />
           </section>
-          <Separator className="h-px shrink-0" />
+          <Separator />
           <section>
             <Dialog>
               <DialogTrigger asChild>
@@ -62,7 +62,7 @@ export default () => {
               </DialogContent>
             </Dialog>
           </section>
-          <Separator className="h-px shrink-0" />
+          <Separator />
           <section>
             <Developer />
           </section>
