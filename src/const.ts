@@ -69,6 +69,13 @@ export type RemoteResponse = {
     version: string;
   };
   configuration: RemoteConfig;
+  spawnToken: {
+    serverTime: number;
+    spawnToken: string;
+    balloonType: BalloonName;
+    spawnAt: number;
+    expiresAt: number;
+  };
   leaderboard: {
     user: User;
     rank: number | null;
@@ -91,6 +98,7 @@ export type RemoteResponse = {
 export type Endpoint =
   | '/status'
   | '/configuration'
+  | '/configuration/spawn-token'
   | '/user/new'
   | '/user/:id'
   | '/user'
@@ -114,8 +122,19 @@ export type SyncStorageStructure = {
 };
 export type SyncStorageKey = keyof SyncStorageStructure;
 
+// The backend's server-owned spawn schedule, cached locally so the background
+// worker can survive suspension between scheduling and spawning.
+export type SpawnSchedule = {
+  spawnToken: string;
+  balloonType: BalloonName;
+  spawnAt: number;
+  expiresAt: number;
+  spawned?: boolean;
+};
+
 export type LocalStorageStructure = {
   loglevel?: LogLevelNumbers;
+  spawnSchedule?: SpawnSchedule;
 };
 export type LocalStorageKey = keyof LocalStorageStructure;
 
@@ -131,6 +150,7 @@ type UpdateCounterMessage = {
 type IncrementCount = {
   action: 'incrementCount';
   type: BalloonName;
+  spawnToken?: string;
 };
 
 type SpawnBalloonMessage = {
@@ -152,7 +172,7 @@ export type Message =
 // * Alarms
 //
 
-export type AlarmName = 'spawnBalloon' | 'restart';
+export type AlarmName = 'spawnBalloon' | 'refreshSpawnToken' | 'restart';
 
 //
 // * Development
@@ -178,6 +198,13 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
       },
     },
     '/user/count/increment': {},
+    '/configuration/spawn-token': {
+      serverTime: Date.now(),
+      spawnToken: 'dev-token-' + Math.random().toString(36).slice(2),
+      balloonType: 'default' as BalloonName,
+      spawnAt: Date.now() + 5000,
+      expiresAt: Date.now() + 35000,
+    },
     '/user/new': { token: 'token', ...dev_user },
     '/user/:id': dev_user,
     '/user': dev_user,

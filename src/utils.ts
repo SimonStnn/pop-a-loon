@@ -129,18 +129,6 @@ export function weightedRandom<T, D = null>(
   return (options.default ?? null) as D;
 }
 
-export async function calculateBalloonSpawnDelay() {
-  const config = await storage.sync.get('config');
-  // Generate a random delay between the min and max spawn interval
-  const randomDelay = random(
-    config.spawnInterval.min,
-    config.spawnInterval.max
-  );
-  const spawnRateMultiplier = Math.max(0, Math.min(config.spawnRate, 1));
-
-  return randomDelay / spawnRateMultiplier;
-}
-
 function createBalloonContainer() {
   const balloonContainer = document.createElement('div');
   balloonContainer.id = BalloonContainerId;
