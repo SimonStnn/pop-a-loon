@@ -22,19 +22,19 @@ export default () => {
   return (
     <>
       <Main className="">
-        <div className="mt-2 grid h-[286px] gap-4">
+        <div className="mt-2 grid min-h-[286px] gap-4">
           <section>
             <LocalSettings />
           </section>
-          <Separator />
+          <Separator className="h-px shrink-0" />
           <section>
             <UpdateUser />
           </section>
-          <Separator />
+          <Separator className="h-px shrink-0" />
           <section>
             <RecoveryCode />
           </section>
-          <Separator />
+          <Separator className="h-px shrink-0" />
           <section>
             <Dialog>
               <DialogTrigger asChild>
@@ -62,7 +62,7 @@ export default () => {
               </DialogContent>
             </Dialog>
           </section>
-          <Separator />
+          <Separator className="h-px shrink-0" />
           <section>
             <Developer />
           </section>

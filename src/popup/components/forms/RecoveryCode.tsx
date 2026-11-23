@@ -3,6 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { User } from '@/const';
 import storage from '@/managers/storage';
@@ -10,25 +17,39 @@ import remote from '@/remote';
 
 export default () => {
   const [user, setUser] = useState<User | null>(null);
+  const [hasCode, setHasCode] = useState(false);
   const [code, setCode] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
-      setUser(await storage.sync.get('user'));
+      const [storedUser, pendingCode, saved] = await Promise.all([
+        storage.sync.get('user'),
+        storage.local.get('pendingRecoveryCode'),
+        storage.sync.get('recoveryCodeSaved'),
+      ]);
+      setUser(storedUser);
       // Popups close when they lose focus. Keep the code visible until the
       // user confirms they saved it.
-      setCode((await storage.local.get('pendingRecoveryCode')) ?? null);
+      setCode(pendingCode ?? null);
+      setHasCode(
+        Boolean(pendingCode) ||
+          Boolean(saved) ||
+          Boolean(storedUser?.hasRecoveryCode)
+      );
     })();
   }, []);
 
   const generate = async () => {
+    setConfirmOpen(false);
     setBusy(true);
     try {
       const { code: newCode } = await remote.createRecoveryCode();
       setCode(newCode);
       setCopied(false);
+      setHasCode(true);
       await storage.local.set('pendingRecoveryCode', newCode);
       setUser(await remote.getSelf());
     } finally {
@@ -60,7 +81,7 @@ export default () => {
             <Button
               type="button"
               variant="outline"
-              className="flex-1"
+              className="h-7 flex-1 px-2 py-1"
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(code);
@@ -77,7 +98,11 @@ export default () => {
               )}
               {copied ? 'Copied' : 'Copy'}
             </Button>
-            <Button type="button" className="flex-1" onClick={confirmSaved}>
+            <Button
+              type="button"
+              className="h-7 flex-1 px-2 py-1"
+              onClick={confirmSaved}
+            >
               I saved it
             </Button>
           </div>
@@ -87,26 +112,62 @@ export default () => {
   }
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-4">
       <Label>Account recovery code</Label>
       <p className="text-sm text-muted-foreground">
-        {user?.hasRecoveryCode
-          ? 'A recovery code is set. Generating a new one invalidates the old code.'
-          : 'No recovery code is set. Without one, clearing your browser data permanently loses your account.'}
+        {hasCode
+          ? 'A recovery code is set. Regenerating it invalidates the old code.'
+          : 'Without a recovery code, clearing your browser data permanently loses your account.'}
       </p>
-      <Button
-        type="button"
-        variant="outline"
-        disabled={busy}
-        onClick={generate}
-      >
-        {user?.hasRecoveryCode
-          ? 'Replace recovery code'
-          : 'Create recovery code'}
-      </Button>
-      <Button type="button" variant="link" className="h-fit p-0" asChild>
-        <Link to="/recover">I already have an account</Link>
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          className="h-7 flex-1 px-2 py-1"
+          disabled={busy}
+          onClick={() => (hasCode ? setConfirmOpen(true) : generate())}
+        >
+          {hasCode ? 'Regenerate recovery code' : 'Create recovery code'}
+        </Button>
+        <Button type="button" variant="link" className="h-7 flex-1 p-0" asChild>
+          <Link to="/recover">I already have an account</Link>
+        </Button>
+      </div>
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Regenerate recovery code?</DialogTitle>
+            <DialogDescription asChild>
+              <Alert variant="destructive" className="text-destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle className="w-min">Warning</AlertTitle>
+                <AlertDescription>
+                  Your old recovery code will stop working immediately. Save the
+                  new code when it appears.
+                </AlertDescription>
+              </Alert>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-7 px-2 py-1"
+              onClick={() => setConfirmOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="h-7 px-2 py-1"
+              disabled={busy}
+              onClick={generate}
+            >
+              Regenerate
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
