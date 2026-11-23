@@ -106,8 +106,28 @@ const updateBadgeColors = () => {
 
   const fetchSchedule = async (): Promise<SpawnSchedule> => {
     try {
+      const requestedAt = Date.now();
       const data = await remote.getSpawnToken();
-      const schedule: SpawnSchedule = { ...data, spawned: false };
+      const receivedAt = Date.now();
+
+      // spawnAt/expiresAt are server-clock timestamps, but browser alarms run
+      // on the local clock. Estimate the offset assuming request and response
+      // took about the same time: the server clock at receipt was roughly
+      // serverTime + half the round trip.
+      const clockOffset =
+        typeof data.serverTime === 'number'
+          ? data.serverTime - (requestedAt + receivedAt) / 2
+          : 0;
+      if (clockOffset) {
+        log.debug(' - Correcting server clock skew', clockOffset, 'ms');
+      }
+
+      const schedule: SpawnSchedule = {
+        ...data,
+        spawnAt: data.spawnAt - clockOffset,
+        expiresAt: data.expiresAt - clockOffset,
+        spawned: false,
+      };
       await storage.local.set('spawnSchedule', schedule);
       return schedule;
     } catch (e) {

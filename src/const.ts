@@ -70,6 +70,7 @@ export type RemoteResponse = {
   };
   configuration: RemoteConfig;
   spawnToken: {
+    serverTime: number;
     spawnToken: string;
     balloonType: BalloonName;
     spawnAt: number;
@@ -198,6 +199,7 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
     },
     '/user/count/increment': {},
     '/configuration/spawn-token': {
+      serverTime: Date.now(),
       spawnToken: 'dev-token-' + Math.random().toString(36).slice(2),
       balloonType: 'default' as BalloonName,
       spawnAt: Date.now() + 5000,

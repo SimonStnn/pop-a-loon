@@ -57,6 +57,7 @@ const response: RemoteResponse = {
     ],
   },
   spawnToken: {
+    serverTime: Date.now(),
     spawnToken: 'mockToken',
     balloonType: 'default',
     spawnAt: Date.now() + 5000,
