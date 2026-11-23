@@ -17,6 +17,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+import storage from '@/managers/storage';
 import remote from '@/remote';
 import { askOriginPermissions, cn } from '@/utils';
 
@@ -33,11 +34,14 @@ type HeaderProps = {
 
 type BannerProps = {
   remoteAvailable: boolean;
+  recoveryNotice: 'pending' | 'missing' | null;
 };
 
 const routeTitles: { [key: string]: string } = {
   '/settings': 'Settings',
+  '/developer': 'Developer info',
   '/general': 'Leaderboard',
+  '/recover': 'Recover account',
 };
 
 const HeaderIcon = (props: iconProps) => {
@@ -83,6 +87,26 @@ const Banner = (props: BannerProps) => {
     fetchAlarms();
     fetchPermissions();
   }, []);
+
+  if (props.recoveryNotice === 'pending')
+    return (
+      <div className="flex items-center justify-center gap-2 bg-secondary p-1 text-secondary-foreground">
+        <span>Recovery code waiting to be saved.</span>
+        <Button variant={'link'} className="h-fit p-0 text-xs" asChild>
+          <Link to="/settings">Save it</Link>
+        </Button>
+      </div>
+    );
+
+  if (props.recoveryNotice === 'missing')
+    return (
+      <div className="flex items-center justify-center gap-2 bg-secondary p-1 text-secondary-foreground">
+        <span>Save a recovery code to protect your account.</span>
+        <Button variant={'link'} className="h-fit p-0 text-xs" asChild>
+          <Link to="/settings">Save</Link>
+        </Button>
+      </div>
+    );
 
   if (alarms.length === 0)
     return (
@@ -158,6 +182,9 @@ const ListItem = (props: {
 
 export default (props: HeaderProps) => {
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
+  const [recoveryNotice, setRecoveryNotice] = useState<
+    'pending' | 'missing' | null
+  >(null);
   const location = useLocation();
 
   const title = Object.keys(routeTitles).includes(location.pathname)
@@ -167,6 +194,30 @@ export default (props: HeaderProps) => {
   useEffect(() => {
     remote.isAvailable().then(setIsAvailable);
   }, []);
+
+  useEffect(() => {
+    // Clearing a pending code and marking it saved are two storage writes, so
+    // ignore results from a read that started before the latest change.
+    let latest = 0;
+    const updateNotice = async () => {
+      const generation = ++latest;
+      const [pendingCode, user, saved] = await Promise.all([
+        storage.local.get('pendingRecoveryCode'),
+        storage.sync.get('user'),
+        storage.sync.get('recoveryCodeSaved'),
+      ]);
+      if (generation !== latest) return;
+
+      if (pendingCode) setRecoveryNotice('pending');
+      else if (user && !user.hasRecoveryCode && !saved && user.count > 0)
+        setRecoveryNotice('missing');
+      else setRecoveryNotice(null);
+    };
+
+    updateNotice();
+    browser.storage.onChanged.addListener(updateNotice);
+    return () => browser.storage.onChanged.removeListener(updateNotice);
+  }, [location.pathname]);
 
   return (
     <>
@@ -211,7 +262,9 @@ export default (props: HeaderProps) => {
           </NavigationMenuList>
         </NavigationMenu>
       </header>
-      <Banner remoteAvailable={isAvailable} />
+      {location.pathname !== '/recover' && (
+        <Banner remoteAvailable={isAvailable} recoveryNotice={recoveryNotice} />
+      )}
     </>
   );
 };

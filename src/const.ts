@@ -36,6 +36,7 @@ export type User = {
   id: string;
   username?: string;
   email?: string;
+  hasRecoveryCode?: boolean;
   count: number;
   updatedAt: string;
   createdAt: string;
@@ -59,6 +60,9 @@ export type RemoteConfig = {
 
 export type RemoteResponse = {
   user: User;
+  recoveryCode: {
+    code: string;
+  };
   count: {
     id: string;
     count: number;
@@ -100,6 +104,8 @@ export type Endpoint =
   | '/configuration'
   | '/configuration/spawn-token'
   | '/user/new'
+  | '/user/recovery-code'
+  | '/auth/recover'
   | '/user/:id'
   | '/user'
   | '/user/count/increment'
@@ -119,6 +125,9 @@ export type SyncStorageStructure = {
   token: string;
   user: User;
   snooze: number | null;
+  accountInitialized?: boolean;
+  needsRecovery?: boolean;
+  recoveryCodeSaved?: boolean;
 };
 export type SyncStorageKey = keyof SyncStorageStructure;
 
@@ -134,6 +143,7 @@ export type SpawnSchedule = {
 
 export type LocalStorageStructure = {
   loglevel?: LogLevelNumbers;
+  pendingRecoveryCode?: string;
   spawnSchedule?: SpawnSchedule;
 };
 export type LocalStorageKey = keyof LocalStorageStructure;
@@ -162,11 +172,29 @@ type SetLogLevelMessage = {
   level: LogLevelNumbers;
 };
 
+type GetDebugInfoMessage = {
+  action: 'getDebugInfo';
+};
+
+/** State that only lives in the background worker. */
+export type DebugInfoResponse = {
+  startedAt: number;
+  lastSpawn: number | null;
+  spawnTimeout: number | null;
+  remoteAvailable: boolean | null;
+  remoteLastChecked: number | null;
+  logLevel: LogLevelNumbers;
+  version: string;
+  mode: string;
+  browser: string;
+};
+
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
   | SpawnBalloonMessage
-  | SetLogLevelMessage;
+  | SetLogLevelMessage
+  | GetDebugInfoMessage;
 
 //
 // * Alarms
@@ -206,6 +234,8 @@ export const devRemoteResponse: Record<Endpoint, any> = new Proxy(
       expiresAt: Date.now() + 35000,
     },
     '/user/new': { token: 'token', ...dev_user },
+    '/user/recovery-code': { code: 'ABCD-EFGH-JKLM-NPQR-STUV-WXYZ' },
+    '/auth/recover': { token: 'token', ...dev_user },
     '/user/:id': dev_user,
     '/user': dev_user,
     '/leaderboard': {

@@ -12,6 +12,13 @@ interface RequestParams {
   [key: string]: string | number | undefined;
 }
 
+export class AuthenticationError extends Error {
+  constructor() {
+    super('Authentication failed');
+    this.name = 'AuthenticationError';
+  }
+}
+
 class BackendAPI {
   private static instance: BackendAPI;
   private static readonly BASE_URL =
@@ -29,6 +36,18 @@ class BackendAPI {
       BackendAPI.instance = new BackendAPI();
     }
     return BackendAPI.instance;
+  }
+
+  public get baseUrl() {
+    return BackendAPI.BASE_URL;
+  }
+
+  public get availability() {
+    return this.available;
+  }
+
+  public get lastCheckedAt() {
+    return this.lastChecked?.getTime() ?? null;
   }
 
   private async request<T>(
@@ -52,8 +71,8 @@ class BackendAPI {
     if (params) {
       for (const [key, value] of Object.entries(params)) {
         if (value === undefined) continue;
-        // POST body params (like spawnToken) go in the body, not the URL
-        if (method === 'POST' && key === 'spawnToken') {
+        // Credentials and spawn tokens belong in the body, never in the URL.
+        if (method === 'POST' && (key === 'code' || key === 'spawnToken')) {
           body[key] = String(value);
         } else {
           searchParams.append(key, String(value));
@@ -83,6 +102,9 @@ class BackendAPI {
     const response = await fetch(url.toString(), fetchOptions);
     if (!response.ok) {
       log.error(response, await response.json());
+      if (response.status === 401 || response.status === 403) {
+        throw new AuthenticationError();
+      }
       throw new Error(`Failed to fetch ${url.toString()}`);
     }
     return response.json() as Promise<T>;
@@ -139,11 +161,28 @@ class BackendAPI {
     });
   }
 
+  public async getSelf() {
+    return await this.request<RemoteResponse['user']>('GET', '/user');
+  }
+
   public async getUser(id: string) {
     return await this.request<RemoteResponse['user']>(
       'GET',
       `/user/${id as ':id'}`
     );
+  }
+
+  public async createRecoveryCode() {
+    return await this.request<RemoteResponse['recoveryCode']>(
+      'POST',
+      '/user/recovery-code'
+    );
+  }
+
+  public async recoverAccount(code: string) {
+    return await this.request<
+      Prettify<{ token: string } & RemoteResponse['user']>
+    >('POST', '/auth/recover', { code });
   }
 
   public async putUser(props: { [K in 'username' | 'email']?: string }) {
@@ -158,6 +197,7 @@ class BackendAPI {
       `/user`
     );
     await storage.sync.clear();
+    await storage.local.remove('pendingRecoveryCode');
     return response;
   }
 
