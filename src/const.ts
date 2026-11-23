@@ -119,13 +119,13 @@ export type SyncStorageStructure = {
   snooze: number | null;
   accountInitialized?: boolean;
   needsRecovery?: boolean;
-  recoveryCodeSet?: boolean;
   recoveryCodeSaved?: boolean;
 };
 export type SyncStorageKey = keyof SyncStorageStructure;
 
 export type LocalStorageStructure = {
   loglevel?: LogLevelNumbers;
+  pendingRecoveryCode?: string;
 };
 export type LocalStorageKey = keyof LocalStorageStructure;
 

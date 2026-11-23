@@ -95,7 +95,6 @@ const updateBadgeColors = () => {
       throw e;
     }
     await storage.sync.set('user', user);
-    await storage.sync.set('recoveryCodeSet', Boolean(user.hasRecoveryCode));
     await storage.sync.set('needsRecovery', false);
 
     // Get the config from the remote

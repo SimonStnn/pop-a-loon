@@ -168,6 +168,7 @@ class BackendAPI {
       `/user`
     );
     await storage.sync.clear();
+    await storage.local.remove('pendingRecoveryCode');
     return response;
   }
 

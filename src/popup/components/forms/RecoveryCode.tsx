@@ -15,7 +15,12 @@ export default () => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    storage.sync.get('user').then(setUser);
+    (async () => {
+      setUser(await storage.sync.get('user'));
+      // Popups close when they lose focus. Keep the code visible until the
+      // user confirms they saved it.
+      setCode((await storage.local.get('pendingRecoveryCode')) ?? null);
+    })();
   }, []);
 
   const generate = async () => {
@@ -24,7 +29,7 @@ export default () => {
       const { code: newCode } = await remote.createRecoveryCode();
       setCode(newCode);
       setCopied(false);
-      await storage.sync.set('recoveryCodeSet', true);
+      await storage.local.set('pendingRecoveryCode', newCode);
       setUser(await remote.getSelf());
     } finally {
       setBusy(false);
@@ -32,6 +37,7 @@ export default () => {
   };
 
   const confirmSaved = async () => {
+    await storage.local.remove('pendingRecoveryCode');
     await storage.sync.set('recoveryCodeSaved', true);
     setCode(null);
   };
@@ -43,8 +49,9 @@ export default () => {
         <AlertTitle>Save this recovery code</AlertTitle>
         <AlertDescription className="grid gap-2">
           <span>
-            It is shown only once. Store it somewhere safe: it is the only way
-            to get your account back if you lose your browser data.
+            Store it somewhere safe: it is the only way to get your account back
+            if you lose your browser data. It stays here until you confirm you
+            saved it.
           </span>
           <code className="break-all rounded bg-muted p-2 font-mono text-sm">
             {code}
