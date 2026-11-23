@@ -13,6 +13,9 @@ const tabsListVariants = cva(
         default: 'h-10 p-1',
         sm: 'h-8 p-0.5',
       },
+      stretch: {
+        true: '[&>button]:flex-1',
+      },
     },
     defaultVariants: {
       size: 'default',
@@ -39,10 +42,10 @@ const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> &
     VariantProps<typeof tabsListVariants>
->(({ className, size, ...props }, ref) => (
+>(({ className, size, stretch, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn(tabsListVariants({ size }), className)}
+    className={cn(tabsListVariants({ size, stretch }), className)}
     {...props}
   />
 ));
