@@ -83,8 +83,17 @@ const SelectContent = React.forwardRef<
     clear();
     const observer = new MutationObserver(clear);
     observer.observe(body, { attributes: true, attributeFilter: ["style"] });
+
+    // Radix Select closes on window blur; in Firefox extension popups focus shifts
+    // can trigger blur and immediately dismiss the open Select.
+    const onBlur = (event: Event) => {
+      event.stopImmediatePropagation();
+    };
+    window.addEventListener("blur", onBlur, true);
+
     return () => {
       observer.disconnect();
+      window.removeEventListener("blur", onBlur, true);
       if (body.style.pointerEvents === "") body.style.pointerEvents = prev;
     };
   }, []);
