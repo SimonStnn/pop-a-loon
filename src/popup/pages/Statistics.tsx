@@ -103,6 +103,12 @@ export default () => {
           <PopoverContent
             className="flex w-full flex-col gap-2 p-2"
             align="start"
+            onInteractOutside={(e) => {
+              const target = e.target as Element | null;
+              if (target?.closest('[data-radix-select-content]')) {
+                e.preventDefault();
+              }
+            }}
           >
             <Select onValueChange={handleDatePresetChange}>
               <SelectTrigger>
