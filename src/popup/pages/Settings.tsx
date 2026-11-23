@@ -22,7 +22,7 @@ export default () => {
   return (
     <>
       <Main className="">
-        <div className="mt-2 grid min-h-[286px] gap-4">
+        <div className="mt-2 grid h-[286px] gap-4">
           <section>
             <LocalSettings />
           </section>
