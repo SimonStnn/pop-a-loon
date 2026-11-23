@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import browser from 'webextension-polyfill';
-import { Loader2, CheckIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2, CheckIcon } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import browser from 'webextension-polyfill';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -14,15 +15,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import storage from '@/managers/storage';
 import { User } from '@/const';
+import storage from '@/managers/storage';
 import remote from '@/remote';
 
 const formSchema = z.object({
   username: z
     .string({
-      required_error: 'Username is required',
+      error: 'Username is required',
     })
     .min(4)
     .max(20)
