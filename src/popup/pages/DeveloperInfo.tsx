@@ -114,7 +114,7 @@ export default () => {
         </Alert>
       )}
       <Tabs defaultValue="runtime">
-        <TabsList size="sm">
+        <TabsList size="sm" className="w-full">
           <TabsTrigger size="sm" value="runtime">
             Runtime
           </TabsTrigger>
