@@ -40,6 +40,7 @@ const updateBadgeColors = () => {
   if (process.env.NODE_ENV === 'development') log.setLevel('debug');
   else log.setLevel('info');
 
+  const startedAt = Date.now();
   const rapidSpawnPenalty = 5 * 60 * 1000; // 5 minutes
   let lastSpawn: number;
   let spawnTimeout: number | null = null;
@@ -380,6 +381,19 @@ const updateBadgeColors = () => {
       case 'setLogLevel':
         log.setLevel(message.level);
         break;
+      case 'getDebugInfo':
+        return {
+          startedAt,
+          lastSpawn: lastSpawn ?? null,
+          spawnTimeout,
+          scheduling,
+          remoteAvailable: remote.availability,
+          remoteLastChecked: remote.lastCheckedAt,
+          logLevel: log.getLevel(),
+          version: process.env.npm_package_version,
+          mode: process.env.NODE_ENV,
+          browser: getBrowser(),
+        };
     }
   });
 

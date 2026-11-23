@@ -38,6 +38,18 @@ class BackendAPI {
     return BackendAPI.instance;
   }
 
+  public get baseUrl() {
+    return BackendAPI.BASE_URL;
+  }
+
+  public get availability() {
+    return this.available;
+  }
+
+  public get lastCheckedAt() {
+    return this.lastChecked?.getTime() ?? null;
+  }
+
   private async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     endpoint: Endpoint,

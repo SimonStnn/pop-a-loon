@@ -172,11 +172,30 @@ type SetLogLevelMessage = {
   level: LogLevelNumbers;
 };
 
+type GetDebugInfoMessage = {
+  action: 'getDebugInfo';
+};
+
+/** State that only lives in the background worker. */
+export type DebugInfoResponse = {
+  startedAt: number;
+  lastSpawn: number | null;
+  spawnTimeout: number | null;
+  scheduling: boolean;
+  remoteAvailable: boolean | null;
+  remoteLastChecked: number | null;
+  logLevel: LogLevelNumbers;
+  version: string;
+  mode: string;
+  browser: string;
+};
+
 export type Message =
   | UpdateCounterMessage
   | IncrementCount
   | SpawnBalloonMessage
-  | SetLogLevelMessage;
+  | SetLogLevelMessage
+  | GetDebugInfoMessage;
 
 //
 // * Alarms

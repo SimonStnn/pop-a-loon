@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import log from '@/managers/log';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -12,40 +12,24 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Checkbox } from '@/components/ui/checkbox';
-import { sendMessage } from '@/utils';
-import storage from '@/managers/storage';
+import { useDebugMode } from '@/popup/hooks/useDebugMode';
 
 const formSchema = z.object({
   loglevel: z.boolean(),
 });
 
 export default () => {
-  const [loglevel, setLoglevel] = useState(log.getLevel());
-
+  const { enabled, toggle } = useDebugMode();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      loglevel: log.getLevel() === log.levels.DEBUG,
+      loglevel: enabled,
     },
   });
 
-  const toggleDebugLogging = async () => {
-    const level =
-      loglevel === log.levels.DEBUG ? log.levels.INFO : log.levels.DEBUG;
-    setLoglevel(level);
-    log.setLevel(level);
-    await sendMessage({ action: 'setLogLevel', level });
-  };
-
   useEffect(() => {
-    const loadLoglevel = async () => {
-      const level = (await storage.local.get('loglevel')) || log.levels.INFO;
-      setLoglevel(level);
-      form.setValue('loglevel', level === log.levels.DEBUG);
-    };
-    loadLoglevel();
-  }, []);
+    form.setValue('loglevel', enabled);
+  }, [enabled, form]);
 
   return (
     <Form {...form}>
@@ -53,17 +37,15 @@ export default () => {
         <FormField
           control={form.control}
           name="loglevel"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel className="flex justify-between">
                 <span>Debug logging</span>
                 <FormControl className="w-auto p-0">
                   <Checkbox
                     className="size-4"
-                    defaultChecked={loglevel === log.levels.DEBUG}
-                    {...field}
-                    onCheckedChange={toggleDebugLogging}
-                    value={loglevel}
+                    checked={enabled}
+                    onCheckedChange={toggle}
                   />
                 </FormControl>
               </FormLabel>
