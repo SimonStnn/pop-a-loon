@@ -39,6 +39,7 @@ type BannerProps = {
 
 const routeTitles: { [key: string]: string } = {
   '/settings': 'Settings',
+  '/developer': 'Developer info',
   '/general': 'Leaderboard',
   '/recover': 'Recover account',
 };

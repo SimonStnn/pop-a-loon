@@ -57,6 +57,13 @@ const response: RemoteResponse = {
       },
     ],
   },
+  spawnToken: {
+    serverTime: Date.now(),
+    spawnToken: 'mockToken',
+    balloonType: 'default',
+    spawnAt: Date.now() + 5000,
+    expiresAt: Date.now() + 35000,
+  },
 };
 
 export const mockFetchResponse = () => {

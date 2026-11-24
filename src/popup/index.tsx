@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
 import App from '@/popup/pages/App';
+import DeveloperInfo from '@/popup/pages/DeveloperInfo';
 import Discovery from '@/popup/pages/Discovery';
 import General from '@/popup/pages/General';
 import RecoverAccount from '@/popup/pages/RecoverAccount';
@@ -27,6 +28,7 @@ import Statistics from '@/popup/pages/Statistics';
           <Route path="/" element={<App />} />
           <Route path="/general" element={<General />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/developer" element={<DeveloperInfo />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/discovery" element={<Discovery />} />
           <Route path="/recover" element={<RecoverAccount />} />

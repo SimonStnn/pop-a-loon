@@ -1,5 +1,6 @@
 import { AlertCircle } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Main from '@/components/Main';
 import DeleteUser from '@/components/forms/DeleteUser';
 import Developer from '@/components/forms/Developer';
@@ -17,8 +18,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { useDebugMode } from '@/popup/hooks/useDebugMode';
 
 export default () => {
+  const { enabled } = useDebugMode();
+
   return (
     <>
       <Main className="">
@@ -65,6 +69,16 @@ export default () => {
           <Separator />
           <section>
             <Developer />
+            {enabled && (
+              <Button
+                asChild
+                size="xs"
+                variant="outline"
+                className="mt-2 w-full"
+              >
+                <Link to="/developer">Open developer info</Link>
+              </Button>
+            )}
           </section>
         </div>
       </Main>

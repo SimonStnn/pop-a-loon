@@ -6,7 +6,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
-import { BalloonName, HistoryNode } from '@/const';
+import { BalloonName, HistoryBucket, HistoryNode } from '@/const';
 import remote from '@/remote';
 
 export default (props: { startDate: Date; endDate: Date; global: boolean }) => {
@@ -15,6 +15,7 @@ export default (props: { startDate: Date; endDate: Date; global: boolean }) => {
     []
   );
   const [chartConfig, setChartConfig] = useState<ChartConfig>({});
+  const [bucket, setBucket] = useState<HistoryBucket>('day');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +33,7 @@ export default (props: { startDate: Date; endDate: Date; global: boolean }) => {
         ),
       ];
 
+      setBucket(response.bucket ?? 'day');
       setPoppedBalloonTypes(allBalloonNames);
 
       const newChartConfig: ChartConfig = {};
@@ -65,6 +67,38 @@ export default (props: { startDate: Date; endDate: Date; global: boolean }) => {
     fetchData();
   }, [props.startDate, props.endDate, props.global]);
 
+  const formatDate = (value: Date | string) =>
+    new Date(value).toLocaleDateString(
+      'en-US',
+      bucket === 'month'
+        ? { month: 'short', year: '2-digit', timeZone: 'UTC' }
+        : { month: 'short', day: '2-digit', timeZone: 'UTC' }
+    );
+
+  const formatTooltipTitle = (value: Date | string) => {
+    const start = new Date(value);
+    if (bucket === 'day') return formatDate(start);
+
+    const end =
+      bucket === 'month'
+        ? new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0))
+        : new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000);
+    const options: Intl.DateTimeFormatOptions =
+      start.getUTCFullYear() === end.getUTCFullYear()
+        ? { month: 'short', day: '2-digit', timeZone: 'UTC' }
+        : {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric',
+            timeZone: 'UTC',
+          };
+
+    return `${start.toLocaleDateString(
+      'en-US',
+      options
+    )} – ${end.toLocaleDateString('en-US', options)}`;
+  };
+
   return (
     <>
       <ChartContainer
@@ -77,15 +111,14 @@ export default (props: { startDate: Date; endDate: Date; global: boolean }) => {
             axisLine={false}
             tickLine={true}
             tickMargin={8}
-            tickFormatter={(value: Date) =>
-              value.toLocaleDateString('en-US', {
-                month: 'short',
-                day: '2-digit',
-              })
-            }
+            tickFormatter={formatDate}
           />
           <YAxis axisLine={false} tickLine={false} />
           <ChartTooltip
+            labelFormatter={(_, payload) => {
+              const date = payload?.[0]?.payload?.date;
+              return date ? formatTooltipTitle(date) : null;
+            }}
             content={
               <ChartTooltipContent className="capitalize" hideIndicator />
             }

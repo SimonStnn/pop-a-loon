@@ -38,6 +38,18 @@ class BackendAPI {
     return BackendAPI.instance;
   }
 
+  public get baseUrl() {
+    return BackendAPI.BASE_URL;
+  }
+
+  public get availability() {
+    return this.available;
+  }
+
+  public get lastCheckedAt() {
+    return this.lastChecked?.getTime() ?? null;
+  }
+
   private async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     endpoint: Endpoint,
@@ -53,32 +65,41 @@ class BackendAPI {
       return devRemoteResponse[endpoint] as any;
     }
     const url = new URL(`${BackendAPI.BASE_URL}/api${endpoint}`);
+    const searchParams = new URLSearchParams();
     const body: Record<string, string> = {};
 
     if (params) {
-      Object.keys(params).forEach((key) => {
-        if (params[key] === undefined) return;
-        // The recovery code is a credential: keep it out of the URL.
-        if (method === 'POST' && key === 'code') {
-          body[key] = String(params[key]);
-          return;
+      for (const [key, value] of Object.entries(params)) {
+        if (value === undefined) continue;
+        // Credentials and spawn tokens belong in the body, never in the URL.
+        if (method === 'POST' && (key === 'code' || key === 'spawnToken')) {
+          body[key] = String(value);
+        } else {
+          searchParams.append(key, String(value));
         }
-        url.searchParams.append(key, String(params[key]));
-      });
+      }
     }
 
-    const headers: Record<string, string> = {
-      authorization: (await storage.sync.get('token')) || '',
-    };
-    if (Object.keys(body).length > 0) {
-      headers['Content-Type'] = 'application/json';
-    }
-
-    const response = await fetch(url.toString(), {
+    const fetchOptions: RequestInit = {
       method,
-      headers,
-      body: Object.keys(body).length > 0 ? JSON.stringify(body) : undefined,
-    });
+      headers: {
+        authorization: (await storage.sync.get('token')) || '',
+      },
+    };
+
+    if (searchParams.toString()) {
+      url.search = searchParams.toString();
+    }
+
+    if (Object.keys(body).length > 0) {
+      fetchOptions.headers = {
+        ...fetchOptions.headers,
+        'Content-Type': 'application/json',
+      };
+      fetchOptions.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(url.toString(), fetchOptions);
     if (!response.ok) {
       log.error(response, await response.json());
       if (response.status === 401 || response.status === 403) {
@@ -120,6 +141,14 @@ class BackendAPI {
     return await this.request<RemoteResponse['configuration']>(
       'GET',
       '/configuration'
+    );
+  }
+
+  public async getSpawnToken(spawnRate?: number) {
+    return await this.request<RemoteResponse['spawnToken']>(
+      'GET',
+      '/configuration/spawn-token',
+      { 'spawn-rate': spawnRate }
     );
   }
 
@@ -172,12 +201,13 @@ class BackendAPI {
     return response;
   }
 
-  public async incrementCount(type: BalloonName) {
+  public async incrementCount(type: BalloonName, spawnToken?: string) {
     return await this.request<RemoteResponse['count']>(
       'POST',
       '/user/count/increment',
       {
         type,
+        spawnToken,
       }
     );
   }
