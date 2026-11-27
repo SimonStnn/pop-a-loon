@@ -1,6 +1,7 @@
 import * as balloons from '@/balloons';
 import log from '@/managers/log';
 import storage from '@/managers/storage';
+import { getBalloonClass } from '@/resolve-balloon';
 import {
   getBalloonContainer,
   importStylesheet,
@@ -37,25 +38,25 @@ import type { SpawnTokenMessageResponse } from '@/const';
   // Add the balloon container to the document
   const _ = getBalloonContainer();
 
-  let Balloon: any;
+  let Balloon: ReturnType<typeof getBalloonClass>;
 
   if (spawnTokenData?.balloonType) {
-    // Use the backend-chosen balloon type, but never trust the raw value: an
-    // unexpected name must fall back instead of throwing on `new Balloon()`.
-    const balloonMap = balloons as Record<string, unknown>;
-    const balloonName = spawnTokenData.balloonType as string;
-    if (
-      Object.hasOwn(balloonMap, balloonName) &&
-      typeof balloonMap[balloonName] === 'function'
-    ) {
-      Balloon = balloonMap[balloonName];
-    } else {
-      log.warn(' - Unknown balloonType from backend:', balloonName);
+    // The backend records the pop under the type bound to the spawn token, so
+    // render that exact type instead of picking another one locally.
+    Balloon = getBalloonClass(spawnTokenData.balloonType);
+    if (!Balloon) {
+      log.warn(
+        ' - Unknown balloonType from backend:',
+        spawnTokenData.balloonType
+      );
+      // A locally chosen balloon would be counted under the backend's type,
+      // so skip this spawn rather than show a balloon that pops incorrectly.
+      log.timeEnd('debug', 'Balloon spawn time');
+      log.groupEnd('debug');
+      return;
     }
-  }
-
-  // Fallback: weighted random selection (legacy mode or invalid balloonType)
-  if (!Balloon) {
+  } else {
+    // Fallback: weighted random selection when no token was issued (dev mode).
     const balloonClasses = Object.values(balloons).filter((BalloonType) => {
       const season = BalloonType.season;
       return (
