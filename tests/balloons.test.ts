@@ -1,8 +1,9 @@
 import fs from 'fs';
-import path from 'path';
 import fetchMock from 'jest-fetch-mock';
+import path from 'path';
 import Balloon from '@/balloon';
 import * as balloons from '@/balloons';
+import { getBalloonClass } from '@/resolve-balloon';
 
 fetchMock.enableMocks();
 
@@ -38,6 +39,16 @@ describe('Balloons', () => {
       const BalloonClass = balloons[balloonName(name)];
       expect(BalloonClass.prototype instanceof Balloon).toBeTruthy();
     });
+  });
+
+  test('backend balloon names resolve to their extension class', () => {
+    balloonNames.forEach((name) => {
+      expect(getBalloonClass(name)).toBe(balloons[balloonName(name)]);
+    });
+  });
+
+  test('unknown backend balloon names do not resolve', () => {
+    expect(getBalloonClass('unknown')).toBeUndefined();
   });
 
   test("all balloons' names are unique", () => {
